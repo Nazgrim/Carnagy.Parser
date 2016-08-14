@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ParserEngine;
+using Autofac;
+using DataAccess;
+using DataAccess.Repositories;
 
 namespace Parser
 {
@@ -10,6 +10,18 @@ namespace Parser
     {
         static void Main(string[] args)
         {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<BaseRepository>().As<IBaseRepository>();
+            builder.RegisterType<SiteParser>().As<ISiteParser>();
+            builder
+                .RegisterType<CarnagyContext>()
+                .AsSelf();
+            var container = builder.Build();
+
+            var siteParser = container.Resolve<ISiteParser>();
+            siteParser.Run();
+            Console.WriteLine("Парсинг закончился. Нажмите любую клавишу для завершения.....");
+            Console.ReadKey();
         }
     }
 }
