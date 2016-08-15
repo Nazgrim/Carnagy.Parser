@@ -7,6 +7,7 @@ namespace DataAccess.Repositories
     {
         List<MainConfiguration> GetMainConfigurations();
         void SaveParssedCar(List<ParssedCar> parssedCars);
+        void AddFiledsValue(List<FieldValue> fieldValues);
         void ClearParssed();
     }
 }

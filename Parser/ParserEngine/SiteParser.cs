@@ -4,6 +4,7 @@ using System.Linq;
 using DataAccess.Repositories;
 using DataAccess.Models;
 using HtmlAgilityPack;
+using DataAccess;
 
 namespace ParserEngine
 {
@@ -22,14 +23,23 @@ namespace ParserEngine
             foreach (var mainConfiguration in mainConfigurations)
             {
                 var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, mainConfiguration.Fields.ToList());
-                SecondPhase(resultFirstPage);
+                SecondPhase(resultFirstPage, mainConfiguration.Fields.ToList());
             }
         }
 
         private HtmlDocument GetHtmlDocument()
         {
-            var sourceDirectory= System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
+            var sourceDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
             var path = System.IO.Path.Combine(sourceDirectory, "autotrader\\New & Used Cars for sale in Ontario _ autoTRADER.ca.html");
+            var html = System.IO.File.ReadAllText(path);
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(html);
+            return htmlDocument;
+        }
+        private HtmlDocument GetHtmlDocument2()
+        {
+            var sourceDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
+            var path = System.IO.Path.Combine(sourceDirectory, "autotrader\\1970 Chevrolet Chevelle SS for $65,000 in KITCHENER _ autoTRADER.ca.html");
             var html = System.IO.File.ReadAllText(path);
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
@@ -56,7 +66,7 @@ namespace ParserEngine
             return result;
         }
 
-        private ParssedCar ParseCarNode(List<Field> fields, HtmlNode carListNode,string url)
+        private ParssedCar ParseCarNode(List<Field> fields, HtmlNode carListNode, string url)
         {
             //var ImgPath = carListNode.SelectSingleNode("div[1]/div[1]/div[2]/span[1]/a[1]/img[1]").GetAttributeValue("src", string.Empty);
             //var DillerName = carListNode.SelectSingleNode("div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]").GetAttributeValue("alt", string.Empty).Trim();
@@ -74,7 +84,7 @@ namespace ParserEngine
             var parssedCar = new ParssedCar();
             foreach (var field in fields)
             {
-                var filedValue = GetFieldValue(field, carListNode,url);
+                var filedValue = GetFieldValue(field, carListNode, url);
                 if (filedValue != null)
                 {
                     parssedCar.FieldValues.Add(filedValue);
@@ -106,9 +116,36 @@ namespace ParserEngine
             return null;
         }
 
-        private void SecondPhase(List<ParssedCar> parrsedCars)
+        private void SecondPhase(List<ParssedCar> parrsedCars, List<Field> fields)
         {
+            var htmlWeb = new HtmlWeb();
+            foreach (var parrsedCar in parrsedCars.Take(1))
+            {
+                
+                var url = parrsedCar.FieldValues.First(a => a.Field.Name == FiledNameConstant.Url).Value;
+                var htmlDocument = GetHtmlDocument2();
+                var fieldValues = new List<FieldValue>();
+                var Make = htmlDocument.DocumentNode.SelectSingleNode("//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[1]/div[2]/span").InnerText.Trim();
+                var Model = string.Empty;
+                var Kilometres = string.Empty;
+                var BodyType = string.Empty;
+                var StyleTrim = string.Empty;
+                var Engine = string.Empty;
+                var Cylinders = string.Empty;
+                var StockNumber = string.Empty;
+                var Drivetrain = string.Empty;
+                var RWD = string.Empty;
 
+                foreach (var field in fields)
+                {
+                    var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, url);
+                    if (fieldValue != null)
+                    {
+                        fieldValue.ParssedCarId = parrsedCar.Id;
+                        fieldValues.Add(fieldValue);
+                    }
+                }
+            }
         }
     }
 }

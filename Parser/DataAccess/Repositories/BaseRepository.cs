@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataAccess.Models;
 
@@ -17,6 +18,8 @@ namespace DataAccess.Repositories
             return _context.MainConfigurations.ToList();
         }
 
+
+
         public void SaveParssedCar(List<ParssedCar> parssedCars)
         {
             _context.ParssedCars.AddRange(parssedCars);
@@ -26,6 +29,13 @@ namespace DataAccess.Repositories
         public void ClearParssed()
         {
             _context.ParssedCars.RemoveRange(_context.ParssedCars.ToList());
+            _context.SaveChanges();
+        }
+
+        public void AddFiledsValue(List<FieldValue> fieldValues)
+        {
+            _context.FieldValues.AddRange(fieldValues);
+            _context.SaveChanges();
         }
     }
 }

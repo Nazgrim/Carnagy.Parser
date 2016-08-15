@@ -29,7 +29,6 @@ namespace DataAccess.Migrations
                         new Field {Name = FiledNameConstant.Distance,Xpath = "div[1]/div[1]/div[2]/div[2]/div[2]"},
                         new Field {Name = FiledNameConstant.Url,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]"},
                         new Field {Name = FiledNameConstant.Name,Xpath = "div[1]/div[2]/div[1]/h2[1]/a[1]/span[1]"},
-                        new Field {Name = FiledNameConstant.Description,Xpath = "div[1]/div[2]/div[1]/p[1]"},
                         new Field {Name = FiledNameConstant.DillerPlace,Xpath = "div[1]/div[2]/div[2]/div[1]/div[4]"},
                     }
                 });
