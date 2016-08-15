@@ -61,6 +61,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\404c1769df" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\BotDetectCaptcha%281%29.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\BotDetectCaptcha%282%29.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\BotDetectCaptcha%283%29.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\BotDetectCaptcha%284%29.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\BotDetectCaptcha.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\cb=gapi%281%29.loaded_0" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\cb=gapi.loaded_0" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\cb=gapi.loaded_1" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\CombineScriptsHandler.ashx" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\event" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\js" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\js%281%29" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\ScriptResource%281%29.axd" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\ScriptResource.axd" />
+    <None Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\v1" />
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\404c1769df" />
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\CombineScriptsHandler.ashx" />
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\event" />
@@ -83,6 +99,73 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\1453028813-postmessagerelay.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\28af7db3-072d-4e4e-a51b-b4abd46cce1b%281%29.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\28af7db3-072d-4e4e-a51b-b4abd46cce1b.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\3f66a19d-054b-4878-941b-2526694f194e.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\48c7e839-0027-47e7-bf79-b3ab26612076.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\4bf8492a-007e-4b96-9178-7c65ec026ac2.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\561aa45d-5cc5-48a4-b16a-a16f216304d3.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\608a0e70-86c2-4761-a504-474c05279c82.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\7029a8ba-d990-458f-91d7-3bf2dfa46927.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\activityi.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\all.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\analytics%281%29.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\analytics.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\b3ee0458-3cb4-4593-835f-35a8c7882c98.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\bd812c7c-d9c5-4ae7-9644-10bab1384109.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\beacon.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\button.a1287ca71ce6e06bb8d64fd87cd04244.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\cfhv-player-v2.min.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\conversion.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\db75f876-7f58-462f-81a1-05355e35737b.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\dc.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\dest4.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\details-bottom-en-ca.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\details-en-ca.css" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\ec.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\embed-jwplayer.min.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\fastbutton.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\foresee-alive.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\foresee-surveydef.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\foresee-trigger.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\ga_setup.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\gpt.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\gtm.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\include.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\jquery.min.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\LanguageLibrary%281%29.aspx" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\LanguageLibrary.aspx" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\Lcj5EtQ5qmD%281%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\Lcj5EtQ5qmD.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\linkid.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\logo-2Line.png" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\logo_email.gif" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\mobileAppBtn_android_en.png" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\mobileAppBtn_blackberry_en2.png" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\mobileAppBtn_iphone_en.jpg" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\nr-963.min.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\ping.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\pixel%281%29.gif" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\pixel.gif" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\plusone.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\postmessageRelay.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\pubads_impl_93.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\rpc-shindig_random.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%281%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%282%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%283%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%284%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%285%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%286%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource%287%29.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\saved_resource.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\star-off.png" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\taglineEn.png" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\tracker.pack.js" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\tweet_button.d73d0c4cb6af3df0ea22b7c11dbc87d2.en.html" />
+    <Content Include="autotrader\1970 Chevrolet Chevelle SS for %2465,000 in KITCHENER _ autoTRADER.ca_files\widgets.js" />
     <Content Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca.html" />
     <Content Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\000500a4-f343-41f6-bad1-3a2e2cd32a9d.jpg" />
     <Content Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\0113887f-b6fc-434b-b6b6-3f9071e150cf.jpg" />
