@@ -11,6 +11,7 @@ namespace DataAccess.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Xpath { get; set; }
+        public string Attribute { get; set; }
         public int MainConfigurationId { get; set; }
 
         public virtual MainConfiguration MainConfiguration { get; set; }

@@ -54,9 +54,14 @@
     <Compile Include="Configurations\FieldValueConfiguration.cs" />
     <Compile Include="Configurations\MainConfigurationConfiguration.cs" />
     <Compile Include="Configurations\ParssedCarConfiguration.cs" />
+    <Compile Include="FiledNameConstant.cs" />
     <Compile Include="Migrations\201608131138564_InitialCreate.cs" />
     <Compile Include="Migrations\201608131138564_InitialCreate.Designer.cs">
       <DependentUpon>201608131138564_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608151051533_AddAtributeToField.cs" />
+    <Compile Include="Migrations\201608151051533_AddAtributeToField.Designer.cs">
+      <DependentUpon>201608151051533_AddAtributeToField.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
@@ -74,6 +79,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201608131138564_InitialCreate.resx">
       <DependentUpon>201608131138564_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151051533_AddAtributeToField.resx">
+      <DependentUpon>201608151051533_AddAtributeToField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
