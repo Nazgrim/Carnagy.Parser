@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using DataAccess.Models;
 
@@ -15,7 +16,9 @@ namespace DataAccess.Repositories
 
         public List<MainConfiguration> GetMainConfigurations()
         {
-            return _context.MainConfigurations.ToList();
+            return _context.MainConfigurations
+                .Include(a=>a.Fields)
+                .ToList();
         }
 
 

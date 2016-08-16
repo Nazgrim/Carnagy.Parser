@@ -22,8 +22,10 @@ namespace ParserEngine
             var mainConfigurations = _repository.GetMainConfigurations();
             foreach (var mainConfiguration in mainConfigurations)
             {
-                var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, mainConfiguration.Fields.ToList());
-                SecondPhase(resultFirstPage, mainConfiguration.Fields.ToList());
+                var fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.List).ToList();
+                var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fileds);
+                fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.Page).ToList();
+                SecondPhase(resultFirstPage, fileds);
             }
         }
 
@@ -50,13 +52,8 @@ namespace ParserEngine
         {
             var htmlDocument = GetHtmlDocument();
             var result = new List<ParssedCar>();
-
-            var carListNodes = htmlDocument.GetElementbyId("adList")
-                .ChildNodes
-                .Where(a => a.Name == "div")
-                .ToList()
-                .Where(a => a.Attributes.Contains("class") && a.Attributes["class"].Value.Contains("at_featuredResult"))
-                .ToList();
+            var listField = fields.First(a => a.Name == FiledNameConstant.List);
+            var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
 
             foreach (var carListNode in carListNodes)
             {
@@ -66,7 +63,7 @@ namespace ParserEngine
             return result;
         }
 
-        private ParssedCar ParseCarNode(List<Field> fields, HtmlNode carListNode, string url)
+        private ParssedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode, string url)
         {
             //var ImgPath = carListNode.SelectSingleNode("div[1]/div[1]/div[2]/span[1]/a[1]/img[1]").GetAttributeValue("src", string.Empty);
             //var DillerName = carListNode.SelectSingleNode("div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]").GetAttributeValue("alt", string.Empty).Trim();
@@ -82,7 +79,13 @@ namespace ParserEngine
             //var DillerPlace = carListNode.SelectSingleNode("div[1]/div[2]/div[2]/div[1]/div[4]").InnerText.Replace("&nbsp;", "").Trim();
 
             var parssedCar = new ParssedCar();
-            foreach (var field in fields)
+            var urlField = fields.First(a => a.Name == FiledNameConstant.Url);
+            var urlFieldValue = GetFieldValue(urlField, carListNode, url);
+            if (urlFieldValue == null)
+                return null;
+
+            parssedCar.Url = urlFieldValue.Value;
+            foreach (var field in fields.Where(a => !a.IsDefault))
             {
                 var filedValue = GetFieldValue(field, carListNode, url);
                 if (filedValue != null)
@@ -121,22 +124,10 @@ namespace ParserEngine
             var htmlWeb = new HtmlWeb();
             foreach (var parrsedCar in parrsedCars.Take(1))
             {
-                
-                var url = parrsedCar.FieldValues.First(a => a.Field.Name == FiledNameConstant.Url).Value;
+                var url = parrsedCar.Url;
                 var htmlDocument = GetHtmlDocument2();
                 var fieldValues = new List<FieldValue>();
-                var Make = htmlDocument.DocumentNode.SelectSingleNode("//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[1]/div[2]/span").InnerText.Trim();
-                var Model = string.Empty;
-                var Kilometres = string.Empty;
-                var BodyType = string.Empty;
-                var StyleTrim = string.Empty;
-                var Engine = string.Empty;
-                var Cylinders = string.Empty;
-                var StockNumber = string.Empty;
-                var Drivetrain = string.Empty;
-                var RWD = string.Empty;
-
-                foreach (var field in fields)
+                foreach (var field in fields.Where(a=>!a.IsDefault))
                 {
                     var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, url);
                     if (fieldValue != null)
@@ -145,7 +136,9 @@ namespace ParserEngine
                         fieldValues.Add(fieldValue);
                     }
                 }
+                _repository.AddFiledsValue(fieldValues);
             }
         }
     }
 }
+
