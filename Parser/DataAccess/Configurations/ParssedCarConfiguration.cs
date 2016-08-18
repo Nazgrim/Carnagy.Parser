@@ -8,6 +8,10 @@ namespace DataAccess.Configurations
         public ParssedCarConfiguration()
         {
             HasKey(t => t.Id);
+            HasRequired(t => t.MainConfiguration)
+                .WithMany(t => t.ParssedCars)
+                .HasForeignKey(d => d.MainConfigurationId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

@@ -11,9 +11,11 @@ namespace ParserEngine
 {
     public class BaseParser : IParser
     {
-        private readonly string ParserName;
+        protected readonly string ParserName;
+        protected int MainConfigurationId;
         protected IBaseRepository _repository { get; set; }
         protected List<string> _errorLog = new List<string>();
+        protected DateTime LastUpdate;
 
         protected BaseParser(IBaseRepository repository)
         {
@@ -29,7 +31,9 @@ namespace ParserEngine
         public virtual void Run()
         {
             _repository.ClearParssed();
+            LastUpdate= DateTime.Now;
             var mainConfiguration = _repository.GetMainConfigurationByName(ParserName);
+            MainConfigurationId = mainConfiguration.Id;
             var fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.List).ToList();
             var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fileds);
             fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.Page).ToList();
@@ -52,6 +56,8 @@ namespace ParserEngine
                 var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
                 isLastPage = pageNumberWrapper != null;
             }
+
+            UpdateDeleteParsedCar();
 
             return result;
         }
@@ -106,7 +112,10 @@ namespace ParserEngine
 
         protected virtual ParssedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode)
         {
-            var parssedCar = new ParssedCar();
+            var parssedCar = new ParssedCar
+            {
+                MainConfigurationId = MainConfigurationId
+            };
             var urlField = fields.First(a => a.Name == FiledNameConstant.Url);
             var urlFieldValue = GetFieldValue(urlField, carListNode);
             if (urlFieldValue == null)
@@ -126,23 +135,53 @@ namespace ParserEngine
 
         protected virtual List<ParssedCar> ParsLisCar(HtmlDocument htmlDocument, List<Field> fields)
         {
-            var result = new List<ParssedCar>();
+            var parsedCars = new List<ParssedCar>();
 
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
             var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
 
             foreach (var carListNode in carListNodes)
             {
-                result.Add(ParseCarNode(fields, carListNode));
+                parsedCars.Add(ParseCarNode(fields, carListNode));
             }
-            _repository.SaveParssedCar(result);
-            return result;
+            var urls = parsedCars.Select(a => a.Url).ToList();
+            var parsedCarsFormDataBase =
+                _repository.GetParssedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));
+
+            var newCars = new List<ParssedCar>();
+            foreach (var parssedCar in parsedCars)
+            {
+                var parsedCarFormDataBase = parsedCarsFormDataBase.FirstOrDefault(a => a.Url == parssedCar.Url);
+                if (parsedCarFormDataBase == null)
+                {
+                    newCars.Add(parssedCar);
+                }
+                else
+                {
+                    parsedCarFormDataBase.LastUpdate = LastUpdate;
+                }
+            }
+
+            _repository.SaveParssedCar(newCars);
+            return newCars;
         }
 
         protected virtual HtmlDocument GetHtmlDocument(HtmlWeb htmlWeb, string url)
         {
             var htmlDocument = htmlWeb.Load(url);
             return htmlDocument;
+        }
+
+        protected virtual void UpdateDeleteParsedCar()
+        {
+            var deleteParsedCar =
+                            _repository.GetParssedCars(
+                                a => a.MainConfigurationId == MainConfigurationId && a.LastUpdate != LastUpdate);
+            foreach (var parssedCar in deleteParsedCar)
+            {
+                parssedCar.IsDeleted = true;
+            }
+            _repository.SaveChanges();
         }
     }
 }

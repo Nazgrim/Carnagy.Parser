@@ -45,5 +45,15 @@ namespace DataAccess.Repositories
         {
             return _context.MainConfigurations.SingleOrDefault(a => a.Name == name);
         }
+
+        public List<ParssedCar> GetParssedCars(Func<ParssedCar, bool> filter)
+        {
+            return _context.ParssedCars.Where(filter).ToList();
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
     }
 }

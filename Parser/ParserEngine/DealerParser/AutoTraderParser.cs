@@ -8,15 +8,12 @@ namespace ParserEngine.DealerParser
 {
     public class AutoTraderParser : BaseParser, IParser
     {
-        private const string ParserName = "AutoTrader";
-
         public AutoTraderParser(IBaseRepository repository) :
-            base(repository)
+            base(repository, "AutoTrader")
         {
-
         }
 
-        protected override string GetPageUrl(string format, Dictionary<string,object> arg)
+        protected override string GetPageUrl(string format, Dictionary<string, object> arg)
         {
             var displayCarInPage = 15;
             var radius = "-1";

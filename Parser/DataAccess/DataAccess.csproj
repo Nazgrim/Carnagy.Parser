@@ -71,6 +71,18 @@
     <Compile Include="Migrations\201608161519384_AddUrlField.Designer.cs">
       <DependentUpon>201608161519384_AddUrlField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608181253001_AddRelationBetweenParsedCarAndMainConfiguration.cs" />
+    <Compile Include="Migrations\201608181253001_AddRelationBetweenParsedCarAndMainConfiguration.Designer.cs">
+      <DependentUpon>201608181253001_AddRelationBetweenParsedCarAndMainConfiguration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608181259203_AddLastUpdateToParssedCar.cs" />
+    <Compile Include="Migrations\201608181259203_AddLastUpdateToParssedCar.Designer.cs">
+      <DependentUpon>201608181259203_AddLastUpdateToParssedCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608181336540_AddIsDeleteFieldToParssedCar.cs" />
+    <Compile Include="Migrations\201608181336540_AddIsDeleteFieldToParssedCar.Designer.cs">
+      <DependentUpon>201608181336540_AddIsDeleteFieldToParssedCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\FieldValue.cs" />
@@ -97,6 +109,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608161519384_AddUrlField.resx">
       <DependentUpon>201608161519384_AddUrlField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608181253001_AddRelationBetweenParsedCarAndMainConfiguration.resx">
+      <DependentUpon>201608181253001_AddRelationBetweenParsedCarAndMainConfiguration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608181259203_AddLastUpdateToParssedCar.resx">
+      <DependentUpon>201608181259203_AddLastUpdateToParssedCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608181336540_AddIsDeleteFieldToParssedCar.resx">
+      <DependentUpon>201608181336540_AddIsDeleteFieldToParssedCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
