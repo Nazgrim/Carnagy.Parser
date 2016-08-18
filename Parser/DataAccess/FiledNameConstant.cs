@@ -2,6 +2,7 @@
 {
     public static class FiledNameConstant
     {
+        public const string PagerCurrentPage = "PagerCurrentPage";
         public const string List = "List";
         public const string ImgPath = "ImgPath";
         public const string Price = "Price";

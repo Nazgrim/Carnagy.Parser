@@ -17,7 +17,7 @@ namespace DataAccess.Repositories
         public List<MainConfiguration> GetMainConfigurations()
         {
             return _context.MainConfigurations
-                .Include(a=>a.Fields)
+                .Include(a => a.Fields)
                 .ToList();
         }
 
@@ -39,6 +39,11 @@ namespace DataAccess.Repositories
         {
             _context.FieldValues.AddRange(fieldValues);
             _context.SaveChanges();
+        }
+
+        public MainConfiguration GetMainConfigurationByName(string name)
+        {
+            return _context.MainConfigurations.SingleOrDefault(a => a.Name == name);
         }
     }
 }

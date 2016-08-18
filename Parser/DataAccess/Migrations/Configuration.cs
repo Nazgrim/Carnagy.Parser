@@ -17,11 +17,12 @@ namespace DataAccess.Migrations
             context.MainConfigurations.AddOrUpdate(m => m.Name,
                 new MainConfiguration
                 {
-                    Name = "autotrader",
+                    Name = "AutoTrader",
                     SiteUrl = "http://www.autotrader.ca/",
                     HoursPeriond = 4,
                     Fields = new List<Field>
                     {
+                        new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.PagerCurrentPage,Xpath =  "//*[@id='ctl00_ctl00_MainContent_MainContent_pager1_pnlPagerSection']/div/div/div[2]/span[contains(@class, 'PagerCurrentPage')]/following-sibling::a",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.List,Xpath = "//*[@id='adList']/div[contains(@class, 'at_featuredResult')]",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.ImgPath,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]/img[1]",Attribute = "src"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.DillerName,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "alt"},

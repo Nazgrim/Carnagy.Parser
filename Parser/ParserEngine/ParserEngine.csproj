@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,8 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ISiteParser.cs" />
-    <Compile Include="SiteParser.cs" />
+    <Compile Include="DealerParser\AutoTraderParser.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="IParser.cs" />
+    <Compile Include="BaseParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

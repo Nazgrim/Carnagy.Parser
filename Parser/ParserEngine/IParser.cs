@@ -1,6 +1,6 @@
 ﻿namespace ParserEngine
 {
-    public interface ISiteParser
+    public interface IParser
     {
         void Run();
     }
