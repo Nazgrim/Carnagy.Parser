@@ -11,6 +11,7 @@ namespace DataAccess.Models
         }
         public int Id { get; set; }
         public string Url { get; set; }
+        public DateTime CreatedTime { get; set; }
         public DateTime LastUpdate { get; set; }
         public bool IsDeleted { get; set; }
 
@@ -18,5 +19,6 @@ namespace DataAccess.Models
 
         public virtual MainConfiguration MainConfiguration { get; set; }
         public virtual ICollection<FieldValue> FieldValues { get; set; }
+        public virtual ICollection<Price> Prices { get; set; }
     }
 }

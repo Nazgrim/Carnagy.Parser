@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using DataAccess.Models;
 
@@ -8,52 +7,49 @@ namespace DataAccess.Repositories
 {
     public class BaseRepository : IBaseRepository
     {
-        private CarnagyContext _context { get; set; }
+        private CarnagyContext Context { get; set; }
         public BaseRepository(CarnagyContext context)
         {
-            _context = context;
+            Context = context;
         }
-
-        public List<MainConfiguration> GetMainConfigurations()
-        {
-            return _context.MainConfigurations
-                .Include(a => a.Fields)
-                .ToList();
-        }
-
-
 
         public void SaveParssedCar(List<ParssedCar> parssedCars)
         {
-            _context.ParssedCars.AddRange(parssedCars);
-            _context.SaveChanges();
+            Context.ParssedCars.AddRange(parssedCars);
+            Context.SaveChanges();
         }
 
         public void ClearParssed()
         {
-            _context.ParssedCars.RemoveRange(_context.ParssedCars.ToList());
-            _context.SaveChanges();
+            Context.ParssedCars.RemoveRange(Context.ParssedCars.ToList());
+            Context.SaveChanges();
         }
 
         public void AddFiledsValue(List<FieldValue> fieldValues)
         {
-            _context.FieldValues.AddRange(fieldValues);
-            _context.SaveChanges();
+            Context.FieldValues.AddRange(fieldValues);
+            Context.SaveChanges();
         }
 
         public MainConfiguration GetMainConfigurationByName(string name)
         {
-            return _context.MainConfigurations.SingleOrDefault(a => a.Name == name);
+            return Context.MainConfigurations.SingleOrDefault(a => a.Name == name);
         }
 
         public List<ParssedCar> GetParssedCars(Func<ParssedCar, bool> filter)
         {
-            return _context.ParssedCars.Where(filter).ToList();
+            return Context.ParssedCars.Where(filter).ToList();
         }
 
         public void SaveChanges()
         {
-            _context.SaveChanges();
+            Context.SaveChanges();
+        }
+
+        public void AddErrorLog(List<ErrorLog> errorLog)
+        {
+            Context.ErrorLogs.AddRange(errorLog);
+            Context.SaveChanges();
         }
     }
 }

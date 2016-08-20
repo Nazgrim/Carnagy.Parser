@@ -6,7 +6,7 @@ using HtmlAgilityPack;
 
 namespace ParserEngine.DealerParser
 {
-    public class AutoTraderParser : BaseParser, IParser
+    public class AutoTraderParser : BaseParser
     {
         public AutoTraderParser(IBaseRepository repository) :
             base(repository, "AutoTrader")
@@ -40,7 +40,7 @@ namespace ParserEngine.DealerParser
                         fieldValues.Add(fieldValue);
                     }
                 }
-                _repository.AddFiledsValue(fieldValues);
+                Repository.AddFiledsValue(fieldValues);
             }
         }
 

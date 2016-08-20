@@ -11,6 +11,8 @@ namespace DataAccess
         public DbSet<Field> Fields { get; set; }
         public DbSet<FieldValue> FieldValues { get; set; }
         public DbSet<ParssedCar> ParssedCars { get; set; }
+        public DbSet<ErrorLog> ErrorLogs { get; set; }
+        public DbSet<Price> Prices { get; set; }
 
         public CarnagyContext()
         {
@@ -22,6 +24,8 @@ namespace DataAccess
             modelBuilder.Configurations.Add(new ParssedCarConfiguration());
             modelBuilder.Configurations.Add(new FieldConfiguration());
             modelBuilder.Configurations.Add(new FieldValueConfiguration());
+            modelBuilder.Configurations.Add(new ErrorLogConfiguration());
+            modelBuilder.Configurations.Add(new PriceConfiguration());
         }
     }
 }

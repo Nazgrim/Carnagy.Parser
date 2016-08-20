@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DataAccess.Models;
 
@@ -20,6 +21,7 @@ namespace DataAccess.Migrations
                     Name = "AutoTrader",
                     SiteUrl = "http://www.autotrader.ca/",
                     HoursPeriond = 4,
+                    CreateTime = DateTime.Now,
                     Fields = new List<Field>
                     {
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.PagerCurrentPage,Xpath =  "//*[@id='ctl00_ctl00_MainContent_MainContent_pager1_pnlPagerSection']/div/div/div[2]/span[contains(@class, 'PagerCurrentPage')]/following-sibling::a",IsDefault = true},
@@ -27,7 +29,7 @@ namespace DataAccess.Migrations
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.ImgPath,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]/img[1]",Attribute = "src"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.DillerName,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "alt"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.DillerLogo,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "src"},
-                        new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Price,Xpath = "div[1]/div[1]/div[2]/div[2]/div[1]/text()[2]"},
+                        new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Price,Xpath = "div[1]/div[1]/div[2]/div[2]/div[1]/text()[2]",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Distance,Xpath = "div[1]/div[1]/div[2]/div[2]/div[2]"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Url,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Name,Xpath = "div[1]/div[2]/div[1]/h2[1]/a[1]/span[1]"},
