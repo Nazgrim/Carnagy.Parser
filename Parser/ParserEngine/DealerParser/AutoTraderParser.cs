@@ -2,6 +2,7 @@
 using DataAccess.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using DataAccess;
 using HtmlAgilityPack;
 
 namespace ParserEngine.DealerParser
@@ -24,35 +25,62 @@ namespace ParserEngine.DealerParser
         }
 
         #region ForDebugOnly
-        protected override void SecondPhase(List<ParssedCar> parrsedCars, List<Field> fields)
+        protected override List<ParssedCar> FirstPhase(string url, List<Field> fields)
         {
+            var result = new List<ParssedCar>();
             var htmlWeb = new HtmlWeb();
-            foreach (var parrsedCar in parrsedCars)
+            var isLastPage = false;
+            var page = 0;
+            var pagerCurrentPageField = fields.First(a => a.Name == FiledNameConstant.PagerCurrentPage);
+            while (!isLastPage && page < 3)
             {
-                var htmlDocument = GetHtmlDocument2();
-                var fieldValues = new List<FieldValue>();
-                foreach (var field in fields.Where(a => !a.IsDefault))
+                var pageUrl = GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
+                var htmlDocument = GetHtmlDocument(htmlWeb, pageUrl);
+                if (htmlDocument == null)
                 {
-                    var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode);
-                    if (fieldValue != null)
-                    {
-                        fieldValue.ParssedCarId = parrsedCar.Id;
-                        fieldValues.Add(fieldValue);
-                    }
+                    isLastPage = true;
+                    continue;
                 }
-                Repository.AddFiledsValue(fieldValues);
+                result.AddRange(ParsLisCar(htmlDocument, fields));
+                page++;
+                var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
+                isLastPage = pageNumberWrapper == null;
             }
+
+            UpdateDeleteParsedCar();
+            SaveError();
+            return result;
         }
 
-        protected override HtmlDocument GetHtmlDocument(HtmlWeb htmlWeb, string url)
-        {
-            var sourceDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
-            var path = System.IO.Path.Combine(sourceDirectory, "autotrader\\New & Used Cars for sale in Ontario _ autoTRADER.ca.html");
-            var html = System.IO.File.ReadAllText(path);
-            var htmlDocument = new HtmlDocument();
-            htmlDocument.LoadHtml(html);
-            return htmlDocument;
-        }
+        //protected override void SecondPhase(List<ParssedCar> parrsedCars, List<Field> fields)
+        //{
+        //    var htmlWeb = new HtmlWeb();
+        //    foreach (var parrsedCar in parrsedCars)
+        //    {
+        //        var htmlDocument = GetHtmlDocument2();
+        //        var fieldValues = new List<FieldValue>();
+        //        foreach (var field in fields.Where(a => !a.IsDefault))
+        //        {
+        //            var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode);
+        //            if (fieldValue != null)
+        //            {
+        //                fieldValue.ParssedCarId = parrsedCar.Id;
+        //                fieldValues.Add(fieldValue);
+        //            }
+        //        }
+        //        Repository.AddFiledsValue(fieldValues);
+        //    }
+        //}
+
+        //protected override HtmlDocument GetHtmlDocument(HtmlWeb htmlWeb, string url)
+        //{
+        //    var sourceDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
+        //    var path = System.IO.Path.Combine(sourceDirectory, "autotrader\\New & Used Cars for sale in Ontario _ autoTRADER.ca.html");
+        //    var html = System.IO.File.ReadAllText(path);
+        //    var htmlDocument = new HtmlDocument();
+        //    htmlDocument.LoadHtml(html);
+        //    return htmlDocument;
+        //}
 
         private HtmlDocument GetHtmlDocument2()
         {

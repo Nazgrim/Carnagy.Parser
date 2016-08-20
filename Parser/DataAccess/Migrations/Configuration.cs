@@ -31,7 +31,7 @@ namespace DataAccess.Migrations
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.DillerLogo,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "src"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Price,Xpath = "div[1]/div[1]/div[2]/div[2]/div[1]/text()[2]",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Distance,Xpath = "div[1]/div[1]/div[2]/div[2]/div[2]"},
-                        new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Url,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]",IsDefault = true},
+                        new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Url,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]",Attribute = "href",IsDefault = true},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Name,Xpath = "div[1]/div[2]/div[1]/h2[1]/a[1]/span[1]"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.DillerPlace,Xpath = "div[1]/div[2]/div[2]/div[1]/div[4]"},
                         new Field {ConfigurationType =FiledConfigurationType.List, Name = FiledNameConstant.Description,Xpath = "div[1]/div[2]/div[1]/p[1]"},

@@ -41,7 +41,7 @@ namespace ParserEngine
             SecondPhase(resultFirstPage, fileds);
         }
 
-        protected List<ParssedCar> FirstPhase(string url, List<Field> fields)
+        protected virtual List<ParssedCar> FirstPhase(string url, List<Field> fields)
         {
             var result = new List<ParssedCar>();
             var htmlWeb = new HtmlWeb();
@@ -86,7 +86,7 @@ namespace ParserEngine
                 var fieldValues = new List<FieldValue>();
                 foreach (var field in fields.Where(a => !a.IsDefault))
                 {
-                    var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode);
+                    var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
                     if (fieldValue != null)
                     {
                         fieldValue.ParssedCarId = parrsedCar.Id;
@@ -98,12 +98,11 @@ namespace ParserEngine
             SaveError();
         }
 
-        protected virtual FieldValue GetFieldValue(Field field, HtmlNode carListNode)
+        protected virtual FieldValue GetFieldValue(Field field, HtmlNode carListNode, string url = "")
         {
             try
             {
-                var filedValue = new FieldValue();
-                filedValue.FieldId = field.Id;
+                var filedValue = new FieldValue { FieldId = field.Id };
                 if (string.IsNullOrWhiteSpace(field.Attribute))
                 {
                     filedValue.Value = carListNode.SelectSingleNode(field.Xpath).InnerText.Trim();
@@ -116,11 +115,23 @@ namespace ParserEngine
             }
             catch (Exception ex)
             {
-                var errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nInnerHtml:{2}\nInnerExeption{3}",
+                string errorMessage = string.Empty;
+                if (!string.IsNullOrWhiteSpace(url))//нельзя сохранять всю html страницу
+                {
+                    errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nUrl:{2}\nInnerExeption{3}",
+                    field.Id,
+                    ex.Message,
+                    url,
+                    ex.InnerException?.Message ?? string.Empty);
+                }
+                else
+                {
+                    errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nInnerHtml:{2}\nInnerExeption{3}",
                     field.Id,
                     ex.Message,
                     carListNode.InnerHtml,
-                    ex.InnerException != null ? ex.InnerException.Message : string.Empty);
+                    ex.InnerException?.Message ?? string.Empty);
+                }
                 Log(errorMessage);
             }
             return null;
@@ -131,11 +142,12 @@ namespace ParserEngine
             var parssedCar = new ParssedCar
             {
                 MainConfigurationId = MainConfigurationId,
-                CreatedTime = LastUpdate
+                CreatedTime = LastUpdate,
+                LastUpdate = LastUpdate
             };
             var urlField = fields.First(a => a.Name == FiledNameConstant.Url);
             var urlFieldValue = GetFieldValue(urlField, carListNode);
-            if (urlFieldValue == null)
+            if (string.IsNullOrWhiteSpace(urlFieldValue?.Value))
                 return null;
 
             parssedCar.Url = urlFieldValue.Value;
@@ -164,7 +176,16 @@ namespace ParserEngine
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
             var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
 
-            var parsedCars = carListNodes.Select(carListNode => ParseCarNode(fields, carListNode)).ToList();
+            var parsedCars = new List<ParssedCar>();
+            foreach (var carListNode in carListNodes)
+            {
+                var parsedCar = ParseCarNode(fields, carListNode);
+                if (parsedCar != null)
+                {
+                    parsedCars.Add(parsedCar);
+                }
+            }
+
             var urls = parsedCars.Select(a => a.Url).ToList();
             var parsedCarsFormDataBase =
                 Repository.GetParssedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));

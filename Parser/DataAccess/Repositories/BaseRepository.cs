@@ -22,6 +22,7 @@ namespace DataAccess.Repositories
         public void ClearParssed()
         {
             Context.ParssedCars.RemoveRange(Context.ParssedCars.ToList());
+            Context.ErrorLogs.RemoveRange(Context.ErrorLogs.ToList());
             Context.SaveChanges();
         }
 

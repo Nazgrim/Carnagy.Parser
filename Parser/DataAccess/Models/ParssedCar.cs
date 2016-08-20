@@ -8,6 +8,7 @@ namespace DataAccess.Models
         public ParssedCar()
         {
             FieldValues = new List<FieldValue>();
+            Prices= new List<Price>();
         }
         public int Id { get; set; }
         public string Url { get; set; }
