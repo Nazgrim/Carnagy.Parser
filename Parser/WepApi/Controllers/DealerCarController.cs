@@ -52,6 +52,28 @@ namespace WepApi.Controllers
             }
             return Ok(similarCars);
         }
+        [HttpGet]
+        [ActionName("PriceTrend")]
+        public IHttpActionResult GetPriceTrend(int dealerCarId)
+        {
+            var priceTrend = GetPriceTrendById(dealerCarId);
+            if (priceTrend == null)
+            {
+                return NotFound();
+            }
+            return Ok(priceTrend);
+        }
+        [HttpGet]
+        [ActionName("DealerCompetitors")]
+        public IHttpActionResult GetDealerCompetitors(int dealerCarId)
+        {
+            var dealerCompetitors = GetDealerCompetitorsById(dealerCarId);
+            if (dealerCompetitors == null)
+            {
+                return NotFound();
+            }
+            return Ok(dealerCompetitors);
+        }
 
         #region ForTestOnly
 
@@ -87,6 +109,24 @@ namespace WepApi.Controllers
             return result;
         }
 
+        private PriceTrend GetPriceTrendById(int dealerCarId)
+        {
+            var filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files/priceTrend.json");
+            string json = System.IO.File.ReadAllText(filePath);
+            var result = JsonConvert.DeserializeObject<PriceTrend>(json);
+            return result;
+        }
+
+        private List<DealerCompetitor> GetDealerCompetitorsById(int dealerCarId)
+        {
+            var filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files/dealerCompetitor.json");
+            string json = System.IO.File.ReadAllText(filePath);
+            var result = JsonConvert.DeserializeObject<List<DealerCompetitor>>(json);
+            return result;
+        }
+
+
+        
         #endregion
     }
 

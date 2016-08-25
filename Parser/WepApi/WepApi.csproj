@@ -100,14 +100,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Car.cs" />
+    <Compile Include="Models\CarPrice.cs" />
     <Compile Include="Models\ChartData.cs" />
     <Compile Include="Models\ChartSeries.cs" />
     <Compile Include="Models\ChartSeriesData.cs" />
     <Compile Include="Models\Dealer.cs" />
     <Compile Include="Models\DealerCar.cs" />
     <Compile Include="Models\DealerClassInformation.cs" />
+    <Compile Include="Models\DealerCompetitor.cs" />
+    <Compile Include="Models\DealerCompetitorCar.cs" />
     <Compile Include="Models\DelalerClassPrice.cs" />
     <Compile Include="Models\Information.cs" />
+    <Compile Include="Models\PriceTrend.cs" />
     <Compile Include="Models\SimilarCar.cs" />
     <Compile Include="Models\XAxisPlotBand.cs" />
     <Compile Include="Models\XAxisPlotLine.cs" />
