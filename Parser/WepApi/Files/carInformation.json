@@ -1,12 +1,20 @@
 {
-            imgScr:'../app/img/f3q.jpg',
-            name:'2017 Ford Fusion',
-            parametrs:
-            {
-                'Bodytype':'SUV',
-                'Trim':'Premium',
-                'Drivetrain':'RWD'
-            },
-            averagePrice:{value:'34%',date:'From last Week',difference:'7,325'},
-            dealerPrice:{value:'34%',date:'From last Week',difference:'7,325'},
-        }
+   imgScr:'../app/img/f3q.jpg',
+   name:'2017 Ford Fusion',
+   parametrs:{
+      'Bodytype':'SUV',
+      'Trim':'Premium',
+      'Drivetrain':'RWD'
+   },
+   averagePrice:{
+      value:'7,325',
+      date:'From last Week',
+      difference:'34%'
+   },
+   dealerPrice:{
+      value:'7,325',
+      date:'From last Week',
+      difference:'34%'
+   },
+
+}

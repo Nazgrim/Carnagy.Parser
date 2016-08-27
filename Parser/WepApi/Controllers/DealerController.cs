@@ -8,6 +8,8 @@ namespace WepApi.Controllers
 {
     public class DealerController : ApiController
     {
+        [HttpGet]
+        [ActionName("Dealer")]
         public IHttpActionResult GetDealer(int id)
         {
             var dealer = GetDelearById(id);
