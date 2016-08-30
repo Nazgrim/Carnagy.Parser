@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using Newtonsoft.Json;
 using WepApi.Models;
@@ -128,7 +129,48 @@ namespace WepApi.Controllers
         }
 
 
-        
+        private void GetAreas()
+        {
+            var rnd = new System.Random();
+            var carDeales = new List<int>();
+            for (int i = 0; i < 40; i++)
+            {
+                carDeales.Add(rnd.Next(0, 1000));
+            }
+
+            var min = carDeales.Min();
+            var max = carDeales.Max();
+            var minMaxDif = max - min;
+            var areaCount = 4;//количество областей
+            carDeales = carDeales.OrderBy(a => a).ToList();
+            var increment = minMaxDif / areaCount;
+            var previousValue = 0;
+            var result = new List<int>();
+            for (int i = increment; i <= minMaxDif; i += increment)
+            {
+                var areaCars = carDeales.Where(a => a > previousValue && a <= i).OrderBy(a => a).ToList();
+                var minX = areaCars.Min();
+                var maxX = areaCars.Max();
+                var minMaxDifX = max - min;
+                var areaCountX = 20;//количество областей
+                var incrementX = minMaxDif / areaCount;
+                var previousValueX = 0;
+                for (int j = incrementX; j <= minMaxDifX; j += incrementX)
+                {
+                    var count = areaCars.Where(a => a > previousValueX && a <= i).Count();
+                    result.Add(count);
+                    previousValueX = j;
+                }
+
+                previousValue = i;
+            }
+
+
+
+            var str = string.Join(",", result);
+
+        }
+
         #endregion
     }
 

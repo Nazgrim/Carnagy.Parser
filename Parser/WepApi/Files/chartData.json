@@ -1,119 +1,22 @@
 ﻿{
-   seriesData:[
-      {
-         x:0,
-         "y":49.9
-      },
-      {
-         x:1,
-         "y":71.5
-      },
-      {
-         x:2,
-         "y":106.4
-      },
-      {
-         x:3,
-         "y":129.2
-      },
-      {
-         x:4,
-         "y":144
-      },
-      {
-         x:5,
-         "y":176
-      },
-      {
-         x:6,
-         "y":150
-      },
-      {
-         x:7,
-         "y":148.5
-      },
-      {
-         x:8,
-         "y":216.4
-      },
-      {
-         x:9,
-         "y":194.1
-      },
-      {
-         x:10,
-         "y":95.6
-      },
-      {
-         x:11,
-         "y":54.4
-      }
-   ],
-   xAxisCategories:[
-      '12.200 $',
-      '13.200 $',
-      '14.200 $',
-      '15.200 $',
-      '16.200 $',
-      '17.200 $',
-      '18.200 $',
-      '19.200 $',
-      '20.200 $',
-      '21.200 $',
-      '22.200 $',
-      '23.200 $'
-   ],
-   xAxisPlotBands:[
-      {
-         chartValue:'below',
-         from:-1.5,
-         to:1.5,
-         labelBtext:'Exceptional Price',
-         labeltext:'Less than 16,200$',
+    seriesData:[
+        49.9,
+        71.5,
+        106.4,
+        129.2,
+        144,
+        176,
+        150,
+        148.5,
+        216.4,
+        194.1,
+        95.6,
+        54.4
+    ],
+    min:12200,
+    max:23200,
+    msrpPrice:12400,
+    avrPrice:17500,
+    dealerPrice:17900,
 
-      },
-      {
-         chartValue:'great',
-         from:1.5,
-         to:4.5,
-         labelBtext:'Great Price',
-         labeltext:'Less than 21,200$',
-
-      },
-      {
-         chartValue:'good',
-         from:4.5,
-         to:7.5,
-         labelBtext:'Good price',
-         labeltext:'Less than 21,200$',
-
-      },
-      {
-         chartValue:'above',
-         from:7.5,
-         to:11.5,
-         labelBtext:'Above Market',
-         labeltext:'Less than 21,200$ or more',
-
-      },
-
-   ],
-   xAxisPlotLines:[
-      {
-         width:2,
-         value:5.5,
-         labelText:'Your price'
-      },
-      {
-         color:'#00FF00',
-         width:2,
-         value:5.0,
-         labelText:'Avr. price'
-      },
-      {
-         width:2,
-         value:0.5,
-         labelText:'MSRP price'
-      }
-   ]
 }

@@ -4,9 +4,11 @@ namespace WepApi.Models
 {
     public class ChartData
     {
-        public List<ChartSeriesData> seriesData { get; set; }
-        public List<string> xAxisCategories { get; set; }
-        public List<XAxisPlotBand> xAxisPlotBands { get; set; }
-        public List<XAxisPlotLine> xAxisPlotLines { get; set; }
+        public List<double> seriesData { get; set; }
+        public int min { get; set; }
+        public int max { get; set; }
+        public int msrpPrice { get; set; }
+        public int avrPrice { get; set; }
+        public int dealerPrice { get; set; }
     }
 }

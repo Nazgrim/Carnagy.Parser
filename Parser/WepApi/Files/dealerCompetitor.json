@@ -1,79 +1,89 @@
 [
-                    {
-                        name: 'Dealer1',
-                        url: '',
-                        city: 'London',
-                        webSiteName: 'dealer.com',
-                        cars: [
-                            {
-                                year: '2017',
-                                maker: 'Ford',
-                                model: 'Fusion',
-                                bodyType: 'SUV',
-                                styleTrim: 'Premium',
-                                drivetrain: 'RWD',
-                                url: '',
-                                price: {
-                                    value: '7,325',
-                                    difference: 500,
-                                }
-                            },
-                            {
-                                year: '2017',
-                                maker: 'Ford',
-                                model: 'Fusion',
-                                bodyType: 'SUV',
-                                styleTrim: 'Premium',
-                                drivetrain: 'RWD',
-                                url: '',
-                                price: {
-                                    value: '7,325',
-                                    difference: -500,
-                                }
-                            }, {
-                                year: '2017',
-                                maker: 'Ford',
-                                model: 'Fusion',
-                                bodyType: 'SUV',
-                                styleTrim: 'Premium',
-                                drivetrain: 'RWD',
-                                url: '',
-                                price: {
-                                    value: '7,325',
-                                    difference: 500,
-                                }
-                            }, {
-                                year: '2017',
-                                maker: 'Ford',
-                                model: 'Fusion',
-                                bodyType: 'SUV',
-                                styleTrim: 'Premium',
-                                drivetrain: 'RWD',
-                                url: '',
-                                price: {
-                                    value: '7,325',
-                                    difference: -500,
-                                }
-                            }, {
-                                year: '2017',
-                                maker: 'Ford',
-                                model: 'Fusion',
-                                bodyType: 'SUV',
-                                styleTrim: 'Premium',
-                                drivetrain: 'RWD',
-                                url: '',
-                                price: {
-                                    value: '7,325',
-                                    difference: 500,
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Dealer2',
-                        url: '',
-                        city: 'London',
-                        webSiteName: 'dealer.com',
-                        cars: []
-                    }
-                ]
+    {
+        name:'Dealer1',
+        url:'',
+        city:'London',
+        webSiteName:'dealer.com',
+        cars:[
+            {
+                year:'2017',
+                maker:'Ford',
+                model:'Fusion',
+                bodyType:'SUV',
+                styleTrim:'Premium',
+                drivetrain:'RWD',
+                url:'',
+                price:{
+                    value:'7,325',
+                    difference:500,
+
+                }
+            },
+            {
+                year:'2017',
+                maker:'Ford',
+                model:'Fusion',
+                bodyType:'SUV',
+                styleTrim:'Premium',
+                drivetrain:'RWD',
+                url:'',
+                price:{
+                    value:'7,325',
+                    difference:-500,
+
+                }
+            },
+            {
+                year:'2017',
+                maker:'Ford',
+                model:'Fusion',
+                bodyType:'SUV',
+                styleTrim:'Premium',
+                drivetrain:'RWD',
+                url:'',
+                price:{
+                    value:'7,325',
+                    difference:500,
+
+                }
+            },
+            {
+                year:'2017',
+                maker:'Ford',
+                model:'Fusion',
+                bodyType:'SUV',
+                styleTrim:'Premium',
+                drivetrain:'RWD',
+                url:'',
+                price:{
+                    value:'7,325',
+                    difference:-500,
+
+                }
+            },
+            {
+                year:'2017',
+                maker:'Ford',
+                model:'Fusion',
+                bodyType:'SUV',
+                styleTrim:'Premium',
+                drivetrain:'RWD',
+                url:'',
+                price:{
+                    value:'7,325',
+                    difference:500,
+
+                }
+            }
+        ]
+    },
+    {
+        name:'Dealer2',
+        url:'',
+        city:'London',
+        webSiteName:'dealer.com',
+        cars:[
+
+        ]
+    }
+]
