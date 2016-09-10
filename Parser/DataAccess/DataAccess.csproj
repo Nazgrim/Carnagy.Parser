@@ -50,12 +50,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CarnagyContext.cs" />
+    <Compile Include="Configurations\BodyTypeConfiguration.cs" />
+    <Compile Include="Configurations\CarConfiguration.cs" />
+    <Compile Include="Configurations\DealerConfiguration.cs" />
+    <Compile Include="Configurations\DrivetrainConfiguration.cs" />
     <Compile Include="Configurations\ErrorLogConfiguration.cs" />
     <Compile Include="Configurations\FieldConfiguration.cs" />
     <Compile Include="Configurations\FieldValueConfiguration.cs" />
     <Compile Include="Configurations\MainConfigurationConfiguration.cs" />
+    <Compile Include="Configurations\MakeConfiguration.cs" />
+    <Compile Include="Configurations\ModelConfiguration.cs" />
     <Compile Include="Configurations\ParssedCarConfiguration.cs" />
     <Compile Include="Configurations\PriceConfiguration.cs" />
+    <Compile Include="Configurations\StockCarConfiguration.cs" />
+    <Compile Include="Configurations\StockCarPriceConfiguration.cs" />
+    <Compile Include="Configurations\StyleTrimConfiguration.cs" />
+    <Compile Include="Configurations\YearConfiguration.cs" />
     <Compile Include="FiledNameConstant.cs" />
     <Compile Include="Migrations\201608131138564_InitialCreate.cs" />
     <Compile Include="Migrations\201608131138564_InitialCreate.Designer.cs">
@@ -101,14 +111,48 @@
     <Compile Include="Migrations\201608201238571_AddCreateTimeToParssedCar.Designer.cs">
       <DependentUpon>201608201238571_AddCreateTimeToParssedCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609070854193_AddDealerTables.cs" />
+    <Compile Include="Migrations\201609070854193_AddDealerTables.Designer.cs">
+      <DependentUpon>201609070854193_AddDealerTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609071004231_AddImageSrcFiledToStockCar.cs" />
+    <Compile Include="Migrations\201609071004231_AddImageSrcFiledToStockCar.Designer.cs">
+      <DependentUpon>201609071004231_AddImageSrcFiledToStockCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609071036511_AddWebSiteAndLocationToDealer.cs" />
+    <Compile Include="Migrations\201609071036511_AddWebSiteAndLocationToDealer.Designer.cs">
+      <DependentUpon>201609071036511_AddWebSiteAndLocationToDealer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609071040373_AddNameToDealer.cs" />
+    <Compile Include="Migrations\201609071040373_AddNameToDealer.Designer.cs">
+      <DependentUpon>201609071040373_AddNameToDealer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609071301472_AddPriceToCar.cs" />
+    <Compile Include="Migrations\201609071301472_AddPriceToCar.Designer.cs">
+      <DependentUpon>201609071301472_AddPriceToCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609071359457_AddStocCarPriceTable.cs" />
+    <Compile Include="Migrations\201609071359457_AddStocCarPriceTable.Designer.cs">
+      <DependentUpon>201609071359457_AddStocCarPriceTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\BodyType.cs" />
+    <Compile Include="Models\Car.cs" />
+    <Compile Include="Models\Dealer.cs" />
+    <Compile Include="Models\Drivetrain.cs" />
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\FieldValue.cs" />
     <Compile Include="Models\FiledConfigurationType.cs" />
     <Compile Include="Models\MainConfiguration.cs" />
+    <Compile Include="Models\Make.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\ParssedCar.cs" />
     <Compile Include="Models\Price.cs" />
+    <Compile Include="Models\StockCar.cs" />
+    <Compile Include="Models\StockCarPrice.cs" />
+    <Compile Include="Models\StyleTrim.cs" />
+    <Compile Include="Models\Year.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\BaseRepository.cs" />
     <Compile Include="Repositories\IBaseRepository.cs" />
@@ -150,6 +194,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608201238571_AddCreateTimeToParssedCar.resx">
       <DependentUpon>201608201238571_AddCreateTimeToParssedCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609070854193_AddDealerTables.resx">
+      <DependentUpon>201609070854193_AddDealerTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609071004231_AddImageSrcFiledToStockCar.resx">
+      <DependentUpon>201609071004231_AddImageSrcFiledToStockCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609071036511_AddWebSiteAndLocationToDealer.resx">
+      <DependentUpon>201609071036511_AddWebSiteAndLocationToDealer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609071040373_AddNameToDealer.resx">
+      <DependentUpon>201609071040373_AddNameToDealer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609071301472_AddPriceToCar.resx">
+      <DependentUpon>201609071301472_AddPriceToCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609071359457_AddStocCarPriceTable.resx">
+      <DependentUpon>201609071359457_AddStocCarPriceTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

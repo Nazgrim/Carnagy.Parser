@@ -4,7 +4,7 @@ namespace WepApi.Models
 {
     public class ChartData
     {
-        public List<double> seriesData { get; set; }
+        public IEnumerable<int> seriesData { get; set; }
         public int min { get; set; }
         public int max { get; set; }
         public int msrpPrice { get; set; }

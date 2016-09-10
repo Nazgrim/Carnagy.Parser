@@ -57,6 +57,73 @@ namespace DataAccess.Migrations
                         new Field {ConfigurationType =FiledConfigurationType.Page, Name = FiledNameConstant.Description    ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecifications_ownerReviewGlance_ratingAverage_suffix']"},
                     }
                 });
+            var stockCar = new StockCar
+            {
+                Year = new Year { Value = "2017" },
+                Make = new Make { Value = "Ford" },
+                Model = new Model { Value = "Fusion" },
+                BodyType = new BodyType { Value = "SUV" },
+                Drivetrain = new Drivetrain { Value = "RWD" },
+                StyleTrim = new StyleTrim { Value = "Premium" },
+                ImageScr = "../app/img/f3q.jpg",
+                StockCarPrices = new List<StockCarPrice>
+                {
+                    new StockCarPrice { DateTime = DateTime.Now, Value =39 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(1), Value =42 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(2), Value =57 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(3), Value =85 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(4), Value =119 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(5), Value =152 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(6), Value =170 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(7), Value =166 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(8), Value =142 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(9), Value =103 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(10), Value =66 },
+                    new StockCarPrice { DateTime = DateTime.Now.AddDays(11), Value =48 }
+                }
+            };
+            context.StockCars.Add(stockCar);
+            context.Dealers.AddOrUpdate(new Dealer
+            {
+                Cars = new List<Car>
+                {
+                    new Car
+                    {
+                        Url = "dealer.com",
+                        StockCar = stockCar,
+                        Price = 7325
+                    }
+                }
+            });
+            context.Dealers.AddRange(new List<Dealer>
+            {
+                new Dealer
+                {
+                    Name = "Dealer1",
+                    Location = "London",
+                    WebSiteName = "dealer.com",
+                    WebSireUrl = "dealer.com",
+                    Cars = new List<Car>
+                    {
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                    }
+                },
+                new Dealer
+                {
+                    Name = "Dealer2",
+                    Location = "London",
+                    WebSiteName = "dealer.com",
+                    WebSireUrl = "dealer.com",
+                    Cars = new List<Car>
+                    {
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
+                    }
+                }
+            });
         }
     }
 }

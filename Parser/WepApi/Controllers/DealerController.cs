@@ -3,29 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using WepApi.Models;
+using WepApi.Service;
 
 namespace WepApi.Controllers
 {
     public class DealerController : ApiController
     {
+        private IDealerService DealerService { get; set; }
+
+        public DealerController(IDealerService dealerService)
+        {
+            DealerService = dealerService;
+        }
+        
         [HttpGet]
-        [ActionName("Dealer")]
+        [ActionName("DealerCars")]
         public IHttpActionResult GetDealer(int id)
         {
-            var dealer = GetDelearById(id);
-            if (dealer == null)
+            var dealerCars = DealerService.GetCarsByDealerId(id);
+            if (dealerCars == null)
             {
                 return NotFound();
             }
-            return Ok(dealer);
+            return Ok(dealerCars);
         }
 
-        private Dealer GetDelearById(int id)
-        {
-            return GetDealers().FirstOrDefault();             
-        }
+        
 
         #region ForTestOnly
+
+        [HttpGet]
+        [ActionName("InitBd")]
+        public IHttpActionResult InitBd()
+        {
+            var dealer = GetDelearById(1);
+            DealerService.InitBd(dealer);
+            return Ok();
+        }
+        private Dealer GetDelearById(int id)
+        {
+            return GetDealers().FirstOrDefault();
+        }
 
         private List<Dealer> GetDealers()
         {

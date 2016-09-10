@@ -1,18 +1,22 @@
 ﻿namespace WepApi.Models
 {
-    public class Car
+    public class CarViewModel
     {
-        public string url { get; set; }
-        public string fullName { get; set; }
+        public string year { get; set; }
         public string make { get; set; }
         public string model { get; set; }
-        public string kilometres { get; set; }
         public string bodyType { get; set; }
         public string styleTrim { get; set; }
+        public string drivetrain { get; set; }
+        public string price { get; set; }
+
+
+        public string url { get; set; }
+        public string fullName { get; set; }       
+        public string kilometres { get; set; }   
         public string engine { get; set; }
         public string cylinders { get; set; }
-        public string stockNumber { get; set; }
-        public string drivetrain { get; set; }
+        public string stockNumber { get; set; }     
         public string transmission { get; set; }
         public string exteriorColour { get; set; }
         public string interiorColour { get; set; }
