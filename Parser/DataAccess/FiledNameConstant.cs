@@ -10,9 +10,9 @@
         public const string Url = "Url";
         public const string Name = "Name";
         public const string Description = "Description";
-        public const string DillerName = "DillerName";
-        public const string DillerLogo = "DillerLogo";
-        public const string DillerPlace = "DillerPlace";
+        public const string DealerName = "DealerName";
+        public const string DealerLogo = "DealerLogo";
+        public const string DealerPlace = "DealerPlace";
 
         public const string Make           = "Make";
         public const string Model          = "Model";

@@ -139,6 +139,10 @@
     <Compile Include="Migrations\201609120123524_RenameParssedCar.Designer.cs">
       <DependentUpon>201609120123524_RenameParssedCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609121052197_RenamedDiller.cs" />
+    <Compile Include="Migrations\201609121052197_RenamedDiller.Designer.cs">
+      <DependentUpon>201609121052197_RenamedDiller.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BodyType.cs" />
     <Compile Include="Models\Car.cs" />
@@ -219,6 +223,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609120123524_RenameParssedCar.resx">
       <DependentUpon>201609120123524_RenameParssedCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609121052197_RenamedDiller.resx">
+      <DependentUpon>201609121052197_RenamedDiller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

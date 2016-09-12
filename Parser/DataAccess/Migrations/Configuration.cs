@@ -6,14 +6,14 @@ namespace DataAccess.Migrations
 {
     using System.Data.Entity.Migrations;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DataAccess.CarnagyContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<CarnagyContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(DataAccess.CarnagyContext context)
+        protected override void Seed(CarnagyContext context)
         {
             context.MainConfigurations.AddOrUpdate(m => m.Name,
                 new MainConfiguration
@@ -27,13 +27,13 @@ namespace DataAccess.Migrations
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.PagerCurrentPage,Xpath =  "//*[@id='ctl00_ctl00_MainContent_MainContent_pager1_pnlPagerSection']/div/div/div[2]/span[contains(@class, 'PagerCurrentPage')]/following-sibling::a",IsDefault = true},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.List,Xpath = "//*[@id='adList']/div[contains(@class, 'at_featuredResult')]",IsDefault = true},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.ImgPath,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]/img[1]",Attribute = "src"},
-                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DillerName,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "alt"},
-                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DillerLogo,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "src"},
+                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DealerName,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "alt"},
+                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DealerLogo,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "src"},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.Price,Xpath = "div[1]/div[1]/div[2]/div[2]/div[1]/text()[2]",IsDefault = true},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.Distance,Xpath = "div[1]/div[1]/div[2]/div[2]/div[2]"},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.Url,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]",Attribute = "href",IsDefault = true},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.Name,Xpath = "div[1]/div[2]/div[1]/h2[1]/a[1]/span[1]"},
-                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DillerPlace,Xpath = "div[1]/div[2]/div[2]/div[1]/div[4]"},
+                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DealerPlace,Xpath = "div[1]/div[2]/div[2]/div[1]/div[4]"},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.Description,Xpath = "div[1]/div[2]/div[1]/p[1]"},
 
                         new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Make           ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[1]/div[2]/span"},
