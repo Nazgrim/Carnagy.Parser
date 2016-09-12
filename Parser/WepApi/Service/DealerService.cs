@@ -12,6 +12,7 @@ namespace WepApi.Service
     public class DealerService : IDealerService
     {
         private IBaseRepository Repository { get; set; }
+
         public DealerService(IBaseRepository repository)
         {
             Repository = repository;
@@ -134,7 +135,7 @@ namespace WepApi.Service
         }
 
         #region ForDevelopOnly
-        public void InitBd(Dealer dealer)
+        public void InitDb(Dealer dealer)
         {
             foreach (var carViewModel in dealer.cars)
             {

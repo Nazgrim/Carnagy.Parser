@@ -29,21 +29,24 @@ namespace ParserEngine
 
         public virtual void Run()
         {
-            Repository.ClearParssed();
+            Repository.ClearParsed();
             LastUpdate = DateTime.Now;
+
             var mainConfiguration = Repository.GetMainConfigurationByName(ParserName);
             mainConfiguration.LastTimeUpdate = LastUpdate;
             Repository.SaveChanges();
             MainConfigurationId = mainConfiguration.Id;
-            var fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.List).ToList();
-            var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fileds);
-            fileds = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.Page).ToList();
-            SecondPhase(resultFirstPage, fileds);
+
+            var fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.List).ToList();
+            var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fields);
+
+            fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.Page).ToList();
+            SecondPhase(resultFirstPage, fields);
         }
 
         protected virtual List<ParssedCar> FirstPhase(string url, List<Field> fields)
         {
-            var result = new List<ParssedCar>();
+            var parsedCars = new List<ParssedCar>();
             var htmlWeb = new HtmlWeb();
             var isLastPage = false;
             var page = 0;
@@ -57,7 +60,7 @@ namespace ParserEngine
                     isLastPage = true;
                     continue;
                 }
-                result.AddRange(ParsLisCar(htmlDocument, fields));
+                parsedCars.AddRange(ParseListCars(htmlDocument, fields));
                 page++;
                 var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
                 isLastPage = pageNumberWrapper == null;
@@ -65,7 +68,7 @@ namespace ParserEngine
 
             UpdateDeleteParsedCar();
             SaveError();
-            return result;
+            return parsedCars;
         }
 
         protected virtual string GetPageUrl(string str, Dictionary<string, object> arg)
@@ -93,7 +96,7 @@ namespace ParserEngine
                         fieldValues.Add(fieldValue);
                     }
                 }
-                Repository.AddFiledsValue(fieldValues);
+                Repository.AddFieldValues(fieldValues);
             }
             SaveError();
         }
@@ -171,52 +174,46 @@ namespace ParserEngine
             return parssedCar;
         }
 
-        protected virtual List<ParssedCar> ParsLisCar(HtmlDocument htmlDocument, List<Field> fields)
+        protected virtual List<ParssedCar> ParseListCars(HtmlDocument htmlDocument, List<Field> fields)
         {
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
             var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
 
-            var parsedCars = new List<ParssedCar>();
-            foreach (var carListNode in carListNodes)
-            {
-                var parsedCar = ParseCarNode(fields, carListNode);
-                if (parsedCar != null)
-                {
-                    parsedCars.Add(parsedCar);
-                }
-            }
+            var parsedCars = carListNodes
+                .Select(node => ParseCarNode(fields, node))
+                .Where(parsedCar => parsedCar != null)
+                .ToList();
 
             var urls = parsedCars.Select(a => a.Url).ToList();
-            var parsedCarsFormDataBase =
-                Repository.GetParssedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));
+            var savedParsedCars = Repository
+                .GetParsedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));
 
-            var newCars = new List<ParssedCar>();
-            foreach (var parssedCar in parsedCars)
+            var newParsedCars = new List<ParssedCar>();
+            foreach (var parsedCar in parsedCars)
             {
-                var parsedCarFormDataBase = parsedCarsFormDataBase.FirstOrDefault(a => a.Url == parssedCar.Url);
-                if (parsedCarFormDataBase == null)
+                var savedParsedCar = savedParsedCars.FirstOrDefault(a => a.Url == parsedCar.Url);
+                if (savedParsedCar == null)
                 {
-                    newCars.Add(parssedCar);
+                    newParsedCars.Add(parsedCar);
                 }
                 else
                 {
-                    parsedCarFormDataBase.LastUpdate = LastUpdate;
+                    savedParsedCar.LastUpdate = LastUpdate;
                 }
             }
 
-            Repository.SaveParssedCar(newCars);
-            return newCars;
+            Repository.SaveParsedCar(newParsedCars);
+
+            return newParsedCars;
         }
 
         protected virtual HtmlDocument GetHtmlDocument(HtmlWeb htmlWeb, string url)
         {
-            HtmlDocument result = null;
             for (var i = 0; i < NumberOfRetries; i++)
             {
                 try
                 {
-                    result = htmlWeb.Load(url);
-                    return result;
+                    return htmlWeb.Load(url);
                 }
                 catch (WebException ex)
                 {
@@ -241,13 +238,14 @@ namespace ParserEngine
 
         protected virtual void UpdateDeleteParsedCar()
         {
-            var deleteParsedCar =
-                            Repository.GetParssedCars(
-                                a => a.MainConfigurationId == MainConfigurationId && a.LastUpdate != LastUpdate);
-            foreach (var parssedCar in deleteParsedCar)
+            var deleteParsedCar = Repository
+                .GetParsedCars(a => a.MainConfigurationId == MainConfigurationId && a.LastUpdate != LastUpdate);
+
+            foreach (var parsedCar in deleteParsedCar)
             {
-                parssedCar.IsDeleted = true;
+                parsedCar.IsDeleted = true;
             }
+
             Repository.SaveChanges();
         }
 

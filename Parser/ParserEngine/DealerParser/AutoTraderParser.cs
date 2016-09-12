@@ -41,7 +41,7 @@ namespace ParserEngine.DealerParser
                     isLastPage = true;
                     continue;
                 }
-                result.AddRange(ParsLisCar(htmlDocument, fields));
+                result.AddRange(ParseListCars(htmlDocument, fields));
                 page++;
                 var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
                 isLastPage = pageNumberWrapper == null;

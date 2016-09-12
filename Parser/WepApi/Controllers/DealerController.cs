@@ -33,13 +33,15 @@ namespace WepApi.Controllers
         #region ForTestOnly
 
         [HttpGet]
-        [ActionName("InitBd")]
-        public IHttpActionResult InitBd()
+        public IHttpActionResult InitDb()
         {
             var dealer = GetDelearById(1);
-            DealerService.InitBd(dealer);
+
+            DealerService.InitDb(dealer);
+
             return Ok();
         }
+
         private Dealer GetDelearById(int id)
         {
             return GetDealers().FirstOrDefault();

@@ -7,21 +7,28 @@ using ParserEngine.DealerParser;
 
 namespace Parser
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
+        {
+            var container = BuildContainer();
+            var parser = container.Resolve<IParser>();
+
+            parser.Run();
+
+            Console.WriteLine("Parsing is completed. Please press any key.");
+            Console.ReadKey();
+        }
+
+        private static IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+
             builder.RegisterType<BaseRepository>().As<IBaseRepository>();
             builder.RegisterType<AutoTraderParser>().As<IParser>();
-            builder
-                .RegisterType<CarnagyContext>()
-                .AsSelf();
-            var container = builder.Build();
-            var siteParser = container.Resolve<IParser>();
-            siteParser.Run();
-            Console.WriteLine("Парсинг закончился. Нажмите любую клавишу для завершения.....");
-            Console.ReadKey();
+            builder.RegisterType<CarnagyContext>().AsSelf();
+
+            return builder.Build();
         }
     }
 }

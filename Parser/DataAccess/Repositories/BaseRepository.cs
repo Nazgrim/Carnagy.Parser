@@ -9,25 +9,26 @@ namespace DataAccess.Repositories
     public class BaseRepository : IBaseRepository
     {
         private CarnagyContext Context { get; set; }
+
         public BaseRepository(CarnagyContext context)
         {
             Context = context;
         }
 
-        public void SaveParssedCar(List<ParssedCar> parssedCars)
+        public void SaveParsedCar(List<ParssedCar> parsedCars)
         {
-            Context.ParssedCars.AddRange(parssedCars);
+            Context.ParssedCars.AddRange(parsedCars);
             Context.SaveChanges();
         }
 
-        public void ClearParssed()
+        public void ClearParsed()
         {
             Context.ParssedCars.RemoveRange(Context.ParssedCars.ToList());
             Context.ErrorLogs.RemoveRange(Context.ErrorLogs.ToList());
             Context.SaveChanges();
         }
 
-        public void AddFiledsValue(List<FieldValue> fieldValues)
+        public void AddFieldValues(List<FieldValue> fieldValues)
         {
             Context.FieldValues.AddRange(fieldValues);
             Context.SaveChanges();
@@ -38,7 +39,7 @@ namespace DataAccess.Repositories
             return Context.MainConfigurations.SingleOrDefault(a => a.Name == name);
         }
 
-        public List<ParssedCar> GetParssedCars(Func<ParssedCar, bool> filter)
+        public List<ParssedCar> GetParsedCars(Func<ParssedCar, bool> filter)
         {
             return Context.ParssedCars.Where(filter).ToList();
         }

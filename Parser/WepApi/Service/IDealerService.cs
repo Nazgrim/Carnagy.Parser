@@ -6,7 +6,7 @@ namespace WepApi.Service
     public interface IDealerService
     {
         List<CarViewModel> GetCarsByDealerId(int dealerId);
-        void InitBd(Dealer dealer);
+        void InitDb(Dealer dealer);
         DealerClassInformation GetInformationById(int dealerCarId);
         ChartData GetChartDataById(int dealerCarId);
         List<DealerCompetitor> GetDealerCompetitorsById(int stockCarId, int dealerId);
