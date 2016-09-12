@@ -8,8 +8,8 @@ namespace DataAccess.Models
         public DateTime DateTime { get; set; }
         public string Value { get; set; }
 
-        public int ParssedCarId { get; set; }
+        public int ParsedCarId { get; set; }
 
-        public virtual ParssedCar ParssedCar { get; set; }
+        public virtual ParsedCar ParsedCar { get; set; }
     }
 }

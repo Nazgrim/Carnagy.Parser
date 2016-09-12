@@ -37,16 +37,16 @@ namespace ParserEngine
             Repository.SaveChanges();
             MainConfigurationId = mainConfiguration.Id;
 
-            var fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.List).ToList();
+            var fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.List).ToList();
             var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fields);
 
-            fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FiledConfigurationType.Page).ToList();
+            fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.Page).ToList();
             SecondPhase(resultFirstPage, fields);
         }
 
-        protected virtual List<ParssedCar> FirstPhase(string url, List<Field> fields)
+        protected virtual List<ParsedCar> FirstPhase(string url, List<Field> fields)
         {
-            var parsedCars = new List<ParssedCar>();
+            var parsedCars = new List<ParsedCar>();
             var htmlWeb = new HtmlWeb();
             var isLastPage = false;
             var page = 0;
@@ -76,7 +76,7 @@ namespace ParserEngine
             return str.FormatFromDictionary(arg);
         }
 
-        protected virtual void SecondPhase(List<ParssedCar> parrsedCars, List<Field> fields)
+        protected virtual void SecondPhase(List<ParsedCar> parrsedCars, List<Field> fields)
         {
             var htmlWeb = new HtmlWeb();
             foreach (var parrsedCar in parrsedCars)
@@ -92,7 +92,7 @@ namespace ParserEngine
                     var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
                     if (fieldValue != null)
                     {
-                        fieldValue.ParssedCarId = parrsedCar.Id;
+                        fieldValue.ParsedCarId = parrsedCar.Id;
                         fieldValues.Add(fieldValue);
                     }
                 }
@@ -140,9 +140,9 @@ namespace ParserEngine
             return null;
         }
 
-        protected virtual ParssedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode)
+        protected virtual ParsedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode)
         {
-            var parssedCar = new ParssedCar
+            var parsedCar = new ParsedCar
             {
                 MainConfigurationId = MainConfigurationId,
                 CreatedTime = LastUpdate,
@@ -153,7 +153,7 @@ namespace ParserEngine
             if (string.IsNullOrWhiteSpace(urlFieldValue?.Value))
                 return null;
 
-            parssedCar.Url = urlFieldValue.Value;
+            parsedCar.Url = urlFieldValue.Value;
 
             var priceField = fields.First(a => a.Name == FiledNameConstant.Price);
             var priceFieldValue = GetFieldValue(priceField, carListNode);
@@ -161,20 +161,20 @@ namespace ParserEngine
             if (priceFieldValue != null)
                 price.Value = priceFieldValue.Value;
 
-            parssedCar.Prices.Add(price);
+            parsedCar.Prices.Add(price);
 
             foreach (var field in fields.Where(a => !a.IsDefault))
             {
                 var filedValue = GetFieldValue(field, carListNode);
                 if (filedValue != null)
                 {
-                    parssedCar.FieldValues.Add(filedValue);
+                    parsedCar.FieldValues.Add(filedValue);
                 }
             }
-            return parssedCar;
+            return parsedCar;
         }
 
-        protected virtual List<ParssedCar> ParseListCars(HtmlDocument htmlDocument, List<Field> fields)
+        protected virtual List<ParsedCar> ParseListCars(HtmlDocument htmlDocument, List<Field> fields)
         {
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
             var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
@@ -188,7 +188,7 @@ namespace ParserEngine
             var savedParsedCars = Repository
                 .GetParsedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));
 
-            var newParsedCars = new List<ParssedCar>();
+            var newParsedCars = new List<ParsedCar>();
             foreach (var parsedCar in parsedCars)
             {
                 var savedParsedCar = savedParsedCars.FirstOrDefault(a => a.Url == parsedCar.Url);

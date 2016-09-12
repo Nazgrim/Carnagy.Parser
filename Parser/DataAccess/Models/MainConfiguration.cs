@@ -9,7 +9,7 @@ namespace DataAccess.Models
         {
             ErrorLogs= new List<ErrorLog>();
             Fields = new List<Field>();
-            ParssedCars= new List<ParssedCar>();
+            ParsedCars= new List<ParsedCar>();
         }
 
         public int Id { get; set; }
@@ -19,7 +19,7 @@ namespace DataAccess.Models
         public DateTime CreateTime { get; set; }
         public DateTime? LastTimeUpdate { get; set; }
 
-        public virtual ICollection<ParssedCar> ParssedCars { get; set; }
+        public virtual ICollection<ParsedCar> ParsedCars { get; set; }
         public virtual ICollection<Field> Fields { get; set; }
         public virtual ICollection<ErrorLog> ErrorLogs { get; set; }
     }

@@ -10,7 +10,7 @@ namespace DataAccess
         public DbSet<MainConfiguration> MainConfigurations { get; set; }
         public DbSet<Field> Fields { get; set; }
         public DbSet<FieldValue> FieldValues { get; set; }
-        public DbSet<ParssedCar> ParssedCars { get; set; }
+        public DbSet<ParsedCar> ParsedCars { get; set; }
         public DbSet<ErrorLog> ErrorLogs { get; set; }
         public DbSet<Price> Prices { get; set; }
 
@@ -33,7 +33,7 @@ namespace DataAccess
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new MainConfigurationConfiguration());
-            modelBuilder.Configurations.Add(new ParssedCarConfiguration());
+            modelBuilder.Configurations.Add(new ParsedCarConfiguration());
             modelBuilder.Configurations.Add(new FieldConfiguration());
             modelBuilder.Configurations.Add(new FieldValueConfiguration());
             modelBuilder.Configurations.Add(new ErrorLogConfiguration());

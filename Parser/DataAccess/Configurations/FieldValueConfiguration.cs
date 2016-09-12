@@ -7,11 +7,11 @@ namespace DataAccess.Configurations
     {
         public FieldValueConfiguration()
         {
-            HasKey(t => new {t.FieldId, t.ParssedCarId});
+            HasKey(t => new { t.FieldId, t.ParsedCarId });
 
-            HasRequired(t => t.ParssedCar)
+            HasRequired(t => t.ParsedCar)
                 .WithMany(t => t.FieldValues)
-                .HasForeignKey(d => d.ParssedCarId);
+                .HasForeignKey(d => d.ParsedCarId);
 
             HasRequired(t => t.Field)
                 .WithMany(t => t.FieldValues)

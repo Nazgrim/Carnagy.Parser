@@ -1,6 +1,6 @@
 ﻿namespace DataAccess.Models
 {
-    public enum FiledConfigurationType
+    public enum FieldConfigurationType
     {
         List,
         Page

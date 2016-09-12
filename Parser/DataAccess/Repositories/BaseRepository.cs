@@ -15,15 +15,15 @@ namespace DataAccess.Repositories
             Context = context;
         }
 
-        public void SaveParsedCar(List<ParssedCar> parsedCars)
+        public void SaveParsedCar(List<ParsedCar> parsedCars)
         {
-            Context.ParssedCars.AddRange(parsedCars);
+            Context.ParsedCars.AddRange(parsedCars);
             Context.SaveChanges();
         }
 
         public void ClearParsed()
         {
-            Context.ParssedCars.RemoveRange(Context.ParssedCars.ToList());
+            Context.ParsedCars.RemoveRange(Context.ParsedCars.ToList());
             Context.ErrorLogs.RemoveRange(Context.ErrorLogs.ToList());
             Context.SaveChanges();
         }
@@ -39,9 +39,9 @@ namespace DataAccess.Repositories
             return Context.MainConfigurations.SingleOrDefault(a => a.Name == name);
         }
 
-        public List<ParssedCar> GetParsedCars(Func<ParssedCar, bool> filter)
+        public List<ParsedCar> GetParsedCars(Func<ParsedCar, bool> filter)
         {
-            return Context.ParssedCars.Where(filter).ToList();
+            return Context.ParsedCars.Where(filter).ToList();
         }
 
         public void SaveChanges()

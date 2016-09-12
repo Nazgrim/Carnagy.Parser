@@ -25,9 +25,9 @@ namespace ParserEngine.DealerParser
         }
 
         #region ForDebugOnly
-        protected override List<ParssedCar> FirstPhase(string url, List<Field> fields)
+        protected override List<ParsedCar> FirstPhase(string url, List<Field> fields)
         {
-            var result = new List<ParssedCar>();
+            var result = new List<ParsedCar>();
             var htmlWeb = new HtmlWeb();
             var isLastPage = false;
             var page = 0;

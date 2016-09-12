@@ -6,10 +6,10 @@ namespace DataAccess.Repositories
 {
     public interface IBaseRepository
     {
-        void SaveParsedCar(List<ParssedCar> parsedCars);
+        void SaveParsedCar(List<ParsedCar> parsedCars);
         void AddFieldValues(List<FieldValue> fieldValues);
         MainConfiguration GetMainConfigurationByName(string name);
-        List<ParssedCar> GetParsedCars(Func<ParssedCar, bool> filter);
+        List<ParsedCar> GetParsedCars(Func<ParsedCar, bool> filter);
         void ClearParsed();
         void SaveChanges();
         void AddErrorLog(List<ErrorLog> errorLog);

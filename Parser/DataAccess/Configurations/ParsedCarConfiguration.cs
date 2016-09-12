@@ -3,13 +3,13 @@ using System.Data.Entity.ModelConfiguration;
 
 namespace DataAccess.Configurations
 {
-    public class ParssedCarConfiguration: EntityTypeConfiguration<ParssedCar>
+    public class ParsedCarConfiguration: EntityTypeConfiguration<ParsedCar>
     {
-        public ParssedCarConfiguration()
+        public ParsedCarConfiguration()
         {
             HasKey(t => t.Id);
             HasRequired(t => t.MainConfiguration)
-                .WithMany(t => t.ParssedCars)
+                .WithMany(t => t.ParsedCars)
                 .HasForeignKey(d => d.MainConfigurationId)
                 .WillCascadeOnDelete(false);
         }

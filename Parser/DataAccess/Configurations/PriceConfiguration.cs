@@ -8,9 +8,9 @@ namespace DataAccess.Configurations
         public PriceConfiguration()
         {
             HasKey(t => t.Id);
-            HasRequired(t => t.ParssedCar)
+            HasRequired(t => t.ParsedCar)
                 .WithMany(t => t.Prices)
-                .HasForeignKey(t => t.ParssedCarId);
+                .HasForeignKey(t => t.ParsedCarId);
         }
     }
 }

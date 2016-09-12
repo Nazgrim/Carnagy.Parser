@@ -60,7 +60,7 @@
     <Compile Include="Configurations\MainConfigurationConfiguration.cs" />
     <Compile Include="Configurations\MakeConfiguration.cs" />
     <Compile Include="Configurations\ModelConfiguration.cs" />
-    <Compile Include="Configurations\ParssedCarConfiguration.cs" />
+    <Compile Include="Configurations\ParsedCarConfiguration.cs" />
     <Compile Include="Configurations\PriceConfiguration.cs" />
     <Compile Include="Configurations\StockCarConfiguration.cs" />
     <Compile Include="Configurations\StockCarPriceConfiguration.cs" />
@@ -135,6 +135,10 @@
     <Compile Include="Migrations\201609071359457_AddStocCarPriceTable.Designer.cs">
       <DependentUpon>201609071359457_AddStocCarPriceTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609120123524_RenameParssedCar.cs" />
+    <Compile Include="Migrations\201609120123524_RenameParssedCar.Designer.cs">
+      <DependentUpon>201609120123524_RenameParssedCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BodyType.cs" />
     <Compile Include="Models\Car.cs" />
@@ -143,11 +147,11 @@
     <Compile Include="Models\ErrorLog.cs" />
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\FieldValue.cs" />
-    <Compile Include="Models\FiledConfigurationType.cs" />
+    <Compile Include="Models\FieldConfigurationType.cs" />
     <Compile Include="Models\MainConfiguration.cs" />
     <Compile Include="Models\Make.cs" />
     <Compile Include="Models\Model.cs" />
-    <Compile Include="Models\ParssedCar.cs" />
+    <Compile Include="Models\ParsedCar.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\StockCar.cs" />
     <Compile Include="Models\StockCarPrice.cs" />
@@ -212,6 +216,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609071359457_AddStocCarPriceTable.resx">
       <DependentUpon>201609071359457_AddStocCarPriceTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609120123524_RenameParssedCar.resx">
+      <DependentUpon>201609120123524_RenameParssedCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
