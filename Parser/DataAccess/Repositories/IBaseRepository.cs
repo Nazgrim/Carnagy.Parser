@@ -13,18 +13,28 @@ namespace DataAccess.Repositories
         void ClearParsed();
         void SaveChanges();
         void AddErrorLog(List<ErrorLog> errorLog);
-
-        Dealer GetDealerById(int id);
+      
         List<Car> GetCarsByDealerId(int dealerId);
-        Make GetMakersByValue(string make);       
+        Make GetMakersByValue(string make);
         Model GetModelsByValue(string model);
-        Year GetYearByValue(string year);        
+        Year GetYearByValue(string year);
         BodyType GetBodyTypeByValue(string bodyType);
-        Drivetrain GetDrivetrainsByValue(string drivetrain);       
-        StyleTrim GetStyleTrimsByValue(string styleTrim);       
-        StockCar GetStockCar(Func<StockCar, bool> filter);       
+        Drivetrain GetDrivetrainsByValue(string drivetrain);
+        StyleTrim GetStyleTrimsByValue(string styleTrim);
+        StockCar GetStockCar(Func<StockCar, bool> filter);
+        List<StockCar> GetStockCars();
         void AddCar(Car car);
 
+        Car GetCarById(int carId);
+        List<Dealer> GetDealers(Func<Dealer, bool> filter);
+        StockCar GetStockCarWithPrices(int stockCarId);
+        List<MainConfiguration> GetConfigurations();
+        void AddAdvertCar(AdvertCar advertCar);
+        void AddAdvertCarPrice(int advertCarId, int value);
+        T GetDictionaryEntity<T>(string value) where T : class, IDictionaryEntity;
+
+        //void CreateDealer(Dealer dealer);
+        //Dealer GetDealerById(int id);
         //void AddStockCar(StockCar stockCar);
         //void AddYear(Year year);
         //void AddMaker(Make make);
@@ -32,8 +42,5 @@ namespace DataAccess.Repositories
         //void AddBodyType(BodyType bodyType);
         //void AddDrivetrain(Drivetrain drivetrain);
         //void AddStyleTrim(StyleTrim styleTrim);
-        Car GetCarById(int carId);
-        List<Dealer> GetDealers(Func<Dealer, bool> filter);
-        StockCar GetStockCarWithPrices(int stockCarId);
     }
 }

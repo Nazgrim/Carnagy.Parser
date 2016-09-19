@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class Make
+    public class Make : IDictionaryEntity
     {
         public int Id { get; set; }
         public string Value { get; set; }

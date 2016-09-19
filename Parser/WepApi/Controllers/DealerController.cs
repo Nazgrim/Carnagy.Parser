@@ -33,6 +33,7 @@ namespace WepApi.Controllers
         #region ForTestOnly
 
         [HttpGet]
+        [ActionName("InitDb")]
         public IHttpActionResult InitDb()
         {
             var dealer = GetDelearById(1);

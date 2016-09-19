@@ -8,6 +8,10 @@ namespace DataAccess.Configurations
         public MainConfigurationConfiguration()
         {
             HasKey(t => t.Id);
+
+            //HasOptional(t => t.Dealer)
+            //    .WithMany(t => t.Configurations)
+            //    .HasForeignKey(d => d.DealerId);
         }
     }
 }

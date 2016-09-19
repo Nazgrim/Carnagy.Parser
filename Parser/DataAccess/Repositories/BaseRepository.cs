@@ -101,12 +101,19 @@ namespace DataAccess.Repositories
 
         public StyleTrim GetStyleTrimsByValue(string styleTrim)
         {
-            return Context.StyleTrims.FirstOrDefault(a => a.Value == styleTrim);
+            return Context.Set<StyleTrim>().FirstOrDefault(a => a.Value == styleTrim);
         }
 
         public StockCar GetStockCar(Func<StockCar, bool> filter)
         {
-            return Context.StockCars.FirstOrDefault(filter);
+            return Context.Set<StockCar>().FirstOrDefault(filter);
+        }
+
+        public List<StockCar> GetStockCars()
+        {
+            return Context.Set<StockCar>()
+                .Include(a=>a.Cars)
+                .ToList();
         }
 
         public void AddCar(Car car)
@@ -137,12 +144,42 @@ namespace DataAccess.Repositories
 
         public StockCar GetStockCarWithPrices(int stockCarId)
         {
-            return Context.StockCars
+            return Context.Set<StockCar>()
                 .Include(a => a.Make)
                 .Include(a => a.Model)
                 .Include(a => a.Year)
                 .Include(a => a.StockCarPrices)
                 .FirstOrDefault(a => a.Id == stockCarId);
+        }
+
+        public List<MainConfiguration> GetConfigurations()
+        {
+            return Context.Set<MainConfiguration>().ToList();
+        }
+
+        public void AddAdvertCar(AdvertCar advertCar)
+        {
+            Context.Set<AdvertCar>().Add(advertCar);
+            Context.SaveChanges();
+        }
+
+        public void AddAdvertCarPrice(int advertCarId, int value)
+        {
+            Context.Set<AdvertCarPrice>()
+                .Add(new AdvertCarPrice { AdvertCarId = advertCarId, Value = value, DateTime = DateTime.Now });
+            Context.SaveChanges();
+        }
+
+        public T GetDictionaryEntity<T>(string value)
+            where T : class, IDictionaryEntity
+        {
+            return Context.Set<T>().FirstOrDefault(a => a.Value == value);
+        }
+
+        public void CreateDealer(Dealer dealer)
+        {
+            Context.Set<Dealer>().Add(dealer);
+            Context.SaveChanges();
         }
     }
 }

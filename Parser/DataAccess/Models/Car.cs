@@ -1,4 +1,6 @@
-﻿namespace DataAccess.Models
+﻿using System.Collections.Generic;
+
+namespace DataAccess.Models
 {
     public class Car
     {
@@ -11,5 +13,7 @@
 
         public virtual StockCar StockCar { get; set; }
         public virtual Dealer Dealer { get; set; }
+
+        public virtual ICollection<AdvertCar> AdvertCars { get; set; }
     }
 }

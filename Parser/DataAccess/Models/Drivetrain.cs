@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class Drivetrain
+    public class Drivetrain : IDictionaryEntity
     {
         public int Id { get; set; }
         public string Value { get; set; }

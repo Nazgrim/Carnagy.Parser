@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CarnagyContext.cs" />
+    <Compile Include="Configurations\AdvertCarConfuguration.cs" />
+    <Compile Include="Configurations\AdvertCarPriceConfiguration.cs" />
     <Compile Include="Configurations\BodyTypeConfiguration.cs" />
     <Compile Include="Configurations\CarConfiguration.cs" />
     <Compile Include="Configurations\DealerConfiguration.cs" />
@@ -143,7 +145,17 @@
     <Compile Include="Migrations\201609121052197_RenamedDiller.Designer.cs">
       <DependentUpon>201609121052197_RenamedDiller.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609150828587_AddTableAdvertCar.cs" />
+    <Compile Include="Migrations\201609150828587_AddTableAdvertCar.Designer.cs">
+      <DependentUpon>201609150828587_AddTableAdvertCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609191431298_AddTableAdvertCarPrice.cs" />
+    <Compile Include="Migrations\201609191431298_AddTableAdvertCarPrice.Designer.cs">
+      <DependentUpon>201609191431298_AddTableAdvertCarPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\AdvertCar.cs" />
+    <Compile Include="Models\AdvertCarPrice.cs" />
     <Compile Include="Models\BodyType.cs" />
     <Compile Include="Models\Car.cs" />
     <Compile Include="Models\Dealer.cs" />
@@ -152,6 +164,7 @@
     <Compile Include="Models\Field.cs" />
     <Compile Include="Models\FieldValue.cs" />
     <Compile Include="Models\FieldConfigurationType.cs" />
+    <Compile Include="Models\IDictionaryEntity.cs" />
     <Compile Include="Models\MainConfiguration.cs" />
     <Compile Include="Models\Make.cs" />
     <Compile Include="Models\Model.cs" />
@@ -226,6 +239,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609121052197_RenamedDiller.resx">
       <DependentUpon>201609121052197_RenamedDiller.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609150828587_AddTableAdvertCar.resx">
+      <DependentUpon>201609150828587_AddTableAdvertCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609191431298_AddTableAdvertCarPrice.resx">
+      <DependentUpon>201609191431298_AddTableAdvertCarPrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

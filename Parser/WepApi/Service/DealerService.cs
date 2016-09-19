@@ -140,7 +140,7 @@ namespace WepApi.Service
             foreach (var carViewModel in dealer.cars)
             {
                 var maker = Repository.GetMakersByValue(carViewModel.bodyType) ??
-                            new Make { Value = carViewModel.bodyType };
+                            new Make { Value = carViewModel.make };
 
                 var model = Repository.GetModelsByValue(carViewModel.model) ??
                             new Model { Value = carViewModel.model };
@@ -163,8 +163,7 @@ namespace WepApi.Service
                 a.BodyTypeId == bodyType.Id &&
                 a.StyleTrimId == styleTrim.Id &&
                 a.DrivetrainId == drivetrain.Id;
-
-                var car = new Car { DealerId = 1 };
+               
                 var stockCar = Repository.GetStockCar(filter) ?? new StockCar
                 {
                     Year = year,
@@ -174,8 +173,12 @@ namespace WepApi.Service
                     Drivetrain = drivetrain,
                     StyleTrim = styleTrim,
                 };
-                car.StockCar = stockCar;
-                car.Url = carViewModel.url;
+                var car = new Car
+                {
+                    DealerId = 1,
+                    StockCar = stockCar,
+                    Url = carViewModel.url
+                };
                 var price = 0;
                 int.TryParse(carViewModel.dealerAdvertisedPrice, out price);
                 car.Price = price;

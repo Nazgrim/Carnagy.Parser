@@ -14,6 +14,7 @@
         public const string DealerLogo = "DealerLogo";
         public const string DealerPlace = "DealerPlace";
 
+        public const string Year           = "Year";
         public const string Make           = "Make";
         public const string Model          = "Model";
         public const string Kilometres     = "Kilometres";

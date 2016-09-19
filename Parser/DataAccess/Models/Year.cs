@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class Year
+    public class Year : IDictionaryEntity
     {
         public int Id { get; set; }
         public string Value { get; set; }

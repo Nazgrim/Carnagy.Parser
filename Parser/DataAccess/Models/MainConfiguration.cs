@@ -19,6 +19,10 @@ namespace DataAccess.Models
         public DateTime CreateTime { get; set; }
         public DateTime? LastTimeUpdate { get; set; }
 
+        public int? DealerId { get; set; }
+
+        public virtual Dealer Dealer { get; set; }
+
         public virtual ICollection<ParsedCar> ParsedCars { get; set; }
         public virtual ICollection<Field> Fields { get; set; }
         public virtual ICollection<ErrorLog> ErrorLogs { get; set; }

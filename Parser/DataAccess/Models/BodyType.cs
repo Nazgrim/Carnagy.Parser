@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class BodyType
+    public class BodyType : IDictionaryEntity
     {
         public int Id { get; set; }
         public string Value { get; set; }

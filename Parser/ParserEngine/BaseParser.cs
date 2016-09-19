@@ -35,6 +35,7 @@ namespace ParserEngine
             var mainConfiguration = Repository.GetMainConfigurationByName(ParserName);
             mainConfiguration.LastTimeUpdate = LastUpdate;
             Repository.SaveChanges();
+
             MainConfigurationId = mainConfiguration.Id;
 
             var fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.List).ToList();

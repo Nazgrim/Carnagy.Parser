@@ -24,6 +24,8 @@ namespace DataAccess
         public DbSet<StockCar> StockCars { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<StockCarPrice> StockCarPrices { get; set; }
+        public DbSet<AdvertCar> AdvertCars { get; set; }
+        public DbSet<AdvertCarPrice> AdvertCarPrices { get; set; }
 
 
         public CarnagyContext() : base("DefaultConnection")
@@ -49,6 +51,9 @@ namespace DataAccess
             modelBuilder.Configurations.Add(new StockCarConfiguration());
             modelBuilder.Configurations.Add(new CarConfiguration());
             modelBuilder.Configurations.Add(new StockCarPriceConfiguration());
+
+            modelBuilder.Configurations.Add(new AdvertCarConfuguration());
+            modelBuilder.Configurations.Add(new AdvertCarPriceConfiguration());
         }
     }
 }
