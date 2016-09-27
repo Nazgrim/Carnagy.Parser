@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using DataAccess.Repositories;
 using DataAccess.Models;
@@ -8,6 +9,7 @@ using DataAccess;
 using ParserEngine.Extensions;
 using System.Threading;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace ParserEngine
 {
@@ -20,6 +22,7 @@ namespace ParserEngine
         protected DateTime LastUpdate;
         protected const int NumberOfRetries = 3;
         protected const int DelayOnRetry = 1000;
+        private Stopwatch Stopwatch { get; set; }
 
         public BaseParser(IBaseRepository repository, string parserName)
         {
@@ -31,7 +34,8 @@ namespace ParserEngine
         {
             Repository.ClearParsed();
             LastUpdate = DateTime.Now;
-
+            Stopwatch = new Stopwatch();
+            Stopwatch.Start();
             var mainConfiguration = Repository.GetMainConfigurationByName(ParserName);
             mainConfiguration.LastTimeUpdate = LastUpdate;
             Repository.SaveChanges();
@@ -43,6 +47,12 @@ namespace ParserEngine
 
             fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.Page).ToList();
             SecondPhase(resultFirstPage, fields);
+            Stopwatch.Stop();
+        }
+
+        protected virtual void WriteToLog(string value)
+        {
+            Console.WriteLine("Time:{0} , Value:{1}", Stopwatch.Elapsed, value);
         }
 
         protected virtual List<ParsedCar> FirstPhase(string url, List<Field> fields)
@@ -50,7 +60,7 @@ namespace ParserEngine
             var parsedCars = new List<ParsedCar>();
             var htmlWeb = new HtmlWeb();
             var isLastPage = false;
-            var page = 0;
+            var page = 1;
             var pagerCurrentPageField = fields.First(a => a.Name == FiledNameConstant.PagerCurrentPage);
             while (!isLastPage)
             {
@@ -80,64 +90,93 @@ namespace ParserEngine
         protected virtual void SecondPhase(List<ParsedCar> parrsedCars, List<Field> fields)
         {
             var htmlWeb = new HtmlWeb();
-            foreach (var parrsedCar in parrsedCars)
+            var fieldValues = new List<FieldValue>();
+            Parallel.ForEach(parrsedCars, new ParallelOptions {MaxDegreeOfParallelism = 8}, parrsedCar =>
             {
+                //    foreach (var parrsedCar in parrsedCars)
+                //{
                 var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
                 if (htmlDocument == null)
                 {
-                    continue;
+                    WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
+                    parrsedCar.Status = ParsedCarStatus.LoadPageError;
+
+                    return;
+                    //continue;
                 }
-                var fieldValues = new List<FieldValue>();
+
+
                 foreach (var field in fields.Where(a => !a.IsDefault))
                 {
                     var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
                     if (fieldValue != null)
                     {
-                        fieldValue.ParsedCarId = parrsedCar.Id;
+                        fieldValue.ParsedCar = parrsedCar;
                         fieldValues.Add(fieldValue);
                     }
+                    else
+                    {
+                        WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
+                    }
                 }
+                if (fieldValues.Any())
+                {
+                    parrsedCar.Status = ParsedCarStatus.Page;
+                }
+
+                Thread.Sleep(1000);
+                //}
+            });
+
+            if (fieldValues.Any())
+            {
                 Repository.AddFieldValues(fieldValues);
             }
+            Repository.SaveChanges();
             SaveError();
         }
 
         protected virtual FieldValue GetFieldValue(Field field, HtmlNode carListNode, string url = "")
         {
-            try
+            var filedValue = new FieldValue { Field = field };
+            var xpaths = field.Xpath.Split(',');
+            foreach (var xpath in xpaths)
             {
-                var filedValue = new FieldValue { FieldId = field.Id };
-                if (string.IsNullOrWhiteSpace(field.Attribute))
+                try
                 {
-                    filedValue.Value = carListNode.SelectSingleNode(field.Xpath).InnerText.Trim();
+                    if (string.IsNullOrWhiteSpace(field.Attribute))
+                    {
+                        filedValue.Value = carListNode.SelectSingleNode(xpath).InnerText.Trim();
+                    }
+                    else
+                    {
+                        filedValue.Value = carListNode.SelectSingleNode(xpath).GetAttributeValue(field.Attribute, string.Empty).Trim();
+                    }
+                    return filedValue;
                 }
-                else
+                catch (Exception ex)
                 {
-                    filedValue.Value = carListNode.SelectSingleNode(field.Xpath).GetAttributeValue(field.Attribute, string.Empty).Trim();
+                    string errorMessage = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(url))//нельзя сохранять всю html страницу
+                    {
+                        errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nUrl:{2}\nInnerExeption{3}",
+                        field.Id,
+                        ex.Message,
+                        url,
+                        ex.InnerException?.Message ?? string.Empty);
+                    }
+                    else
+                    {
+                        errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nInnerHtml:{2}\nInnerExeption{3}",
+                        field.Id,
+                        ex.Message,
+                        carListNode.InnerHtml,
+                        ex.InnerException?.Message ?? string.Empty);
+                    }
+                    Log(errorMessage);
                 }
-                return filedValue;
             }
-            catch (Exception ex)
-            {
-                string errorMessage = string.Empty;
-                if (!string.IsNullOrWhiteSpace(url))//нельзя сохранять всю html страницу
-                {
-                    errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nUrl:{2}\nInnerExeption{3}",
-                    field.Id,
-                    ex.Message,
-                    url,
-                    ex.InnerException?.Message ?? string.Empty);
-                }
-                else
-                {
-                    errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nInnerHtml:{2}\nInnerExeption{3}",
-                    field.Id,
-                    ex.Message,
-                    carListNode.InnerHtml,
-                    ex.InnerException?.Message ?? string.Empty);
-                }
-                Log(errorMessage);
-            }
+
             return null;
         }
 
@@ -147,12 +186,16 @@ namespace ParserEngine
             {
                 MainConfigurationId = MainConfigurationId,
                 CreatedTime = LastUpdate,
-                LastUpdate = LastUpdate
+                LastUpdate = LastUpdate,
+                Status = ParsedCarStatus.List
             };
             var urlField = fields.First(a => a.Name == FiledNameConstant.Url);
             var urlFieldValue = GetFieldValue(urlField, carListNode);
             if (string.IsNullOrWhiteSpace(urlFieldValue?.Value))
+            {
+                WriteToLog("Не удалось распарсить url");
                 return null;
+            }
 
             parsedCar.Url = urlFieldValue.Value;
 
@@ -171,7 +214,12 @@ namespace ParserEngine
                 {
                     parsedCar.FieldValues.Add(filedValue);
                 }
+                else
+                {
+                    //WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
+                }
             }
+
             return parsedCar;
         }
 
@@ -179,20 +227,24 @@ namespace ParserEngine
         {
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
             var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
+            WriteToLog($"Машин на странице:{carListNodes.Count}");
 
             var parsedCars = carListNodes
                 .Select(node => ParseCarNode(fields, node))
                 .Where(parsedCar => parsedCar != null)
                 .ToList();
 
+            WriteToLog($"Удалось распарсить:{parsedCars.Count}");
+
             var urls = parsedCars.Select(a => a.Url).ToList();
             var savedParsedCars = Repository
                 .GetParsedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));
 
             var newParsedCars = new List<ParsedCar>();
+
             foreach (var parsedCar in parsedCars)
             {
-                var savedParsedCar = savedParsedCars.FirstOrDefault(a => a.Url == parsedCar.Url);
+                var savedParsedCar = savedParsedCars.FirstOrDefault(a => a.Url == parsedCar.Url);// потенциальный дубляж
                 if (savedParsedCar == null)
                 {
                     newParsedCars.Add(parsedCar);

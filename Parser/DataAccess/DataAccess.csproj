@@ -153,6 +153,38 @@
     <Compile Include="Migrations\201609191431298_AddTableAdvertCarPrice.Designer.cs">
       <DependentUpon>201609191431298_AddTableAdvertCarPrice.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609230824299_AddLogoFieldInDealer.cs" />
+    <Compile Include="Migrations\201609230824299_AddLogoFieldInDealer.Designer.cs">
+      <DependentUpon>201609230824299_AddLogoFieldInDealer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609230827219_AddIsCreatedFieldInDealer.cs" />
+    <Compile Include="Migrations\201609230827219_AddIsCreatedFieldInDealer.Designer.cs">
+      <DependentUpon>201609230827219_AddIsCreatedFieldInDealer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609230852142_ChangeTypeOfPriceInCar.cs" />
+    <Compile Include="Migrations\201609230852142_ChangeTypeOfPriceInCar.Designer.cs">
+      <DependentUpon>201609230852142_ChangeTypeOfPriceInCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609230900244_ChangeTypeOfValueInAdvertCarPrice.cs" />
+    <Compile Include="Migrations\201609230900244_ChangeTypeOfValueInAdvertCarPrice.Designer.cs">
+      <DependentUpon>201609230900244_ChangeTypeOfValueInAdvertCarPrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609240918175_AddStocNumberFieldInCar.cs" />
+    <Compile Include="Migrations\201609240918175_AddStocNumberFieldInCar.Designer.cs">
+      <DependentUpon>201609240918175_AddStocNumberFieldInCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609240952559_ChangeRelationTypeInAdvertCar.cs" />
+    <Compile Include="Migrations\201609240952559_ChangeRelationTypeInAdvertCar.Designer.cs">
+      <DependentUpon>201609240952559_ChangeRelationTypeInAdvertCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609250910577_AddStatusFieldInParsedCar.cs" />
+    <Compile Include="Migrations\201609250910577_AddStatusFieldInParsedCar.Designer.cs">
+      <DependentUpon>201609250910577_AddStatusFieldInParsedCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609251322020_AddPriceInStockCar.cs" />
+    <Compile Include="Migrations\201609251322020_AddPriceInStockCar.Designer.cs">
+      <DependentUpon>201609251322020_AddPriceInStockCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -169,6 +201,7 @@
     <Compile Include="Models\Make.cs" />
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\ParsedCar.cs" />
+    <Compile Include="Models\ParsedCarStatus.cs" />
     <Compile Include="Models\Price.cs" />
     <Compile Include="Models\StockCar.cs" />
     <Compile Include="Models\StockCarPrice.cs" />
@@ -245,6 +278,30 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609191431298_AddTableAdvertCarPrice.resx">
       <DependentUpon>201609191431298_AddTableAdvertCarPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609230824299_AddLogoFieldInDealer.resx">
+      <DependentUpon>201609230824299_AddLogoFieldInDealer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609230827219_AddIsCreatedFieldInDealer.resx">
+      <DependentUpon>201609230827219_AddIsCreatedFieldInDealer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609230852142_ChangeTypeOfPriceInCar.resx">
+      <DependentUpon>201609230852142_ChangeTypeOfPriceInCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609230900244_ChangeTypeOfValueInAdvertCarPrice.resx">
+      <DependentUpon>201609230900244_ChangeTypeOfValueInAdvertCarPrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609240918175_AddStocNumberFieldInCar.resx">
+      <DependentUpon>201609240918175_AddStocNumberFieldInCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609240952559_ChangeRelationTypeInAdvertCar.resx">
+      <DependentUpon>201609240952559_ChangeRelationTypeInAdvertCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609250910577_AddStatusFieldInParsedCar.resx">
+      <DependentUpon>201609250910577_AddStatusFieldInParsedCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609251322020_AddPriceInStockCar.resx">
+      <DependentUpon>201609251322020_AddPriceInStockCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

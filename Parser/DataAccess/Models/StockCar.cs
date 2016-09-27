@@ -19,6 +19,7 @@ namespace DataAccess.Models
         public int BodyTypeId { get; set; }
         public int StyleTrimId { get; set; }
         public int DrivetrainId { get; set; }
+        public double Price { get; set; }
 
         public virtual Year Year { get; set; }
         public virtual Model Model { get; set; }

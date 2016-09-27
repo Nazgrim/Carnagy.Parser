@@ -29,10 +29,10 @@ namespace DataAccess.Repositories
         List<Dealer> GetDealers(Func<Dealer, bool> filter);
         StockCar GetStockCarWithPrices(int stockCarId);
         List<MainConfiguration> GetConfigurations();
-        void AddAdvertCar(AdvertCar advertCar);
-        void AddAdvertCarPrice(int advertCarId, int value);
+        void CreateAdvertCar(AdvertCar advertCar);
+        void AddAdvertCarPrice(int advertCarId, double value, DateTime now);
         T GetDictionaryEntity<T>(string value) where T : class, IDictionaryEntity;
-
+        List<T> GetDictionaryEntity<T>() where T : class, IDictionaryEntity;
         //void CreateDealer(Dealer dealer);
         //Dealer GetDealerById(int id);
         //void AddStockCar(StockCar stockCar);
@@ -42,5 +42,12 @@ namespace DataAccess.Repositories
         //void AddBodyType(BodyType bodyType);
         //void AddDrivetrain(Drivetrain drivetrain);
         //void AddStyleTrim(StyleTrim styleTrim);
+        Dealer GetDealerByName(string name);
+        void CreateDealer(Dealer dealer);
+        void CreateDictionary<T>(T dictionary) where T : class, IDictionaryEntity;
+        void CreateStockCar(StockCar stockCar);
+        Car GetCar(int stockCarId, int dealerId, string stockNumber);
+        void CreateCar(Car car);
+        AdvertCar GetDealerAdvertCar(int carId);
     }
 }

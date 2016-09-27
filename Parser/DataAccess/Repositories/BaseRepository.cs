@@ -30,8 +30,10 @@ namespace DataAccess.Repositories
 
         public void AddFieldValues(List<FieldValue> fieldValues)
         {
-            Context.FieldValues.AddRange(fieldValues);
-            Context.SaveChanges();
+            foreach (var fieldValue in fieldValues)
+            {
+                Context.FieldValues.Add(fieldValue);
+            }           
         }
 
         public MainConfiguration GetMainConfigurationByName(string name)
@@ -112,7 +114,7 @@ namespace DataAccess.Repositories
         public List<StockCar> GetStockCars()
         {
             return Context.Set<StockCar>()
-                .Include(a=>a.Cars)
+                .Include(a => a.Cars)
                 .ToList();
         }
 
@@ -157,16 +159,16 @@ namespace DataAccess.Repositories
             return Context.Set<MainConfiguration>().ToList();
         }
 
-        public void AddAdvertCar(AdvertCar advertCar)
+        public void CreateAdvertCar(AdvertCar advertCar)
         {
             Context.Set<AdvertCar>().Add(advertCar);
             Context.SaveChanges();
         }
 
-        public void AddAdvertCarPrice(int advertCarId, int value)
+        public void AddAdvertCarPrice(int advertCarId, double value, DateTime now)
         {
             Context.Set<AdvertCarPrice>()
-                .Add(new AdvertCarPrice { AdvertCarId = advertCarId, Value = value, DateTime = DateTime.Now });
+                .Add(new AdvertCarPrice { AdvertCarId = advertCarId, Value = value, DateTime = now });
             Context.SaveChanges();
         }
 
@@ -176,10 +178,48 @@ namespace DataAccess.Repositories
             return Context.Set<T>().FirstOrDefault(a => a.Value == value);
         }
 
+        public List<T> GetDictionaryEntity<T>() where T : class, IDictionaryEntity
+        {
+            return Context.Set<T>().ToList();
+        }
+
+        public Dealer GetDealerByName(string name)
+        {
+            return Context.Set<Dealer>().FirstOrDefault(a => a.Name == name);
+        }
+
         public void CreateDealer(Dealer dealer)
         {
             Context.Set<Dealer>().Add(dealer);
             Context.SaveChanges();
+        }
+
+        public void CreateDictionary<T>(T dictionary) where T : class, IDictionaryEntity
+        {
+            Context.Set<T>().Add(dictionary);
+            Context.SaveChanges();
+        }
+
+        public void CreateStockCar(StockCar stockCar)
+        {
+            Context.Set<StockCar>().Add(stockCar);
+            Context.SaveChanges();
+        }
+
+        public Car GetCar(int stockCarId, int dealerId, string stockNumber)
+        {
+            return Context.Set<Car>().FirstOrDefault(a => a.StockCarId == stockCarId && a.DealerId == dealerId && a.StockNumber == stockNumber);
+        }
+
+        public void CreateCar(Car car)
+        {
+            Context.Set<Car>().Add(car);
+            Context.SaveChanges();
+        }
+
+        public AdvertCar GetDealerAdvertCar(int carId)
+        {
+            return Context.Set<AdvertCar>().FirstOrDefault(a => a.CarId == carId && a.IsDealer);
         }
     }
 }

@@ -2,6 +2,10 @@
 {
     public class CarViewModel
     {
+        public int id { get; set; }
+        public int stockCarId { get; set; }
+
+
         public string year { get; set; }
         public string make { get; set; }
         public string model { get; set; }

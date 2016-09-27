@@ -1,4 +1,5 @@
-﻿using DataAccess.Models;
+﻿using System;
+using DataAccess.Models;
 using DataAccess.Repositories;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,11 @@ namespace ParserEngine.DealerParser
 
         protected override string GetPageUrl(string format, Dictionary<string, object> arg)
         {
-            var displayCarInPage = 15;
+            var displayCarInPage = 100;
             var radius = "-1";
-            var url = "http://www.autotrader.ca/";
             return string.Format(
-                        "{3}/cars/?prx={0}&rcs={1}&rcp={2}&adtype=Dealer&sts=New&showcpo=1&hprc=True&wcp=False",
-                        radius, (int)arg["page"] * displayCarInPage, displayCarInPage, url);
+                        "{0}/?prx={1}&rcs={2}&rcp={3}&adtype=Dealer&sts=New&showcpo=1&hprc=True&wcp=False",
+                        format, radius, (int)arg["page"] * displayCarInPage, displayCarInPage);
         }
 
         #region ForDebugOnly
@@ -32,19 +32,29 @@ namespace ParserEngine.DealerParser
             var isLastPage = false;
             var page = 0;
             var pagerCurrentPageField = fields.First(a => a.Name == FiledNameConstant.PagerCurrentPage);
-            while (!isLastPage && page < 3)
+
+            var listMakers = new List<string> {"chevrolet", "buick", "GMC"};
+
+            foreach (var maker in listMakers.Where(a=>a== "buick"))
             {
-                var pageUrl = GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
-                var htmlDocument = GetHtmlDocument(htmlWeb, pageUrl);
-                if (htmlDocument == null)
+                url =
+                    $"http://wwwa.autotrader.ca/cars/{maker}";
+                while (!isLastPage && page < 1)
                 {
-                    isLastPage = true;
-                    continue;
+                    WriteToLog("Страница " + page);
+                    var pageUrl = GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
+                    var htmlDocument = GetHtmlDocument(htmlWeb, pageUrl);
+                    if (htmlDocument == null)
+                    {
+                        WriteToLog("Последняя страница");
+                        isLastPage = true;
+                        continue;
+                    }
+                    result.AddRange(ParseListCars(htmlDocument, fields));
+                    page++;
+                    var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
+                    isLastPage = pageNumberWrapper == null;
                 }
-                result.AddRange(ParseListCars(htmlDocument, fields));
-                page++;
-                var pageNumberWrapper = htmlDocument.DocumentNode.SelectSingleNode(pagerCurrentPageField.Xpath);
-                isLastPage = pageNumberWrapper == null;
             }
 
             UpdateDeleteParsedCar();

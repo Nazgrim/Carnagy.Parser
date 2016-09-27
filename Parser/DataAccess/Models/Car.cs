@@ -6,7 +6,8 @@ namespace DataAccess.Models
     {
         public int Id { get; set; }
         public string Url { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
+        public string StockNumber { get; set; }
 
         public int StockCarId { get; set; }
         public int DealerId { get; set; }

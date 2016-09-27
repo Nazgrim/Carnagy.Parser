@@ -14,6 +14,8 @@ namespace DataAccess.Models
         public string WebSireUrl { get; set; }
         public string WebSiteName { get; set; }
         public string Name { get; set; }
+        public string Logo { get; set; }
+        public bool IsCreated { get; set; }
 
         public virtual ICollection<MainConfiguration> Configurations { get; set; }
         public virtual ICollection<Car> Cars { get; set; }

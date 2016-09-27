@@ -9,6 +9,7 @@ namespace DataAccess.Models
         {
             FieldValues = new List<FieldValue>();
             Prices = new List<Price>();
+            AdvertCars = new List<AdvertCar>();
         }
 
         public int Id { get; set; }
@@ -17,11 +18,12 @@ namespace DataAccess.Models
         public DateTime LastUpdate { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsParsed { get; set; }
+        public ParsedCarStatus Status { get; set; }
 
         public int MainConfigurationId { get; set; }
 
         public virtual MainConfiguration MainConfiguration { get; set; }
-        public virtual AdvertCar AdvertCar { get; set; }
+        public virtual ICollection<AdvertCar> AdvertCars { get; set; }
         public virtual ICollection<FieldValue> FieldValues { get; set; }
         public virtual ICollection<Price> Prices { get; set; }
 

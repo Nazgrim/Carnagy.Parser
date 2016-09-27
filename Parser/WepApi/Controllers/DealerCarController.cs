@@ -17,9 +17,9 @@ namespace WepApi.Controllers
 
         [HttpGet]
         [ActionName("Information")]
-        public IHttpActionResult GetCarInformation(int dealerCarId)
+        public IHttpActionResult GetCarInformation(int carId)
         {
-            var information = DealerService.GetInformationById(dealerCarId);
+            var information = DealerService.GetInformationById(carId);
             if (information == null)
             {
                 return NotFound();
@@ -29,9 +29,9 @@ namespace WepApi.Controllers
 
         [HttpGet]
         [ActionName("ChartData")]
-        public IHttpActionResult GetChartData(int dealerCarId)
+        public IHttpActionResult GetChartData(int carId)
         {
-            var chartData = DealerService.GetChartDataById(dealerCarId);
+            var chartData = DealerService.GetChartDataById(carId);
             if (chartData == null)
             {
                 return NotFound();
@@ -81,14 +81,6 @@ namespace WepApi.Controllers
             var filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files/similarCars.json");
             string json = System.IO.File.ReadAllText(filePath);
             var result = JsonConvert.DeserializeObject<List<SimilarCar>>(json);
-            return result;
-        }
-
-        private PriceTrend GetPriceTrendById(int dealerCarId)
-        {
-            var filePath = System.Web.Hosting.HostingEnvironment.MapPath("~/Files/priceTrend.json");
-            string json = System.IO.File.ReadAllText(filePath);
-            var result = JsonConvert.DeserializeObject<PriceTrend>(json);
             return result;
         }
         #endregion

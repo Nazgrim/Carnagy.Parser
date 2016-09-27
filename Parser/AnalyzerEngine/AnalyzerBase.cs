@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using DataAccess;
 using DataAccess.Models;
@@ -25,12 +26,13 @@ namespace AnalyzerEngine
         private void Analyze()
         {
             var configuration = Repository.GetConfigurations();
-            AnalyzeDealerConfiguration(configuration);
+            //AnalyzeDealerConfiguration(configuration);
             AnalyzeAutotraderConfiguration(configuration);
         }
 
         private void AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
         {
+            var now = DateTime.Now;
             var dealerConfiguration = configuration.Where(a => a.DealerId.HasValue);
             foreach (var mainConfiguration in dealerConfiguration)
             {
@@ -39,14 +41,14 @@ namespace AnalyzerEngine
                     var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
                     if (parssedCar.IsParsed)
                     {
-                        parssedCar.AdvertCar.Car.Price = priceValue;
-                        Repository.AddAdvertCarPrice(parssedCar.Id, priceValue);
+                        parssedCar.AdvertCars.First().Car.Price = priceValue;
+                        Repository.AddAdvertCarPrice(parssedCar.Id, priceValue, now);
                     }
                     else
                     {
                         parssedCar.IsParsed = true;
                         var advertCar = GetAdvertCar(parssedCar, priceValue, mainConfiguration.Dealer);
-                        Repository.AddAdvertCar(advertCar);
+                        Repository.CreateAdvertCar(advertCar);
                     }
                 }
 
@@ -55,21 +57,29 @@ namespace AnalyzerEngine
 
         private void AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
         {
-            var autotraderConfiguration = configuration.Where(a => a.DealerId.HasValue);
+            var autotraderConfiguration = configuration.Where(a => !a.DealerId.HasValue);
 
             foreach (var mainConfiguration in autotraderConfiguration)
             {
                 foreach (var parssedCar in mainConfiguration.ParsedCars.Where(a => !a.IsDeleted))
                 {
+                    var dealerName = GetValue(parssedCar.FieldValues, FiledNameConstant.DealerName); ;
+                    if (dealerName == null)
+                        continue;
+
+                    var dealer = GetOrCreateDealer(parssedCar, dealerName);
+
+
+
                     #region MoreDifficultWay
                     //create relation between dealer advert and autortrader advert 
                     //var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
-                    //var dealer = GetDealer();
+
                     //if (dealer.Id == 0)
                     //{
                     //    Repository.CreateDealer(dealer);
-                    //    var advertCar = GetAdvertCar(mainConfiguration, parssedCar, priceValue, dealer);
-                    //    Repository.AddAdvertCar(advertCar);
+                    //    var advertCar = GetDealerAdvertCar(mainConfiguration, parssedCar, priceValue, dealer);
+                    //    Repository.CreateAdvertCar(advertCar);
                     //}
                     //else
                     //{
@@ -77,9 +87,23 @@ namespace AnalyzerEngine
                     //    //var advertCar=car.AdvertCars.w
                     //}
                     #endregion
-                    var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
-                    var advertCar = GetAdvertCar(parssedCar, priceValue);
-                    Repository.AddAdvertCar(advertCar);
+
+                    var price = parssedCar.Prices
+                        .OrderByDescending(a => a.DateTime)
+                        .FirstOrDefault()?.Value ?? string.Empty;
+
+                    var priceValue = 0.0;
+                    if (!double.TryParse(price, NumberStyles.Currency, CultureInfo.CreateSpecificCulture("eu-US"), out priceValue))
+                        continue;
+
+                    var advertCar = GetAdvertCar(parssedCar, priceValue, dealer);
+                    if (advertCar != null)
+                        Repository.CreateAdvertCar(advertCar);
+                    else
+
+                    {
+                        Console.WriteLine("Не удалось распарсить");
+                    }
                 }
             }
         }
@@ -87,29 +111,57 @@ namespace AnalyzerEngine
         private void Сalculation()
         {
             var stockCars = Repository.GetStockCars();
-            var timeStart= DateTime.Now;
+            var timeStart = DateTime.Now;
             foreach (var stockCar in stockCars)
             {
-                stockCar.StockCarPrices.Add(new StockCarPrice
+                if (stockCar.Cars.Any())
                 {
-                    DateTime = timeStart,
-                    Value = (int)stockCar.Cars.Average(a => a.Price)
-                }); 
+                    stockCar.StockCarPrices.Add(new StockCarPrice
+                    {
+                        DateTime = timeStart,
+                        Value = (int)stockCar.Cars.Average(a => a.Price)
+                    });
+                }                
             }
             Repository.SaveChanges();
         }
 
-        private Dealer GetDealer()
+        private Dealer GetOrCreateDealer(ParsedCar parssedCar, string dealerName)
         {
-            return new Dealer();
+            var dealer = Repository.GetDealerByName(dealerName);
+
+            if (dealer != null) return dealer;
+
+            var dealerLogo = GetValue(parssedCar.FieldValues, FiledNameConstant.DealerLogo);
+            var dealerPlace = GetValue(parssedCar.FieldValues, FiledNameConstant.DealerPlace);
+            dealer = new Dealer
+            {
+                Location = dealerPlace,
+                Logo = dealerLogo,
+                Name = dealerName,
+                IsCreated = false
+            };
+            Repository.CreateDealer(dealer);
+
+            return dealer;
         }
 
         private string GetValue(IEnumerable<FieldValue> fieldValues, string key)
         {
             return fieldValues.SingleOrDefault(a => a.Field.Name == key)?.Value;
         }
+        private T GetDictionaryOrCreateEntity<T>(string value) where T : class, IDictionaryEntity, new()
+        {
+            var dictionary = Repository.GetDictionaryEntity<T>(value);
+            if (dictionary != null)
+                return dictionary;
 
-        private T GetDictionaryEntity<T>(ParsedCar parssedCar, string key) where T : class, IDictionaryEntity, new()
+            dictionary = new T { Value = value };
+            Repository.CreateDictionary(dictionary);
+
+            return dictionary;
+        }
+        private T GetDictionaryOrCreateEntity<T>(ParsedCar parssedCar, string key) where T : class, IDictionaryEntity, new()
         {
             var value = GetValue(parssedCar.FieldValues, key);
             if (value == null)
@@ -119,24 +171,49 @@ namespace AnalyzerEngine
 
         private StockCar GetStockCar(ParsedCar parssedCar)
         {
-            var maker = GetDictionaryEntity<Make>(parssedCar, FiledNameConstant.Make);
-            var model = GetDictionaryEntity<Model>(parssedCar, FiledNameConstant.Model);
-            var year = GetDictionaryEntity<Year>(parssedCar, FiledNameConstant.Year);
-            var bodyType = GetDictionaryEntity<BodyType>(parssedCar, FiledNameConstant.BodyType);
-            var styleTrim = GetDictionaryEntity<StyleTrim>(parssedCar, FiledNameConstant.StyleTrim);
-            var drivetrain = GetDictionaryEntity<Drivetrain>(parssedCar, FiledNameConstant.Drivetrain);
+            var nameFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Name);
+            var makeFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Make);
+            var modelFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Model);
+            var yearFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Year);
+            var bodyTypeFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.BodyType);
+            var styleTrimFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.StyleTrim);
+            var drivetrainFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Drivetrain);
+
+            if (makeFieldValue == null)
+                makeFieldValue = GetMakeValue(nameFieldValue);
+
+            if (modelFieldValue == null)
+                modelFieldValue = GetModelValue(nameFieldValue);
+
+            if (yearFieldValue == null)
+                yearFieldValue = GetYearValue(nameFieldValue);
+
+            if (makeFieldValue == null ||
+                modelFieldValue == null ||
+                yearFieldValue == null ||
+                bodyTypeFieldValue == null ||
+                styleTrimFieldValue == null ||
+                drivetrainFieldValue == null)
+                return null;
+
+            var make = GetDictionaryOrCreateEntity<Make>(makeFieldValue);
+            var model = GetDictionaryOrCreateEntity<Model>(modelFieldValue);
+            var year = GetDictionaryOrCreateEntity<Year>(yearFieldValue);
+            var bodyType = GetDictionaryOrCreateEntity<BodyType>(bodyTypeFieldValue);
+            var styleTrim = GetDictionaryOrCreateEntity<StyleTrim>(styleTrimFieldValue);
+            var drivetrain = GetDictionaryOrCreateEntity<Drivetrain>(drivetrainFieldValue);
 
             Func<StockCar, bool> filter = a => a.YearId == year.Id &&
-            a.MakeId == maker.Id &&
-            a.ModelId == model.Id &&
-            a.BodyTypeId == bodyType.Id &&
-            a.StyleTrimId == styleTrim.Id &&
-            a.DrivetrainId == drivetrain.Id;
+                                                a.MakeId == make.Id &&
+                                                a.ModelId == model.Id &&
+                                                a.BodyTypeId == bodyType.Id &&
+                                                a.StyleTrimId == styleTrim.Id &&
+                                                a.DrivetrainId == drivetrain.Id;
 
             var stockCar = Repository.GetStockCar(filter) ?? new StockCar
             {
                 Year = year,
-                Make = maker,
+                Make = make,
                 Model = model,
                 BodyType = bodyType,
                 Drivetrain = drivetrain,
@@ -146,9 +223,55 @@ namespace AnalyzerEngine
             return stockCar;
         }
 
-        private AdvertCar GetAdvertCar(ParsedCar parssedCar, int priceValue, Dealer dealer = null)
+        private string GetYearValue(string name)
+        {
+            var years = Repository.GetDictionaryEntity<Year>();
+            foreach (var year in years)
+            {
+                if (name.Contains(year.Value))
+                {
+                    return year.Value;
+                }
+            }
+            return null;
+        }
+
+        private string GetModelValue(string name)
+        {
+            var models = Repository.GetDictionaryEntity<Model>();
+            foreach (var model in models)
+            {
+                if (name.Contains(model.Value))
+                {
+                    return model.Value;
+                }
+            }
+            return null;
+        }
+
+        private string GetMakeValue(string name)
+        {
+            var makes = Repository.GetDictionaryEntity<Make>();
+            foreach (var make in makes)
+            {
+                if (name.Contains(make.Value))
+                {
+                    return make.Value;
+                }
+            }
+            return null;
+        }
+
+        private AdvertCar GetAdvertCar(ParsedCar parssedCar, double priceValue, Dealer dealer = null)
         {
             var stockCar = GetStockCar(parssedCar);
+            if (stockCar == null)
+            {
+                parssedCar.Status = ParsedCarStatus.AnalyzeError;
+                Repository.SaveChanges();
+                return null;
+            }
+
             var advertCar = new AdvertCar
             {
                 Car = new Car

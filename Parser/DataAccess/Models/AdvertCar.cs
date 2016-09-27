@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
@@ -8,11 +9,13 @@ namespace DataAccess.Models
         {
             AdvertCarPrices = new List<AdvertCarPrice>();
         }
-        public int ParsedCarId { get; set; }            
+
+        public int Id { get; set; }
         public bool IsDealer { get; set; }
         public string Url { get; set; }
 
         public int CarId { get; set; }
+        public int? ParsedCarId { get; set; }
 
         public virtual Car Car { get; set; }
         public virtual ParsedCar ParsedCar { get; set; }

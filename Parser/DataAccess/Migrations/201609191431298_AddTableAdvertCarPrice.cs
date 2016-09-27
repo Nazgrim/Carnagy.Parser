@@ -24,6 +24,7 @@ namespace DataAccess.Migrations
             AddColumn("dbo.MainConfigurations", "DealerId", c => c.Int());
             CreateIndex("dbo.MainConfigurations", "DealerId");
             AddForeignKey("dbo.MainConfigurations", "DealerId", "dbo.Dealers", "Id");
+            AddColumn("dbo.ParsedCars", "IsParsed", c => c.Boolean(nullable: false));
         }
         
         public override void Down()
@@ -35,6 +36,7 @@ namespace DataAccess.Migrations
             DropColumn("dbo.MainConfigurations", "DealerId");
             DropColumn("dbo.AdvertCars", "Url");
             DropTable("dbo.AdvertCarPrices");
+            DropColumn("dbo.ParsedCars", "IsParsed");
         }
     }
 }

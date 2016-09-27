@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using ParserEngine;
 using Autofac;
 using DataAccess;
@@ -13,9 +14,7 @@ namespace Parser
         {
             var container = BuildContainer();
             var parser = container.Resolve<IParser>();
-
             parser.Run();
-
             Console.WriteLine("Parsing is completed. Please press any key.");
             Console.ReadKey();
         }

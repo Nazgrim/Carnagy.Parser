@@ -22,6 +22,7 @@ namespace WepApi.Service
         {
             return Repository
                 .GetCarsByDealerId(dealerId)
+                .Where(a=>a.StockCar.Make.Value=="Buick")
                 .Select(a => new CarViewModel()
                 {
                     year = a.StockCar.Year.Value,
@@ -30,7 +31,9 @@ namespace WepApi.Service
                     bodyType = a.StockCar.BodyType.Value,
                     styleTrim = a.StockCar.StyleTrim.Value,
                     drivetrain = a.StockCar.Drivetrain.Value,
-                    price = a.Price.ToString()
+                    price = a.Price.ToString(),
+                    id = a.Id,
+                    stockCarId = a.StockCarId
                 })
                 .ToList();
         }
@@ -41,9 +44,9 @@ namespace WepApi.Service
             var year = car.StockCar.Year.Value;
             var make = car.StockCar.Make.Value;
             var model = car.StockCar.Model.Value;
-            var bodyType = car.StockCar.Model.Value;
-            var styleTrim = car.StockCar.Model.Value;
-            var drivetrain = car.StockCar.Model.Value;
+            var bodyType = car.StockCar.BodyType.Value;
+            var styleTrim = car.StockCar.StyleTrim.Value;
+            var drivetrain = car.StockCar.Drivetrain.Value;
             var dealerClassInformation = new DealerClassInformation
             {
                 name = $"{year} {make} {model}",
@@ -62,7 +65,7 @@ namespace WepApi.Service
                 },
                 averagePrice = new DelalerClassPrice
                 {
-                    value = "7,325",
+                    value = car.StockCar.Price.ToString(),
                     date = "From last Week",
                     difference = "34%"
                 }

@@ -25,7 +25,7 @@ namespace DataAccess.Migrations
                     Fields = new List<Field>
                     {
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.PagerCurrentPage,Xpath =  "//*[@id='ctl00_ctl00_MainContent_MainContent_pager1_pnlPagerSection']/div/div/div[2]/span[contains(@class, 'PagerCurrentPage')]/following-sibling::a",IsDefault = true},
-                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.List,Xpath = "//*[@id='adList']/div[contains(@class, 'at_featuredResult')]",IsDefault = true},
+                        new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.List,Xpath = "//*[@id='adList']/div[contains(@class, 'at_result')]",IsDefault = true},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.ImgPath,Xpath = "div[1]/div[1]/div[2]/span[1]/a[1]/img[1]",Attribute = "src"},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DealerName,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "alt"},
                         new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.DealerLogo,Xpath = "div[1]/div[2]/div[2]/div[1]/div[1]/a[1]/img[1]",Attribute = "src"},
@@ -38,25 +38,40 @@ namespace DataAccess.Migrations
 
                         new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Make           ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[1]/div[2]/span"},
                         new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Model          ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[2]/div[2]/span"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Kilometres     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[3]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.BodyType       ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[4]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.StyleTrim      ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[5]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Engine         ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[6]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Cylinders      ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[7]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.StockNumber    ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[8]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Drivetrain     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[9]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.RWD            ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[1]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Transmission   ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[1]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.ExteriorColour ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[2]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.InteriorColour ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[3]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Passengers     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[4]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Doors          ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[5]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.FuelType       ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[6]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.HwyFuelEconomy ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[8]/div[2]"},
-                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.CityFuelEconomy,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[7]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Kilometres     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[3]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[1]/div[2],//*[@id='topSpecs']/div[2]/div[1]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.BodyType       ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[4]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[4]/div[2],//*[@id='topSpecs']/div[1]/div[2]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.StyleTrim      ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[5]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[3]/div[2],//*[@id='topSpecs']/div[2]/div[2]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Engine         ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[6]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[5]/div[2],//*[@id='specs']/div[1]/div[2]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Cylinders      ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[7]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[6]/div[2],//*[@id='specs']/div[1]/div[3]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.StockNumber    ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[8]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[1]/div[2],//*[@id='specs']/div[1]/div[5]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Drivetrain     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[1]/div[9]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[8]/div[2],//*[@id='specs']/div[1]/div[4]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Transmission   ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[1]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[1]/div[7]/div[2],//*[@id='topSpecs']/div[1]/div[1]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.ExteriorColour ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[2]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[2]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.InteriorColour ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[3]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[3]/div[2],//*[@id='specs']/div[2]/div[1]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Passengers     ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[4]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[4]/div[2],//*[@id='specs']/div[2]/div[2]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Doors          ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[5]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[5]/div[2],//*[@id='specs']/div[2]/div[3]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.FuelType       ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[6]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[6]/div[2],//*[@id='specs']/div[2]/div[4]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.HwyFuelEconomy ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[8]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[7]/div[2],//*[@id='specs']/div[2]/div[6]/div[2]"},
+                        new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.CityFuelEconomy,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecificationsPanel']/div/div/div[2]/div[2]/div[7]/div[2],//*[@id='transparencySpecsContainer']/div[1]/div[2]/div[7]/div[2],//*[@id='specs']/div[2]/div[5]/div[2]"},
                         new Field {ConfigurationType =FieldConfigurationType.Page, Name = FiledNameConstant.Description    ,Xpath = "//*[@id='ctl00_ctl00_MainContent_MainContent_rptAdDetail_ctl00_adDetailControl_vehicleSpecifications_ownerReviewGlance_ratingAverage_suffix']"},
                     }
                 });
+            context.MainConfigurations.AddOrUpdate(m => m.Name, new MainConfiguration
+            {
+                Name = "addisongm",
+                SiteUrl = "http://addisongm.com/",
+                CreateTime = DateTime.Now,
+                HoursPeriond = 4,
+                Dealer = new Dealer
+                {
+                    Name = "addisongm",
+                    IsCreated = true
+                },
+                Fields = new List<Field>
+                {
+                    new Field {ConfigurationType =FieldConfigurationType.List, Name = FiledNameConstant.PagerCurrentPage,Xpath =  "//*[@id='ctl00_ctl00_MainContent_MainContent_pager1_pnlPagerSection']/div/div/div[2]/span[contains(@class, 'PagerCurrentPage')]/following-sibling::a", IsDefault = true},
+                }
+            });
             var stockCar = new StockCar
             {
                 Year = new Year { Value = "2017" },
@@ -95,35 +110,34 @@ namespace DataAccess.Migrations
                     }
                 }
             });
-            context.Dealers.AddRange(new List<Dealer>
+            var dealer1 = new Dealer
             {
-                new Dealer
+                Name = "Dealer1",
+                Location = "London",
+                WebSiteName = "dealer.com",
+                WebSireUrl = "dealer.com",
+                Cars = new List<Car>
                 {
-                    Name = "Dealer1",
-                    Location = "London",
-                    WebSiteName = "dealer.com",
-                    WebSireUrl = "dealer.com",
-                    Cars = new List<Car>
-                    {
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                    }
-                },
-                new Dealer
-                {
-                    Name = "Dealer2",
-                    Location = "London",
-                    WebSiteName = "dealer.com",
-                    WebSireUrl = "dealer.com",
-                    Cars = new List<Car>
-                    {
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                        new Car { Url = "dealer.com", StockCar = stockCar, Price = 7325 },
-                    }
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
                 }
-            });
+            };
+            var dealer2 = new Dealer
+            {
+                Name = "Dealer2",
+                Location = "London",
+                WebSiteName = "dealer.com",
+                WebSireUrl = "dealer.com",
+                Cars = new List<Car>
+                {
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
+                    new Car {Url = "dealer.com", StockCar = stockCar, Price = 7325},
+                }
+            };
+            context.Dealers.AddOrUpdate(a => a.Name, dealer1);
+            context.Dealers.AddOrUpdate(a => a.Name, dealer2);
         }
     }
 }

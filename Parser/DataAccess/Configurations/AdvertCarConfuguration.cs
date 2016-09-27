@@ -7,13 +7,15 @@ namespace DataAccess.Configurations
     {
         public AdvertCarConfuguration()
         {
-            HasKey(t => t.ParsedCarId);
-
-            
-
+            HasKey(t => t.Id);
+           
             HasRequired(t => t.Car)
                 .WithMany(t => t.AdvertCars)
                 .HasForeignKey(d => d.CarId);
+
+            HasOptional(t => t.ParsedCar)
+                .WithMany(t => t.AdvertCars)
+                .HasForeignKey(d => d.ParsedCarId);
         }
     }
 }
