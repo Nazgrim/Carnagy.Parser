@@ -5,10 +5,10 @@ namespace WepApi.Models
     public class ChartData
     {
         public IEnumerable<int> seriesData { get; set; }
-        public int min { get; set; }
-        public int max { get; set; }
+        public double min { get; set; }
+        public double max { get; set; }
         public int msrpPrice { get; set; }
-        public int avrPrice { get; set; }
+        public double avrPrice { get; set; }
         public int dealerPrice { get; set; }
     }
 }

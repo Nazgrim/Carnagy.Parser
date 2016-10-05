@@ -5,7 +5,6 @@
         public int id { get; set; }
         public int stockCarId { get; set; }
 
-
         public string year { get; set; }
         public string make { get; set; }
         public string model { get; set; }
@@ -13,9 +12,10 @@
         public string styleTrim { get; set; }
         public string drivetrain { get; set; }
         public string price { get; set; }
-
-
         public string url { get; set; }
+        public string dealerAdvertisedPrice { get; set; }
+
+
         public string fullName { get; set; }       
         public string kilometres { get; set; }   
         public string engine { get; set; }
@@ -28,8 +28,7 @@
         public string doors { get; set; }
         public string fuelType { get; set; }
         public string cityFuelEconomy { get; set; }
-        public string hwyFuelEconomy { get; set; }
-        public string dealerAdvertisedPrice { get; set; }
+        public string hwyFuelEconomy { get; set; }      
         public string dealerMSRPPrice { get; set; }
         public string dealerUrl { get; set; }
         public string dealerName { get; set; }

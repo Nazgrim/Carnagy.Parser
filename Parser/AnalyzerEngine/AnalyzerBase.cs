@@ -69,8 +69,6 @@ namespace AnalyzerEngine
 
                     var dealer = GetOrCreateDealer(parssedCar, dealerName);
 
-
-
                     #region MoreDifficultWay
                     //create relation between dealer advert and autortrader advert 
                     //var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
@@ -93,14 +91,19 @@ namespace AnalyzerEngine
                         .FirstOrDefault()?.Value ?? string.Empty;
 
                     var priceValue = 0.0;
-                    if (!double.TryParse(price, NumberStyles.Currency, CultureInfo.CreateSpecificCulture("eu-US"), out priceValue))
+                    if (!double.TryParse(
+                        price,
+                        NumberStyles.AllowCurrencySymbol |
+                        NumberStyles.AllowDecimalPoint |
+                        NumberStyles.AllowThousands,
+                        new CultureInfo("en-US"),
+                        out priceValue))
                         continue;
 
                     var advertCar = GetAdvertCar(parssedCar, priceValue, dealer);
                     if (advertCar != null)
                         Repository.CreateAdvertCar(advertCar);
                     else
-
                     {
                         Console.WriteLine("Не удалось распарсить");
                     }
@@ -114,14 +117,14 @@ namespace AnalyzerEngine
             var timeStart = DateTime.Now;
             foreach (var stockCar in stockCars)
             {
-                if (stockCar.Cars.Any())
+                if (!stockCar.Cars.Any()) continue;
+                var averagePrice = (int)stockCar.Cars.Average(a => a.Price);
+                stockCar.Price = averagePrice;
+                stockCar.StockCarPrices.Add(new StockCarPrice
                 {
-                    stockCar.StockCarPrices.Add(new StockCarPrice
-                    {
-                        DateTime = timeStart,
-                        Value = (int)stockCar.Cars.Average(a => a.Price)
-                    });
-                }                
+                    DateTime = timeStart,
+                    Value = averagePrice
+                });
             }
             Repository.SaveChanges();
         }
@@ -278,7 +281,8 @@ namespace AnalyzerEngine
                 {
                     StockCar = stockCar,
                     Dealer = dealer,
-                    Price = priceValue
+                    Price = priceValue,
+                    Url = parssedCar.Url
                 },
                 IsDealer = true,
                 Url = parssedCar.Url,

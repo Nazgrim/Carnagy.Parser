@@ -221,5 +221,10 @@ namespace DataAccess.Repositories
         {
             return Context.Set<AdvertCar>().FirstOrDefault(a => a.CarId == carId && a.IsDealer);
         }
+
+        public List<double> GetStockCarPrices(int stockCarId)
+        {
+            return Context.Set<Car>().Where(a => a.StockCarId == stockCarId).Select(a => a.Price).ToList();
+        }
     }
 }

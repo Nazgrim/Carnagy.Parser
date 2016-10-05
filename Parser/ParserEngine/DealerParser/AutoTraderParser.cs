@@ -39,10 +39,12 @@ namespace ParserEngine.DealerParser
             {
                 url =
                     $"http://wwwa.autotrader.ca/cars/{maker}";
+
                 while (!isLastPage && page < 1)
                 {
                     WriteToLog("Страница " + page);
-                    var pageUrl = GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
+                    var pageUrl = "http://wwwa.autotrader.ca/cars/buick/encore/?prx=-1&loc=Ontario&adtype=Dealer&sts=New&hprc=True&wcp=True&inMarket=advancedSearch&rcs=0&rcp=500";
+                        //GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
                     var htmlDocument = GetHtmlDocument(htmlWeb, pageUrl);
                     if (htmlDocument == null)
                     {

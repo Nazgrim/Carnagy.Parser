@@ -16,5 +16,6 @@ namespace DataAccess.Models
         public virtual Dealer Dealer { get; set; }
 
         public virtual ICollection<AdvertCar> AdvertCars { get; set; }
+        
     }
 }

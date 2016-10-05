@@ -22,7 +22,7 @@ namespace WepApi.Service
         {
             return Repository
                 .GetCarsByDealerId(dealerId)
-                .Where(a=>a.StockCar.Make.Value=="Buick")
+                .Where(a => a.StockCar.Make.Value == "Buick")
                 .Select(a => new CarViewModel()
                 {
                     year = a.StockCar.Year.Value,
@@ -33,7 +33,8 @@ namespace WepApi.Service
                     drivetrain = a.StockCar.Drivetrain.Value,
                     price = a.Price.ToString(),
                     id = a.Id,
-                    stockCarId = a.StockCarId
+                    stockCarId = a.StockCarId,
+                    url = a.Url
                 })
                 .ToList();
         }
@@ -50,7 +51,7 @@ namespace WepApi.Service
             var dealerClassInformation = new DealerClassInformation
             {
                 name = $"{year} {make} {model}",
-                imgScr = car.StockCar.ImageScr,
+                imgScr = $"http://localhost/WepApi/image/cars/{car.Id}.jpg",
                 parametrs = new Dictionary<string, string>
                 {
                     {"Bodytype", bodyType},
@@ -73,18 +74,21 @@ namespace WepApi.Service
             return dealerClassInformation;
         }
 
-        public ChartData GetChartDataById(int dealerCarId)
+        public ChartData GetChartDataById(int stockCarId)
         {
-            var cars = GetCars();
+            var cars = Repository.GetStockCarPrices(stockCarId);
+            var max = Math.Ceiling(cars.Max() / 1000) * 1000;
+            var min = Math.Floor(cars.Min() / 1000) * 1000;
+            var seriesData = GetSeriesData(cars, max, min);
             var chartData = new ChartData
             {
                 avrPrice = (int)cars.Average(),
-                max = cars.Max(),
-                min = cars.Min(),
-                dealerPrice = 17900,
-                msrpPrice = 12400
+                max = max,
+                min = min,
+                dealerPrice = 0,
+                msrpPrice = 0,
+                seriesData = seriesData
             };
-            chartData.seriesData = GetSeriesData(cars, chartData.max, chartData.min);
 
             return chartData;
         }
@@ -137,6 +141,58 @@ namespace WepApi.Service
             return chartSeties;
         }
 
+        private IEnumerable<int> GetSeriesData(List<double> carDeales, double max, double min)
+        {
+            if (carDeales.Count <= 1)
+            {
+                return new List<int> { 1 };
+            }
+
+            var minMaxDif = max - min;
+            var areaCount = 4;//количество областей
+            carDeales = carDeales.OrderBy(a => a).ToList();
+            var increment = minMaxDif / areaCount;
+            var previousValue = min;
+            var result = new List<int>();
+            for (double i = min + increment; i <= max; i += increment)
+            {
+                var areaCars = carDeales.Where(a => a > previousValue && a <= i).OrderBy(a => a).ToList();
+                if (!areaCars.Any())
+                {
+                    previousValue = i;
+                    result.Add(0);
+                    continue;
+                }
+
+                
+
+
+                //var minX = Math.Floor(areaCars.Min() / 250) *250;
+                //var maxX = Math.Ceiling(areaCars.Max() / 250) * 250;
+                //var minMaxDifX = maxX - minX;
+                //if (minMaxDifX == 0)
+                //{
+                //    result.Add(1);
+                //    previousValue = i;
+                //    continue;
+                //}
+
+                var areaCountX = 5;//количество областей
+                var incrementX = increment / areaCountX;
+                var previousValueX = previousValue;
+                for (double j = previousValue + incrementX; j <= i; j += incrementX)
+                {
+                    var count = areaCars.Count(a => a > previousValueX && a <= j);
+                    result.Add(count);
+                    previousValueX = j;
+                }
+
+                previousValue = i;
+
+            }
+            return result;
+        }
+
         #region ForDevelopOnly
         public void InitDb(Dealer dealer)
         {
@@ -166,7 +222,7 @@ namespace WepApi.Service
                 a.BodyTypeId == bodyType.Id &&
                 a.StyleTrimId == styleTrim.Id &&
                 a.DrivetrainId == drivetrain.Id;
-               
+
                 var stockCar = Repository.GetStockCar(filter) ?? new StockCar
                 {
                     Year = year,
@@ -189,38 +245,6 @@ namespace WepApi.Service
             }
         }
 
-        private IEnumerable<int> GetSeriesData(List<int> carDeales, int max, int min)
-        {
-            var minMaxDif = max - min;
-            var areaCount = 4;//количество областей
-            carDeales = carDeales.OrderBy(a => a).ToList();
-            var increment = minMaxDif / areaCount;
-            var previousValue = min;
-            var result = new List<int>();
-            for (int i = min + increment; i <= max; i += increment)
-            {
-                var areaCars = carDeales.Where(a => a > previousValue && a <= i).OrderBy(a => a).ToList();
-                if (!areaCars.Any())
-                    continue;
-
-                var minX = areaCars.Min();
-                var maxX = areaCars.Max();
-                var minMaxDifX = maxX - minX;
-                var areaCountX = 4;//количество областей
-                var incrementX = minMaxDifX / areaCountX;
-                var previousValueX = minX;
-                for (int j = minX + incrementX; j <= maxX; j += incrementX)
-                {
-                    var count = areaCars.Count(a => a > previousValueX && a <= i);
-                    result.Add(count);
-                    previousValueX = j;
-                }
-
-                previousValue = i;
-            }
-            return result;
-        }
-
         private List<int> GetCars()
         {
             var carDeales = new List<int>();
@@ -231,7 +255,6 @@ namespace WepApi.Service
             }
             return carDeales;
         }
-
         #endregion
     }
 }

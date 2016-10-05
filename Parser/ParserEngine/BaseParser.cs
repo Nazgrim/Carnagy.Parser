@@ -93,6 +93,7 @@ namespace ParserEngine
             var fieldValues = new List<FieldValue>();
             Parallel.ForEach(parrsedCars, new ParallelOptions {MaxDegreeOfParallelism = 8}, parrsedCar =>
             {
+                var fieldValues1 = new List<FieldValue>();
                 //    foreach (var parrsedCar in parrsedCars)
                 //{
                 var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
@@ -112,17 +113,18 @@ namespace ParserEngine
                     if (fieldValue != null)
                     {
                         fieldValue.ParsedCar = parrsedCar;
-                        fieldValues.Add(fieldValue);
+                        fieldValues1.Add(fieldValue);
                     }
                     else
                     {
                         WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
                     }
                 }
-                if (fieldValues.Any())
+                if (fieldValues1.Any())
                 {
                     parrsedCar.Status = ParsedCarStatus.Page;
                 }
+                fieldValues.AddRange(fieldValues1);
 
                 Thread.Sleep(1000);
                 //}
