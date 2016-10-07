@@ -1,0 +1,113 @@
+Type.registerNamespace('AutomotiveExaleadWeb.WebServices');
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService=function() {
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.initializeBase(this);
+this._timeout = 0;
+this._userContext = null;
+this._succeeded = null;
+this._failed = null;
+}
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.prototype={
+_get_path:function() {
+ var p = this.get_path();
+ if (p) return p;
+ else return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_path();},
+SaveSearch:function(name,sendUpdate,frequency,userSavedTime,searchOption,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveSearch',false,{name:name,sendUpdate:sendUpdate,frequency:frequency,userSavedTime:userSavedTime,searchOption:searchOption},succeededCallback,failedCallback,userContext); },
+DeleteSearch:function(name,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'DeleteSearch',false,{name:name},succeededCallback,failedCallback,userContext); },
+DeleteAllSearches:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'DeleteAllSearches',false,{},succeededCallback,failedCallback,userContext); },
+GetDefaultSearchName:function(searchOption,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetDefaultSearchName',false,{searchOption:searchOption},succeededCallback,failedCallback,userContext); },
+RenameSearch:function(oldName,newName,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'RenameSearch',false,{oldName:oldName,newName:newName},succeededCallback,failedCallback,userContext); },
+SaveSearchUpdates:function(oldName,newName,sendUpdate,frequency,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveSearchUpdates',false,{oldName:oldName,newName:newName,sendUpdate:sendUpdate,frequency:frequency},succeededCallback,failedCallback,userContext); },
+SaveAd:function(sourceId,foreignId,title,shortTitle,categoryId,userSavedTime,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveAd',false,{sourceId:sourceId,foreignId:foreignId,title:title,shortTitle:shortTitle,categoryId:categoryId,userSavedTime:userSavedTime},succeededCallback,failedCallback,userContext); },
+SaveAdById:function(sourceId,foreignId,userSavedTime,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveAdById',false,{sourceId:sourceId,foreignId:foreignId,userSavedTime:userSavedTime},succeededCallback,failedCallback,userContext); },
+RemoveAd:function(sourceId,foreignId,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'RemoveAd',false,{sourceId:sourceId,foreignId:foreignId},succeededCallback,failedCallback,userContext); },
+RemoveAllAds:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'RemoveAllAds',false,{},succeededCallback,failedCallback,userContext); },
+SaveAllAds:function(options,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveAllAds',false,{options:options},succeededCallback,failedCallback,userContext); },
+AddAdToCompare:function(sourceId,foreignId,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'AddAdToCompare',false,{sourceId:sourceId,foreignId:foreignId},succeededCallback,failedCallback,userContext); },
+RemoveAdToCompare:function(sourceId,foreignId,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'RemoveAdToCompare',false,{sourceId:sourceId,foreignId:foreignId},succeededCallback,failedCallback,userContext); },
+RemoveAllFromComparison:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'RemoveAllFromComparison',false,{},succeededCallback,failedCallback,userContext); },
+GetAdCompareList:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetAdCompareList',false,{},succeededCallback,failedCallback,userContext); },
+GetComparedSavedList:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'GetComparedSavedList',false,{},succeededCallback,failedCallback,userContext); },
+IsUserAuthenticated:function(succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'IsUserAuthenticated',false,{},succeededCallback,failedCallback,userContext); },
+SaveDisplayName:function(userName,currentDisplayName,newDisplayName,succeededCallback, failedCallback, userContext) {
+return this._invoke(this._get_path(), 'SaveDisplayName',false,{userName:userName,currentDisplayName:currentDisplayName,newDisplayName:newDisplayName},succeededCallback,failedCallback,userContext); }}
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.registerClass('AutomotiveExaleadWeb.WebServices.AutomotiveProfileService',Sys.Net.WebServiceProxy);
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance = new AutomotiveExaleadWeb.WebServices.AutomotiveProfileService();
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_path = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_path(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_path = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_path(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_timeout = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_timeout(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_timeout = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_timeout(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_defaultUserContext = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_defaultUserContext(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_defaultUserContext = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_defaultUserContext(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_defaultSucceededCallback = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_defaultSucceededCallback(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_defaultSucceededCallback = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_defaultSucceededCallback(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_defaultFailedCallback = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_defaultFailedCallback(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_defaultFailedCallback = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_defaultFailedCallback(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_enableJsonp = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_enableJsonp(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_enableJsonp = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_enableJsonp(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_jsonpCallbackParameter = function(value) { AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.set_jsonpCallbackParameter(value); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.get_jsonpCallbackParameter = function() { return AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.get_jsonpCallbackParameter(); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.set_path("http://www.autotrader.ca/WebServices/AutomotiveProfileService.svc");
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveSearch= function(name,sendUpdate,frequency,userSavedTime,searchOption,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveSearch(name,sendUpdate,frequency,userSavedTime,searchOption,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.DeleteSearch= function(name,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.DeleteSearch(name,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.DeleteAllSearches= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.DeleteAllSearches(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.GetDefaultSearchName= function(searchOption,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.GetDefaultSearchName(searchOption,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.RenameSearch= function(oldName,newName,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.RenameSearch(oldName,newName,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveSearchUpdates= function(oldName,newName,sendUpdate,frequency,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveSearchUpdates(oldName,newName,sendUpdate,frequency,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveAd= function(sourceId,foreignId,title,shortTitle,categoryId,userSavedTime,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveAd(sourceId,foreignId,title,shortTitle,categoryId,userSavedTime,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveAdById= function(sourceId,foreignId,userSavedTime,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveAdById(sourceId,foreignId,userSavedTime,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.RemoveAd= function(sourceId,foreignId,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.RemoveAd(sourceId,foreignId,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.RemoveAllAds= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.RemoveAllAds(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveAllAds= function(options,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveAllAds(options,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.AddAdToCompare= function(sourceId,foreignId,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.AddAdToCompare(sourceId,foreignId,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.RemoveAdToCompare= function(sourceId,foreignId,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.RemoveAdToCompare(sourceId,foreignId,onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.RemoveAllFromComparison= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.RemoveAllFromComparison(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.GetAdCompareList= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.GetAdCompareList(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.GetComparedSavedList= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.GetComparedSavedList(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.IsUserAuthenticated= function(onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.IsUserAuthenticated(onSuccess,onFailed,userContext); }
+AutomotiveExaleadWeb.WebServices.AutomotiveProfileService.SaveDisplayName= function(userName,currentDisplayName,newDisplayName,onSuccess,onFailed,userContext) {AutomotiveExaleadWeb.WebServices.AutomotiveProfileService._staticInstance.SaveDisplayName(userName,currentDisplayName,newDisplayName,onSuccess,onFailed,userContext); }
+var gtc = Sys.Net.WebServiceProxy._generateTypedConstructor;
+Type.registerNamespace('AutomotiveSearchModel');
+if (typeof(AutomotiveSearchModel.ResultsRefinementSearchOption) === 'undefined') {
+AutomotiveSearchModel.ResultsRefinementSearchOption=gtc("ResultsRefinementSearchOption:http://schemas.datacontract.org/2004/07/AutomotiveSearchModel");
+AutomotiveSearchModel.ResultsRefinementSearchOption.registerClass('AutomotiveSearchModel.ResultsRefinementSearchOption');
+}
+Type.registerNamespace('AutomotiveExaleadLogic.UserProfile');
+if (typeof(AutomotiveExaleadLogic.UserProfile.SaveSearchResults) === 'undefined') {
+AutomotiveExaleadLogic.UserProfile.SaveSearchResults=gtc("SaveSearchResults:http://schemas.datacontract.org/2004/07/AutomotiveExaleadLogic.UserProfile");
+AutomotiveExaleadLogic.UserProfile.SaveSearchResults.registerClass('AutomotiveExaleadLogic.UserProfile.SaveSearchResults');
+}
+if (typeof(AutomotiveExaleadLogic.UserProfile.SaveResults) === 'undefined') {
+AutomotiveExaleadLogic.UserProfile.SaveResults=gtc("SaveResults:http://schemas.datacontract.org/2004/07/AutomotiveExaleadLogic.UserProfile");
+AutomotiveExaleadLogic.UserProfile.SaveResults.registerClass('AutomotiveExaleadLogic.UserProfile.SaveResults');
+}
+if (typeof(AutomotiveExaleadLogic.UserProfile.SaveVehicleResults) === 'undefined') {
+AutomotiveExaleadLogic.UserProfile.SaveVehicleResults=gtc("SaveVehicleResults:http://schemas.datacontract.org/2004/07/AutomotiveExaleadLogic.UserProfile");
+AutomotiveExaleadLogic.UserProfile.SaveVehicleResults.registerClass('AutomotiveExaleadLogic.UserProfile.SaveVehicleResults');
+}
+if (typeof(AutomotiveExaleadLogic.UserProfile.SaveDisplayNameResults) === 'undefined') {
+AutomotiveExaleadLogic.UserProfile.SaveDisplayNameResults=gtc("SaveDisplayNameResults:http://schemas.datacontract.org/2004/07/AutomotiveExaleadLogic.UserProfile");
+AutomotiveExaleadLogic.UserProfile.SaveDisplayNameResults.registerClass('AutomotiveExaleadLogic.UserProfile.SaveDisplayNameResults');
+}
+Type.registerNamespace('AutomotiveExaleadModel.Enumerations');
+if (typeof(AutomotiveExaleadModel.Enumerations.ProfileErrorCodes) === 'undefined') {
+AutomotiveExaleadModel.Enumerations.ProfileErrorCodes = function() { throw Error.invalidOperation(); }
+AutomotiveExaleadModel.Enumerations.ProfileErrorCodes.prototype = {None: 0,UserLoginRequired: 1,SaveError: 2,NameAlreadyExists: 3,AdNotFound: 4,SearchNotFound: 5,DataError: 6,TooManyAdToCompare: 7,AdsToCompareNotInSameCategory: 8,WrongDateTimeFormat: 9,NameIsBlank: 10,NavigationStateIsNull: 11}
+AutomotiveExaleadModel.Enumerations.ProfileErrorCodes.registerEnum('AutomotiveExaleadModel.Enumerations.ProfileErrorCodes', true);
+}
