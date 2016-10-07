@@ -9,6 +9,8 @@
         public string styleTrim { get; set; }
         public string drivetrain { get; set; }
         public string url { get; set; }
+        public string dealerName { get; set; }
+        public string dealerLocation { get; set; }
         public CarPrice price { get; set; }
     }
 }

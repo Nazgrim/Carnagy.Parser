@@ -50,5 +50,6 @@ namespace DataAccess.Repositories
         void CreateCar(Car car);
         AdvertCar GetDealerAdvertCar(int carId);
         List<double> GetStockCarPrices(int stockCarId);
+        List<Car> GetCarsByStockCarId(int stockCarId);
     }
 }

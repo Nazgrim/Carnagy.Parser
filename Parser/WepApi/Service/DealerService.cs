@@ -93,33 +93,27 @@ namespace WepApi.Service
             return chartData;
         }
 
-        public List<DealerCompetitor> GetDealerCompetitorsById(int stockCarId, int dealerId)
+        public List<DealerCompetitorCar> GetDealerCompetitorsById(int stockCarId, int dealerId)
         {
-            return Repository.GetDealers(a => a.Id != dealerId && a.Cars.Any(b => b.StockCarId == stockCarId))
-                .Select(a => new DealerCompetitor
+            var result = Repository.GetCarsByStockCarId(stockCarId)
+                .Select(c => new DealerCompetitorCar
                 {
-                    url = a.WebSireUrl,
-                    webSiteName = a.WebSiteName,
-                    city = a.Location,
-                    name = a.Name,
-                    cars = a.Cars.Select(c => new DealerCompetitorCar
+                    url = c.Url,
+                    year = c.StockCar.Year.Value,
+                    model = c.StockCar.Model.Value,
+                    bodyType = c.StockCar.BodyType.Value,
+                    drivetrain = c.StockCar.Drivetrain.Value,
+                    maker = c.StockCar.Make.Value,
+                    styleTrim = c.StockCar.StyleTrim.Value,
+                    price = new CarPrice
                     {
-                        url = c.Url,
-                        year = c.StockCar.Year.Value,
-                        model = c.StockCar.Model.Value,
-                        bodyType = c.StockCar.BodyType.Value,
-                        drivetrain = c.StockCar.Drivetrain.Value,
-                        maker = c.StockCar.Make.Value,
-                        styleTrim = c.StockCar.StyleTrim.Value,
-                        price = new CarPrice
-                        {
-                            value = c.Price.ToString(),
-                            difference = 500,
-                        }
-                    })
-                    .ToList()
-                })
-                .ToList();
+                        value = c.Price.ToString(),
+                        difference = 500,
+                    },
+                    dealerLocation = c.Dealer.Location,
+                    dealerName = c.Dealer.Name,
+                }).ToList();
+            return result;
         }
 
         public ChartSeries GetPriceTrendById(int stockCarId)
@@ -164,7 +158,7 @@ namespace WepApi.Service
                     continue;
                 }
 
-                
+
 
 
                 //var minX = Math.Floor(areaCars.Min() / 250) *250;

@@ -33,7 +33,7 @@ namespace DataAccess.Repositories
             foreach (var fieldValue in fieldValues)
             {
                 Context.FieldValues.Add(fieldValue);
-            }           
+            }
         }
 
         public MainConfiguration GetMainConfigurationByName(string name)
@@ -225,6 +225,14 @@ namespace DataAccess.Repositories
         public List<double> GetStockCarPrices(int stockCarId)
         {
             return Context.Set<Car>().Where(a => a.StockCarId == stockCarId).Select(a => a.Price).ToList();
+        }
+
+        public List<Car> GetCarsByStockCarId(int stockCarId)
+        {
+            return Context.Set<Car>()
+                .Include(a => a.Dealer)
+                .Where(a => a.StockCarId == stockCarId)
+                .ToList();
         }
     }
 }
