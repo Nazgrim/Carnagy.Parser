@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DownloadImage.cs" />
+    <Compile Include="Helpers\EnumerableHelper.cs" />
     <Compile Include="IDownloadImage.cs" />
     <Compile Include="ImageForSave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

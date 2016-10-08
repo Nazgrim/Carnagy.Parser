@@ -86,6 +86,7 @@
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\ScriptResource%281%29.axd" />
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\ScriptResource.axd" />
     <None Include="autotrader\New &amp; Used Cars for sale in Ontario _ autoTRADER.ca_files\v1" />
+    <None Include="json\inventory.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
