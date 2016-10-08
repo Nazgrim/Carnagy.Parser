@@ -1,5 +1,6 @@
 ﻿using DataAccess.Repositories;
 using HtmlAgilityPack;
+using Utility;
 
 namespace ParserEngine.DealerParser
 {

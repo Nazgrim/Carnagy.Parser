@@ -222,9 +222,9 @@ namespace DataAccess.Repositories
             return Context.Set<AdvertCar>().FirstOrDefault(a => a.CarId == carId && a.IsDealer);
         }
 
-        public List<double> GetStockCarPrices(int stockCarId)
+        public List<Car> GetStockCarPrices(int stockCarId)
         {
-            return Context.Set<Car>().Where(a => a.StockCarId == stockCarId).Select(a => a.Price).ToList();
+            return Context.Set<Car>().Where(a => a.StockCarId == stockCarId).ToList();
         }
 
         public List<Car> GetCarsByStockCarId(int stockCarId)
@@ -233,6 +233,11 @@ namespace DataAccess.Repositories
                 .Include(a => a.Dealer)
                 .Where(a => a.StockCarId == stockCarId)
                 .ToList();
+        }
+
+        public List<Car> GetCarsByFilter(Func<Car, bool> filter)
+        {
+            return Context.Set<Car>().Where(filter).ToList();
         }
     }
 }

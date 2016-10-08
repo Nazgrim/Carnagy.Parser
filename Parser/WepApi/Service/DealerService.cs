@@ -74,19 +74,22 @@ namespace WepApi.Service
             return dealerClassInformation;
         }
 
-        public ChartData GetChartDataById(int stockCarId)
+        public ChartData GetChartDataById(int stockCarId, int dealerId)
         {
+            var stockCar = Repository.GetStockCar(a => a.Id == stockCarId);           
             var cars = Repository.GetStockCarPrices(stockCarId);
-            var max = Math.Ceiling(cars.Max() / 1000) * 1000;
-            var min = Math.Floor(cars.Min() / 1000) * 1000;
-            var seriesData = GetSeriesData(cars, max, min);
+            var dealer = cars.FirstOrDefault(a=>a.DealerId== dealerId);
+            var carsPrice = cars.Select(a => a.Price);
+            var max = Math.Ceiling(carsPrice.Max() / 1000) * 1000;
+            var min = Math.Floor(carsPrice.Min() / 1000) * 1000;
+            var seriesData = GetSeriesData(carsPrice, max, min);
             var chartData = new ChartData
             {
-                avrPrice = (int)cars.Average(),
+                avrPrice = (int)carsPrice.Average(),
                 max = max,
                 min = min,
-                dealerPrice = 0,
-                msrpPrice = 0,
+                dealerPrice = dealer.Price,
+                msrpPrice = stockCar.MsrpPrice,
                 seriesData = seriesData
             };
 
@@ -135,9 +138,9 @@ namespace WepApi.Service
             return chartSeties;
         }
 
-        private IEnumerable<int> GetSeriesData(List<double> carDeales, double max, double min)
+        private IEnumerable<int> GetSeriesData(IEnumerable<double> carDeales, double max, double min)
         {
-            if (carDeales.Count <= 1)
+            if (carDeales.Count() <= 1)
             {
                 return new List<int> { 1 };
             }
@@ -148,7 +151,7 @@ namespace WepApi.Service
             var increment = minMaxDif / areaCount;
             var previousValue = min;
             var result = new List<int>();
-            for (double i = min + increment; i <= max; i += increment)
+            for (var i = min + increment; i <= max; i += increment)
             {
                 var areaCars = carDeales.Where(a => a > previousValue && a <= i).OrderBy(a => a).ToList();
                 if (!areaCars.Any())
@@ -158,23 +161,10 @@ namespace WepApi.Service
                     continue;
                 }
 
-
-
-
-                //var minX = Math.Floor(areaCars.Min() / 250) *250;
-                //var maxX = Math.Ceiling(areaCars.Max() / 250) * 250;
-                //var minMaxDifX = maxX - minX;
-                //if (minMaxDifX == 0)
-                //{
-                //    result.Add(1);
-                //    previousValue = i;
-                //    continue;
-                //}
-
                 var areaCountX = 5;//количество областей
                 var incrementX = increment / areaCountX;
                 var previousValueX = previousValue;
-                for (double j = previousValue + incrementX; j <= i; j += incrementX)
+                for (var j = previousValue + incrementX; j <= i; j += incrementX)
                 {
                     var count = areaCars.Count(a => a > previousValueX && a <= j);
                     result.Add(count);

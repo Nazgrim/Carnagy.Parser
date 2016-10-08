@@ -20,6 +20,7 @@ namespace DataAccess.Models
         public int StyleTrimId { get; set; }
         public int DrivetrainId { get; set; }
         public double Price { get; set; }
+        public double MsrpPrice { get; set; }
 
         public virtual Year Year { get; set; }
         public virtual Model Model { get; set; }
@@ -30,5 +31,6 @@ namespace DataAccess.Models
 
         public virtual ICollection<Car> Cars { get; set; }
         public virtual ICollection<StockCarPrice> StockCarPrices { get; set; }
+        
     }
 }

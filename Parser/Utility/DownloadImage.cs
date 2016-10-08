@@ -36,8 +36,8 @@ namespace Utility
                 Task.WaitAll(taskList.ToArray());
                 taskList.Clear();
             }
+            Task.WaitAll(taskList.ToArray());
         }
-
 
         private static async Task DownloadRemoteImageFile(string uri, string fileName)
         {

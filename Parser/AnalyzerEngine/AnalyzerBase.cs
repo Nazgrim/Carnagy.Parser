@@ -5,16 +5,19 @@ using System.Linq;
 using DataAccess;
 using DataAccess.Models;
 using DataAccess.Repositories;
+using Utility;
 
 namespace AnalyzerEngine
 {
     public class AnalyzerBase : IAnalyzer
     {
         private IBaseRepository Repository { get; set; }
+        private IDownloadImage DownloadImager { get; set; }
 
-        public AnalyzerBase(IBaseRepository repository)
+        public AnalyzerBase(IBaseRepository repository, IDownloadImage downloadImager)
         {
             Repository = repository;
+            DownloadImager = downloadImager;
         }
 
         public void Run()
@@ -22,16 +25,19 @@ namespace AnalyzerEngine
             Analyze();
             Сalculation();
         }
-
         private void Analyze()
         {
+            var images = new List<ImageForSave>();
             var configuration = Repository.GetConfigurations();
             //AnalyzeDealerConfiguration(configuration);
-            AnalyzeAutotraderConfiguration(configuration);
+            var autotraderImages = AnalyzeAutotraderConfiguration(configuration);
+            images.AddRange(autotraderImages);
+            DownloadImager.Download("Cars", images.Where(a => !string.IsNullOrWhiteSpace(a.Url)));
         }
 
-        private void AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
+        private List<ImageForSave> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
         {
+            var result = new List<ImageForSave>();
             var now = DateTime.Now;
             var dealerConfiguration = configuration.Where(a => a.DealerId.HasValue);
             foreach (var mainConfiguration in dealerConfiguration)
@@ -51,12 +57,13 @@ namespace AnalyzerEngine
                         Repository.CreateAdvertCar(advertCar);
                     }
                 }
-
             }
+            return result;
         }
 
-        private void AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
+        private List<ImageForSave> AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
         {
+            var result = new List<ImageForSave>();
             var autotraderConfiguration = configuration.Where(a => !a.DealerId.HasValue);
 
             foreach (var mainConfiguration in autotraderConfiguration)
@@ -102,13 +109,17 @@ namespace AnalyzerEngine
 
                     var advertCar = GetAdvertCar(parssedCar, priceValue, dealer);
                     if (advertCar != null)
+                    {
                         Repository.CreateAdvertCar(advertCar);
+                        result.Add(new ImageForSave { Id = advertCar.CarId, Url = GetValue(parssedCar.FieldValues, FiledNameConstant.ImgPath) });
+                    }
                     else
                     {
                         Console.WriteLine("Не удалось распарсить");
                     }
                 }
             }
+            return result;
         }
 
         private void Сalculation()

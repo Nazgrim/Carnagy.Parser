@@ -10,8 +10,8 @@ namespace ParserEngine.DealerParser
 {
     public class AutoTraderParser : BaseParser
     {
-        public AutoTraderParser(IBaseRepository repository, IDownloadImage downloadImage) :
-            base(repository, "AutoTrader", downloadImage)
+        public AutoTraderParser(IBaseRepository repository) :
+            base(repository, "AutoTrader")
         {
         }
 

@@ -23,14 +23,12 @@ namespace ParserEngine
         protected DateTime LastUpdate;
         protected const int NumberOfRetries = 3;
         protected const int DelayOnRetry = 1000;
-        private Stopwatch Stopwatch { get; set; }
-        protected IDownloadImage DownloadImage { get; set; }
+        private Stopwatch Stopwatch { get; set; }       
 
-        public BaseParser(IBaseRepository repository, string parserName, IDownloadImage downloadImage)
+        public BaseParser(IBaseRepository repository, string parserName)
         {
             Repository = repository;
-            ParserName = parserName;
-            DownloadImage = downloadImage;
+            ParserName = parserName;            
         }
 
         public virtual void Run()
@@ -49,14 +47,8 @@ namespace ParserEngine
             var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fields);
 
             fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.Page).ToList();
-            SecondPhase(resultFirstPage, fields);
-            ThirdPhase();
+            SecondPhase(resultFirstPage, fields);            
             Stopwatch.Stop();
-        }
-
-        protected virtual void ThirdPhase()
-        {
-            throw new NotImplementedException();
         }
 
         protected virtual void WriteToLog(string value)
@@ -103,17 +95,17 @@ namespace ParserEngine
             Parallel.ForEach(parrsedCars, new ParallelOptions { MaxDegreeOfParallelism = 8 }, parrsedCar =>
               {
                   var fieldValues1 = new List<FieldValue>();
-                //    foreach (var parrsedCar in parrsedCars)
-                //{
-                var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
+                  //    foreach (var parrsedCar in parrsedCars)
+                  //{
+                  var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
                   if (htmlDocument == null)
                   {
                       WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
                       parrsedCar.Status = ParsedCarStatus.LoadPageError;
 
                       return;
-                    //continue;
-                }
+                      //continue;
+                  }
 
 
                   foreach (var field in fields.Where(a => !a.IsDefault))
@@ -136,8 +128,8 @@ namespace ParserEngine
                   fieldValues.AddRange(fieldValues1);
 
                   Thread.Sleep(1000);
-                //}
-            });
+                  //}
+              });
 
             if (fieldValues.Any())
             {

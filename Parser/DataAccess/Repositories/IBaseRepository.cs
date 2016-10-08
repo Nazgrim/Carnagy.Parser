@@ -49,7 +49,8 @@ namespace DataAccess.Repositories
         Car GetCar(int stockCarId, int dealerId, string stockNumber);
         void CreateCar(Car car);
         AdvertCar GetDealerAdvertCar(int carId);
-        List<double> GetStockCarPrices(int stockCarId);
+        List<Car> GetStockCarPrices(int stockCarId);
         List<Car> GetCarsByStockCarId(int stockCarId);
+        List<Car> GetCarsByFilter(Func<Car, bool> filter);
     }
 }

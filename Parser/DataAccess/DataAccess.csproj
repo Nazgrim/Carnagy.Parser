@@ -185,6 +185,10 @@
     <Compile Include="Migrations\201609251322020_AddPriceInStockCar.Designer.cs">
       <DependentUpon>201609251322020_AddPriceInStockCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610080929353_AddMsrpPriceFieldInStockCar.cs" />
+    <Compile Include="Migrations\201610080929353_AddMsrpPriceFieldInStockCar.Designer.cs">
+      <DependentUpon>201610080929353_AddMsrpPriceFieldInStockCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -302,6 +306,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609251322020_AddPriceInStockCar.resx">
       <DependentUpon>201609251322020_AddPriceInStockCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610080929353_AddMsrpPriceFieldInStockCar.resx">
+      <DependentUpon>201610080929353_AddMsrpPriceFieldInStockCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
