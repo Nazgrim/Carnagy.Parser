@@ -6,10 +6,11 @@ using DataAccess.Repositories;
 using DataAccess.Models;
 using HtmlAgilityPack;
 using DataAccess;
-using ParserEngine.Extensions;
 using System.Threading;
 using System.Net;
 using System.Threading.Tasks;
+using Utility;
+using Utility.Extensions;
 
 namespace ParserEngine
 {
@@ -23,11 +24,13 @@ namespace ParserEngine
         protected const int NumberOfRetries = 3;
         protected const int DelayOnRetry = 1000;
         private Stopwatch Stopwatch { get; set; }
+        protected IDownloadImage DownloadImage { get; set; }
 
-        public BaseParser(IBaseRepository repository, string parserName)
+        public BaseParser(IBaseRepository repository, string parserName, IDownloadImage downloadImage)
         {
             Repository = repository;
             ParserName = parserName;
+            DownloadImage = downloadImage;
         }
 
         public virtual void Run()
@@ -47,7 +50,13 @@ namespace ParserEngine
 
             fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.Page).ToList();
             SecondPhase(resultFirstPage, fields);
+            ThirdPhase();
             Stopwatch.Stop();
+        }
+
+        protected virtual void ThirdPhase()
+        {
+            throw new NotImplementedException();
         }
 
         protected virtual void WriteToLog(string value)
@@ -91,42 +100,42 @@ namespace ParserEngine
         {
             var htmlWeb = new HtmlWeb();
             var fieldValues = new List<FieldValue>();
-            Parallel.ForEach(parrsedCars, new ParallelOptions {MaxDegreeOfParallelism = 8}, parrsedCar =>
-            {
-                var fieldValues1 = new List<FieldValue>();
+            Parallel.ForEach(parrsedCars, new ParallelOptions { MaxDegreeOfParallelism = 8 }, parrsedCar =>
+              {
+                  var fieldValues1 = new List<FieldValue>();
                 //    foreach (var parrsedCar in parrsedCars)
                 //{
                 var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
-                if (htmlDocument == null)
-                {
-                    WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
-                    parrsedCar.Status = ParsedCarStatus.LoadPageError;
+                  if (htmlDocument == null)
+                  {
+                      WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
+                      parrsedCar.Status = ParsedCarStatus.LoadPageError;
 
-                    return;
+                      return;
                     //continue;
                 }
 
 
-                foreach (var field in fields.Where(a => !a.IsDefault))
-                {
-                    var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
-                    if (fieldValue != null)
-                    {
-                        fieldValue.ParsedCar = parrsedCar;
-                        fieldValues1.Add(fieldValue);
-                    }
-                    else
-                    {
-                        WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
-                    }
-                }
-                if (fieldValues1.Any())
-                {
-                    parrsedCar.Status = ParsedCarStatus.Page;
-                }
-                fieldValues.AddRange(fieldValues1);
+                  foreach (var field in fields.Where(a => !a.IsDefault))
+                  {
+                      var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
+                      if (fieldValue != null)
+                      {
+                          fieldValue.ParsedCar = parrsedCar;
+                          fieldValues1.Add(fieldValue);
+                      }
+                      else
+                      {
+                          WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
+                      }
+                  }
+                  if (fieldValues1.Any())
+                  {
+                      parrsedCar.Status = ParsedCarStatus.Page;
+                  }
+                  fieldValues.AddRange(fieldValues1);
 
-                Thread.Sleep(1000);
+                  Thread.Sleep(1000);
                 //}
             });
 

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Text;
 
-namespace ParserEngine.Extensions
+namespace Utility.Extensions
 {
     public static class StringExtensions
     {

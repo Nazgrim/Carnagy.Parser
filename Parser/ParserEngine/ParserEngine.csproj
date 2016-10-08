@@ -47,7 +47,6 @@
   <ItemGroup>
     <Compile Include="DealerParser\AddisongmParser.cs" />
     <Compile Include="DealerParser\AutoTraderParser.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IParser.cs" />
     <Compile Include="BaseParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Utility.Helpers
+namespace Utility.Extensions
 {
     static class EnumerableHelper
     {

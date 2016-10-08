@@ -1,17 +1,17 @@
-﻿using System;
-using DataAccess.Models;
+﻿using DataAccess.Models;
 using DataAccess.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using DataAccess;
 using HtmlAgilityPack;
+using Utility;
 
 namespace ParserEngine.DealerParser
 {
     public class AutoTraderParser : BaseParser
     {
-        public AutoTraderParser(IBaseRepository repository) :
-            base(repository, "AutoTrader")
+        public AutoTraderParser(IBaseRepository repository, IDownloadImage downloadImage) :
+            base(repository, "AutoTrader", downloadImage)
         {
         }
 
