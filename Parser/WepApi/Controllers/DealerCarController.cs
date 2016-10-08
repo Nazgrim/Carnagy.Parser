@@ -31,7 +31,7 @@ namespace WepApi.Controllers
         [ActionName("ChartData")]
         public IHttpActionResult GetChartData(int carId)
         {
-            var chartData = DealerService.GetChartDataById(carId);
+            var chartData = DealerService.GetChartDataById(carId, 1);
             if (chartData == null)
             {
                 return NotFound();

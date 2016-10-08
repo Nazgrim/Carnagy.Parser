@@ -8,7 +8,7 @@ namespace WepApi.Service
         List<CarViewModel> GetCarsByDealerId(int dealerId);
         void InitDb(Dealer dealer);
         DealerClassInformation GetInformationById(int dealerCarId);
-        ChartData GetChartDataById(int stockCarId);
+        ChartData GetChartDataById(int stockCarId, int dealerId);
         List<DealerCompetitorCar> GetDealerCompetitorsById(int stockCarId, int dealerId);
         ChartSeries GetPriceTrendById(int stockCarId);
     }
