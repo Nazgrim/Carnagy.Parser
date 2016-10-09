@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System.Threading.Tasks;
 using DataAccess.Models;
 
 namespace DataAccess.Repositories
@@ -30,10 +31,7 @@ namespace DataAccess.Repositories
 
         public void AddFieldValues(List<FieldValue> fieldValues)
         {
-            foreach (var fieldValue in fieldValues)
-            {
-                Context.FieldValues.Add(fieldValue);
-            }
+            Context.FieldValues.AddRange(fieldValues);
         }
 
         public MainConfiguration GetMainConfigurationByName(string name)
@@ -50,11 +48,14 @@ namespace DataAccess.Repositories
         {
             Context.SaveChanges();
         }
+        public Task<int> SaveChangesAsync()
+        {
+            return Context.SaveChangesAsync();
+        }
 
         public void AddErrorLog(List<ErrorLog> errorLog)
         {
             Context.ErrorLogs.AddRange(errorLog);
-            Context.SaveChanges();
         }
 
         public Dealer GetDealerById(int id)

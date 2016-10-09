@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,7 +10,6 @@ using DataAccess;
 using System.Threading;
 using System.Net;
 using System.Threading.Tasks;
-using Utility;
 using Utility.Extensions;
 
 namespace ParserEngine
@@ -23,12 +23,13 @@ namespace ParserEngine
         protected DateTime LastUpdate;
         protected const int NumberOfRetries = 3;
         protected const int DelayOnRetry = 1000;
-        private Stopwatch Stopwatch { get; set; }       
+        private Stopwatch Stopwatch { get; set; }
+        protected int ThredCound = 5;
 
         public BaseParser(IBaseRepository repository, string parserName)
         {
             Repository = repository;
-            ParserName = parserName;            
+            ParserName = parserName;
         }
 
         public virtual void Run()
@@ -47,8 +48,17 @@ namespace ParserEngine
             var resultFirstPage = FirstPhase(mainConfiguration.SiteUrl, fields);
 
             fields = mainConfiguration.Fields.Where(a => a.ConfigurationType == FieldConfigurationType.Page).ToList();
-            SecondPhase(resultFirstPage, fields);            
+            Console.WriteLine($"First phase completed for {GetTime(Stopwatch.Elapsed)}");
+            Console.WriteLine($"Car count is {resultFirstPage.Count}");
+            SecondPhase(resultFirstPage, fields);
             Stopwatch.Stop();
+            Console.WriteLine($"Second phase completed for {GetTime(Stopwatch.Elapsed)}");
+        }
+
+        private string GetTime(TimeSpan ts)
+        {
+            var elapsedTime = $"{ts.Hours:00}:{ts.Minutes:00}:{ts.Seconds:00}.{ts.Milliseconds / 10:00}";
+            return elapsedTime;
         }
 
         protected virtual void WriteToLog(string value)
@@ -90,53 +100,66 @@ namespace ParserEngine
 
         protected virtual void SecondPhase(List<ParsedCar> parrsedCars, List<Field> fields)
         {
-            var htmlWeb = new HtmlWeb();
-            var fieldValues = new List<FieldValue>();
-            Parallel.ForEach(parrsedCars, new ParallelOptions { MaxDegreeOfParallelism = 8 }, parrsedCar =>
-              {
-                  var fieldValues1 = new List<FieldValue>();
-                  //    foreach (var parrsedCar in parrsedCars)
-                  //{
-                  var htmlDocument = GetHtmlDocument(htmlWeb, parrsedCar.Url);
-                  if (htmlDocument == null)
-                  {
-                      WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
-                      parrsedCar.Status = ParsedCarStatus.LoadPageError;
+            var listTask = new List<Task>();
 
-                      return;
-                      //continue;
-                  }
-
-
-                  foreach (var field in fields.Where(a => !a.IsDefault))
-                  {
-                      var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
-                      if (fieldValue != null)
-                      {
-                          fieldValue.ParsedCar = parrsedCar;
-                          fieldValues1.Add(fieldValue);
-                      }
-                      else
-                      {
-                          WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
-                      }
-                  }
-                  if (fieldValues1.Any())
-                  {
-                      parrsedCar.Status = ParsedCarStatus.Page;
-                  }
-                  fieldValues.AddRange(fieldValues1);
-
-                  Thread.Sleep(1000);
-                  //}
-              });
-
-            if (fieldValues.Any())
+            try
             {
-                Repository.AddFieldValues(fieldValues);
+                foreach (var parrsedCar in parrsedCars)
+                {
+                    listTask.Add(ParseOnePage(parrsedCar, fields));
+                    if (listTask.Count != ThredCound)
+                        continue;
+                    Task.WaitAll(listTask.ToArray());
+                    listTask.Clear();
+                    Repository.SaveChanges();
+                }
+                Task.WaitAll(listTask.ToArray());
+                Repository.SaveChanges();
             }
-            Repository.SaveChanges();
-            SaveError();
+            catch (Exception e)
+            {
+                Console.WriteLine("Down" + e.Message);
+            }      
+        }
+
+        protected virtual async Task ParseOnePage(ParsedCar parrsedCar, List<Field> fields)
+        {
+            try
+            {
+                var htmlDocument = await GetHtmlDocumentAsync(parrsedCar.Url);
+                if (htmlDocument == null)
+                {
+                    WriteToLog($"Не удалось загрузить {parrsedCar.Url}");
+                    parrsedCar.Status = ParsedCarStatus.LoadPageError;
+                    return;
+                }
+                var carFiels = (await Task.WhenAll(fields.Select(field => GetFieldAsync(field, htmlDocument, parrsedCar))))
+                                    .Where(a => a != null);
+                if (carFiels.Any())
+                {
+                    parrsedCar.Status = ParsedCarStatus.Page;
+                    Repository.AddFieldValues(carFiels.ToList());
+                }
+            }
+            catch (Exception e)
+            {                
+                Console.WriteLine("Up"+e.Message);
+            }           
+        }
+
+        protected virtual Task<FieldValue> GetFieldAsync(Field field, HtmlDocument htmlDocument, ParsedCar parrsedCar)
+        {
+            return Task.Run(() =>
+            {
+                var fieldValue = GetFieldValue(field, htmlDocument.DocumentNode, parrsedCar.Url);
+                if (fieldValue != null)
+                {
+                    fieldValue.ParsedCar = parrsedCar;
+                    return fieldValue;
+                }
+                //WriteToLog($"Не удалось распарсить свойство Id:{field.Id}");
+                return null;
+            });
         }
 
         protected virtual FieldValue GetFieldValue(Field field, HtmlNode carListNode, string url = "")
@@ -159,22 +182,16 @@ namespace ParserEngine
                 }
                 catch (Exception ex)
                 {
-                    string errorMessage = string.Empty;
+                    var errorMessage = string.Empty;
                     if (!string.IsNullOrWhiteSpace(url))//нельзя сохранять всю html страницу
                     {
-                        errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nUrl:{2}\nInnerExeption{3}",
-                        field.Id,
-                        ex.Message,
-                        url,
-                        ex.InnerException?.Message ?? string.Empty);
+                        errorMessage =
+                            $"Field Id:{field.Id}\nErrorMessage:{ex.Message}\nUrl:{url}\nInnerExeption{ex.InnerException?.Message ?? string.Empty}";
                     }
                     else
                     {
-                        errorMessage = string.Format("Field Id:{0}\nErrorMessage:{1}\nInnerHtml:{2}\nInnerExeption{3}",
-                        field.Id,
-                        ex.Message,
-                        carListNode.InnerHtml,
-                        ex.InnerException?.Message ?? string.Empty);
+                        errorMessage =
+                            $"Field Id:{field.Id}\nErrorMessage:{ex.Message}\nInnerHtml:{carListNode.InnerHtml}\nInnerExeption{ex.InnerException?.Message ?? string.Empty}";
                     }
                     Log(errorMessage);
                 }
@@ -261,6 +278,15 @@ namespace ParserEngine
             Repository.SaveParsedCar(newParsedCars);
 
             return newParsedCars;
+        }
+
+        protected async Task<HtmlDocument> GetHtmlDocumentAsync(string url)
+        {
+            var request = WebRequest.Create(url);
+            var response = (HttpWebResponse)await request.GetResponseAsync();
+            var htmlDoc = new HtmlDocument { OptionFixNestedTags = true };
+            htmlDoc.Load(response.GetResponseStream());
+            return htmlDoc;
         }
 
         protected virtual HtmlDocument GetHtmlDocument(HtmlWeb htmlWeb, string url)

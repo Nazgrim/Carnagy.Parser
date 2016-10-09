@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DataAccess.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
@@ -52,5 +53,6 @@ namespace DataAccess.Repositories
         List<Car> GetStockCarPrices(int stockCarId);
         List<Car> GetCarsByStockCarId(int stockCarId);
         List<Car> GetCarsByFilter(Func<Car, bool> filter);
+        Task<int> SaveChangesAsync();
     }
 }

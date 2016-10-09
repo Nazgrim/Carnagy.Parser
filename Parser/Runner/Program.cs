@@ -21,15 +21,15 @@ namespace Runner
             //stopwathc.Start();
             //download.Download();
             //stopwathc.Stop();
-            //var parser = container.Resolve<IParser>();
-            //Console.WriteLine("Parsing is started.");
-            //parser.Run();
-            //Console.WriteLine("Parsing is completed.");
+            var parser = container.Resolve<IParser>();
+            Console.WriteLine("Parsing is started.");
+            parser.Run();
+            Console.WriteLine("Parsing is completed.");
 
-            var parseAndAnalyze = container.Resolve<IParseAndAnalyze>();
-            Console.WriteLine("AddisongmParseAndAnalyze is started.");
-            parseAndAnalyze.Run();
-            Console.WriteLine("AddisongmParseAndAnalyze is completed.");
+            //var parseAndAnalyze = container.Resolve<IParseAndAnalyze>();
+            //Console.WriteLine("AddisongmParseAndAnalyze is started.");
+            //parseAndAnalyze.Run();
+            //Console.WriteLine("AddisongmParseAndAnalyze is completed.");
 
             //var analyzer = container.Resolve<IAnalyzer>();
             //Console.WriteLine("Analyzer is started.");
