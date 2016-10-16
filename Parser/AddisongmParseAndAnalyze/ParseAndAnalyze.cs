@@ -31,7 +31,7 @@ namespace AddisongmParseAndAnalyze
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var images = Repository.GetCarsByDealerId(dealer.Id)
-                .Select(a => new ImageForSave()
+                .Select(a => new ImageDownloadCommand()
                 {
                     Id = a.Id,
                     Url = vehicles.FirstOrDefault(b => b.stocknumber == a.StockNumber)?.picture

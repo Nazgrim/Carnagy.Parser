@@ -4,6 +4,6 @@ namespace Utility
 {
     public interface IDownloadImage
     {
-        void Download(string dir, IEnumerable<ImageForSave> images);
+        void Download(string dirName, IEnumerable<ImageDownloadCommand> commands);
     }
 }

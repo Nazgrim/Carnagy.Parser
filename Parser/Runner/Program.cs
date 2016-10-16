@@ -41,7 +41,10 @@ namespace Runner
 
         private static IContainer BuildContainer()
         {
+            //TODO: Move to app.config
+            const int threadCount = 5;
             const string baseDir = @"C:\Users\Иван\Source\Repos\Carnagy.Parser\Parser\WepApi\Image";
+
             var builder = new ContainerBuilder();
 
             builder.RegisterType<BaseRepository>().As<IBaseRepository>();
@@ -49,8 +52,9 @@ namespace Runner
             builder.RegisterType<CarnagyContext>().AsSelf();
             builder.RegisterType<AnalyzerBase>().As<IAnalyzer>();
             builder.RegisterType<ParseAndAnalyze>().As<IParseAndAnalyze>();
-            builder.RegisterType<DownloadImage>().As<IDownloadImage>()
-                  .WithParameter("baseDir", baseDir);
+            builder.RegisterType<ImageDownloader>().As<IDownloadImage>()
+                  .WithParameter(nameof(baseDir), baseDir)
+                  .WithParameter(nameof(threadCount), threadCount);
 
             return builder.Build();
         }

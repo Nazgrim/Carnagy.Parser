@@ -40,11 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DownloadImage.cs" />
-    <Compile Include="Extensions\EnumerableHelper.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="ImageDownloader.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IDownloadImage.cs" />
-    <Compile Include="ImageForSave.cs" />
+    <Compile Include="ImageDownloadCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

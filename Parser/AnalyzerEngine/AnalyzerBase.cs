@@ -27,7 +27,7 @@ namespace AnalyzerEngine
         }
         private void Analyze()
         {
-            var images = new List<ImageForSave>();
+            var images = new List<ImageDownloadCommand>();
             var configuration = Repository.GetConfigurations();
             //AnalyzeDealerConfiguration(configuration);
             var autotraderImages = AnalyzeAutotraderConfiguration(configuration);
@@ -35,9 +35,9 @@ namespace AnalyzerEngine
             DownloadImager.Download("Cars", images.Where(a => !string.IsNullOrWhiteSpace(a.Url)));
         }
 
-        private List<ImageForSave> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
+        private List<ImageDownloadCommand> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
         {
-            var result = new List<ImageForSave>();
+            var result = new List<ImageDownloadCommand>();
             var now = DateTime.Now;
             var dealerConfiguration = configuration.Where(a => a.DealerId.HasValue);
             foreach (var mainConfiguration in dealerConfiguration)
@@ -61,9 +61,9 @@ namespace AnalyzerEngine
             return result;
         }
 
-        private List<ImageForSave> AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
+        private List<ImageDownloadCommand> AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
         {
-            var result = new List<ImageForSave>();
+            var result = new List<ImageDownloadCommand>();
             var autotraderConfiguration = configuration.Where(a => !a.DealerId.HasValue);
 
             foreach (var mainConfiguration in autotraderConfiguration)
@@ -111,7 +111,7 @@ namespace AnalyzerEngine
                     if (advertCar != null)
                     {
                         Repository.CreateAdvertCar(advertCar);
-                        result.Add(new ImageForSave { Id = advertCar.CarId, Url = GetValue(parssedCar.FieldValues, FiledNameConstant.ImgPath) });
+                        result.Add(new ImageDownloadCommand { Id = advertCar.CarId, Url = GetValue(parssedCar.FieldValues, FiledNameConstant.ImgPath) });
                     }
                     else
                     {

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Utility.Extensions
+namespace Utility
 {
-    public static class EnumerableHelper
+    public static class EnumerableExtensions
     {
-        public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)
+        public static IEnumerable<IEnumerable<T>> SplitBy<T>(this IEnumerable<T> source, int size)
         {
             while (source.Any())
             {
-                yield return source.Take(chunksize);
-                source = source.Skip(chunksize);
+                yield return source.Take(size);
+                source = source.Skip(size);
             }
         }
 
@@ -26,6 +26,16 @@ namespace Utility.Extensions
                         while (partition.MoveNext())
                             await body(partition.Current);
                 })));
+        }
+
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            foreach (var element in source)
+            {
+                action(element);
+            }
+
+            return source;
         }
     }
 }
