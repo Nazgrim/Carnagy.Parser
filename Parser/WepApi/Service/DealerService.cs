@@ -76,13 +76,13 @@ namespace WepApi.Service
 
         public ChartData GetChartDataById(int stockCarId, int dealerId)
         {
-            var stockCar = Repository.GetStockCar(a => a.Id == stockCarId);           
+            var stockCar = Repository.GetStockCar(a => a.Id == stockCarId);
             var cars = Repository.GetStockCarPrices(stockCarId);
-            var dealer = cars.FirstOrDefault(a=>a.DealerId== dealerId);
+            var dealer = cars.FirstOrDefault(a => a.DealerId == dealerId);
             var carsPrice = cars.Select(a => a.Price);
             var max = Math.Ceiling(carsPrice.Max() / 1000) * 1000;
             var min = Math.Floor(carsPrice.Min() / 1000) * 1000;
-            var seriesData = GetSeriesData(carsPrice, max, min);
+            var seriesData = GetSeriesData(cars, max, min);
             var chartData = new ChartData
             {
                 avrPrice = (int)carsPrice.Average(),
@@ -106,7 +106,7 @@ namespace WepApi.Service
                     model = c.StockCar.Model.Value,
                     bodyType = c.StockCar.BodyType.Value,
                     drivetrain = c.StockCar.Drivetrain.Value,
-                    maker = c.StockCar.Make.Value,
+                    make = c.StockCar.Make.Value,
                     styleTrim = c.StockCar.StyleTrim.Value,
                     price = new CarPrice
                     {
@@ -115,6 +115,7 @@ namespace WepApi.Service
                     },
                     dealerLocation = c.Dealer.Location,
                     dealerName = c.Dealer.Name,
+                    dealerId = c.DealerId
                 }).ToList();
             return result;
         }
@@ -138,26 +139,28 @@ namespace WepApi.Service
             return chartSeties;
         }
 
-        private IEnumerable<int> GetSeriesData(IEnumerable<double> carDeales, double max, double min)
+        private IEnumerable<SeriesDataValue> GetSeriesData(List<Car> carDeales, double max, double min)
         {
-            if (carDeales.Count() <= 1)
+            if (carDeales.Count <= 1)
             {
-                return new List<int> { 1 };
+                return new List<SeriesDataValue> { new SeriesDataValue { value = 1 } };
             }
 
             var minMaxDif = max - min;
             var areaCount = 4;//количество областей
-            carDeales = carDeales.OrderBy(a => a).ToList();
+            carDeales = carDeales.OrderBy(a => a.Price).ToList();
             var increment = minMaxDif / areaCount;
             var previousValue = min;
-            var result = new List<int>();
+            var result = new List<SeriesDataValue>();
             for (var i = min + increment; i <= max; i += increment)
             {
-                var areaCars = carDeales.Where(a => a > previousValue && a <= i).OrderBy(a => a).ToList();
+                var areaCars = carDeales.Where(a => a.Price > previousValue && a.Price <= i)
+                    .OrderBy(a => a.Price)
+                    .ToList();
                 if (!areaCars.Any())
                 {
                     previousValue = i;
-                    result.Add(0);
+                    result.Add(new SeriesDataValue { value = 0 });
                     continue;
                 }
 
@@ -166,8 +169,12 @@ namespace WepApi.Service
                 var previousValueX = previousValue;
                 for (var j = previousValue + incrementX; j <= i; j += incrementX)
                 {
-                    var count = areaCars.Count(a => a > previousValueX && a <= j);
-                    result.Add(count);
+                    var filtered = areaCars.Where(a => a.Price > previousValueX && a.Price <= j);
+                    result.Add(new SeriesDataValue
+                    {
+                        value = filtered.Count(),
+                        dealersId = filtered.Select(a => a.DealerId).ToList()
+                    });
                     previousValueX = j;
                 }
 
