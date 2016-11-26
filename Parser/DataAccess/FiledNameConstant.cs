@@ -10,10 +10,11 @@
         public const string Url = "Url";
         public const string Name = "Name";
         public const string Description = "Description";
-        public const string DealerName = "DealerName";
-        public const string DealerLogo = "DealerLogo";
-        public const string DealerPlace = "DealerPlace";
 
+        public const string DealerName     = "DealerName";
+        public const string DealerLogo     = "DealerLogo";
+        public const string DealerPlace    = "DealerPlace";
+        public const string DealerWebSite  = "DealerWebSite";
         public const string Year           = "Year";
         public const string Make           = "Make";
         public const string Model          = "Model";
@@ -24,7 +25,6 @@
         public const string Cylinders      = "Cylinders";
         public const string StockNumber    = "StockNumber";
         public const string Drivetrain     = "Drivetrain";
-        public const string RWD            = "RWD";
         public const string Transmission   = "Transmission";
         public const string ExteriorColour = "ExteriorColour";
         public const string InteriorColour = "InteriorColour";
@@ -35,29 +35,6 @@
         public const string CityFuelEconomy= "CityFuelEconomy";
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     }
 }

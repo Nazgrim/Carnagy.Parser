@@ -11,12 +11,16 @@ namespace AddisongmParseAndAnalyze
 {
     public class ParseAndAnalyze : IParseAndAnalyze
     {
+        private const string InventoryUrl = "http://addisongm.com/data/inventory.json";
         private IBaseRepository Repository { get; set; }
         private IDownloadImage DownloadImage { get; set; }
-        public ParseAndAnalyze(IBaseRepository repository, IDownloadImage downloadImage)
+        private IDownloadManager DownloadManager { get; set; }
+
+        public ParseAndAnalyze(IBaseRepository repository, IDownloadImage downloadImage, IDownloadManager downloadManager)
         {
             Repository = repository;
             DownloadImage = downloadImage;
+            DownloadManager = downloadManager;
         }
 
         public void Run()
@@ -27,11 +31,12 @@ namespace AddisongmParseAndAnalyze
                 return;
 
             var vehicles = rooobject.vehicles.ToList();
-            //FillDatabase(rooobject.vehicles.ToList(), dealer);
+            var stockNumbers = Repository.GetAllStockNumber(dealer.Id);
+            FillDatabase(rooobject.vehicles.ToList(), dealer, stockNumbers);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             var images = Repository.GetCarsByDealerId(dealer.Id)
-                .Select(a => new ImageDownloadCommand()
+                .Select(a => new ImageDownloadCommand
                 {
                     Id = a.Id,
                     Url = vehicles.FirstOrDefault(b => b.stocknumber == a.StockNumber)?.picture
@@ -43,46 +48,64 @@ namespace AddisongmParseAndAnalyze
             Console.ReadKey();
         }
 
-        private static Rootobject GetRootobject()
+        private Rootobject GetRootobject()
         {
             var sourceDirectory = System.IO.Directory.GetParent(System.IO.Directory.GetCurrentDirectory()).Parent.FullName;
             var path = System.IO.Path.Combine(sourceDirectory, "json\\inventory.json");
             var json = System.IO.File.ReadAllText(path);
+            //var json = DownloadManager.DownloadString(InventoryUrl);
             var result = JsonConvert.DeserializeObject<Rootobject>(json);
             return result;
         }
 
-        private void FillDatabase(List<Vehicle> vehicles, Dealer dealer)
+        private void FillDatabase(List<Vehicle> vehicles, Dealer dealer, List<Car> stockNumbers)
         {
             var now = DateTime.Now;
             foreach (var vehicle in vehicles)
             {
-                if (vehicle.bodystyle == "Sport Utility")
+                var car = stockNumbers.SingleOrDefault(a => a.StockNumber == vehicle.stocknumber);
+                if (car == null)
                 {
-                    vehicle.bodystyle = "SUV";
+                    car = AddCar(vehicle, dealer);
                 }
-
-                if (vehicle.bodystyle == "4dr Car")
+                else
                 {
-                    vehicle.bodystyle = "Sedan";
+                    stockNumbers.Remove(car);
                 }
-
-                var make = GetDictionaryOrCreateEntity<Make>(vehicle.make);
-                var model = GetDictionaryOrCreateEntity<Model>(vehicle.model);
-                var year = GetDictionaryOrCreateEntity<Year>(vehicle.year);
-                var bodyType = GetDictionaryOrCreateEntity<BodyType>(vehicle.bodystyle);
-                var styleTrim = GetDictionaryOrCreateEntity<StyleTrim>(vehicle.trim);
-                var drivetrain = GetDictionaryOrCreateEntity<Drivetrain>(vehicle.drivetrain);
-
-                var stockCar = GetOrCreateStocCar(make, model, year, bodyType, styleTrim, drivetrain);
-
-                var car = GetCar(stockCar.Id, dealer.Id, vehicle.stocknumber);
-                car = CreateOrUpdateCar(car, dealer.Id, stockCar.Id, vehicle.stocknumber, vehicle.price, vehicle.id);
-
                 var advertCar = GetOrCreateAdvertCar(car);
 
                 Repository.AddAdvertCarPrice(advertCar.Id, vehicle.price, now);
             }
+
+            Repository.DeleteCars(stockNumbers);
+
+            Repository.SaveChanges();
+        }
+
+        private Car AddCar(Vehicle vehicle, Dealer dealer)
+        {
+            if (vehicle.bodystyle == "Sport Utility")
+            {
+                vehicle.bodystyle = "SUV";
+            }
+
+            if (vehicle.bodystyle == "4dr Car")
+            {
+                vehicle.bodystyle = "Sedan";
+            }
+
+            var make = GetDictionaryOrCreateEntity<Make>(vehicle.make);
+            var model = GetDictionaryOrCreateEntity<Model>(vehicle.model);
+            var year = GetDictionaryOrCreateEntity<Year>(vehicle.year);
+            var bodyType = GetDictionaryOrCreateEntity<BodyType>(vehicle.bodystyle);
+            var styleTrim = GetDictionaryOrCreateEntity<StyleTrim>(vehicle.trim);
+            var drivetrain = GetDictionaryOrCreateEntity<Drivetrain>(vehicle.drivetrain);
+
+            var stockCar = GetOrCreateStocCar(make, model, year, bodyType, styleTrim, drivetrain, vehicle.msrp);
+
+            var car = GetCar(stockCar.Id, dealer.Id, vehicle.stocknumber);
+            car = CreateOrUpdateCar(car, dealer.Id, stockCar.Id, vehicle.stocknumber, vehicle.price, vehicle);
+            return car;
         }
 
         private AdvertCar GetOrCreateAdvertCar(Car car)
@@ -93,8 +116,8 @@ namespace AddisongmParseAndAnalyze
 
             advertCar = new AdvertCar
             {
-                Car = car,
-                IsDealer = true,
+                MainAdvertCar = new MainAdvertCar { Car = car },
+                IsDealer = true
             };
             Repository.CreateAdvertCar(advertCar);
 
@@ -106,17 +129,20 @@ namespace AddisongmParseAndAnalyze
             return Repository.GetCar(stockCarId, dealerId, stockNumber);
         }
 
-        private Car CreateOrUpdateCar(Car car, int dealerId, int stockCarId, string stocknumber, float price, int carId)
+        private Car CreateOrUpdateCar(Car car, int dealerId, int stockCarId, string stocknumber, float price, Vehicle vehicle)
         {
             if (car == null)
             {
+                //формирование url взято у диллера на сайте
+                var carUrl = $"http://addisongm.com/view/{vehicle.condition}-{vehicle.year}-{vehicle.make}-{vehicle.model}-{vehicle.id}";
+                carUrl = System.Text.RegularExpressions.Regex.Replace(carUrl, @"\s g", "-").ToLower();
                 car = new Car
                 {
                     DealerId = dealerId,
                     StockCarId = stockCarId,
                     StockNumber = stocknumber,
                     Price = price,
-                    Url = $"http://addisongm.com/view/{carId}/"
+                    Url = carUrl
                 };
                 Repository.CreateCar(car);
             }
@@ -128,7 +154,7 @@ namespace AddisongmParseAndAnalyze
             return car;
         }
 
-        private StockCar GetOrCreateStocCar(Make make, Model model, Year year, BodyType bodyType, StyleTrim styleTrim, Drivetrain drivetrain)
+        private StockCar GetOrCreateStocCar(Make make, Model model, Year year, BodyType bodyType, StyleTrim styleTrim, Drivetrain drivetrain, float msrp)
         {
             Func<StockCar, bool> filter = a => a.YearId == year.Id &&
                                                     a.MakeId == make.Id &&
@@ -149,6 +175,7 @@ namespace AddisongmParseAndAnalyze
                 BodyType = bodyType,
                 Drivetrain = drivetrain,
                 StyleTrim = styleTrim,
+                MsrpPrice = msrp
             };
             Repository.CreateStockCar(stockCar);
 

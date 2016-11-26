@@ -53,6 +53,61 @@ namespace DataAccess.Repositories
             return Context.SaveChangesAsync();
         }
 
+        public List<Car> GetAllStockNumber(int dealerId)
+        {
+            var result = Context.Set<Car>()
+                .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)
+                .Select(a => new { a.Id, a.StockNumber })
+                .ToList()
+                .Select(a => new Car
+                {
+                    StockNumber = a.StockNumber,
+                    Id = a.Id
+                })
+                .ToList();
+            return result;
+        }
+
+        public void DeleteCars(List<Car> cars)
+        {
+            foreach (var car in cars)
+            {
+                var mainAdvertCar = new MainAdvertCar
+                {
+                    CarId = car.Id,
+                    IsDeleted = true
+                };
+                Context.Entry(mainAdvertCar).State = EntityState.Modified;
+            }
+        }
+
+        public List<ParsedCar> GetParsedCarsByPage(int skip, int take, int configurationId)
+        {
+            return Context.Set<ParsedCar>()
+                .Where(a => 
+                !a.IsDeleted 
+                && (a.Status == ParsedCarStatus.Page || a.Status == ParsedCarStatus.CantGetStockCar || a.Status == ParsedCarStatus.CannotParsePrice)
+                //&& a.Status==ParsedCarStatus.CannotParsePrice 
+                && a.MainConfigurationId == configurationId)
+                .OrderBy(a => a.Id)
+                .Skip(skip)
+                .Take(take)
+                .ToList();
+        }
+
+        public void DetachParsedCars(List<ParsedCar> parrsedCar)
+        {
+            foreach (var parsedCar in parrsedCar)
+            {
+                Context.Entry(parsedCar).State = EntityState.Detached;
+            }
+        }
+
+        public AdvertCar GetAdvertCar(int parsedCarId)
+        {
+            return Context.Set<AdvertCar>().FirstOrDefault(a => a.ParsedCarId == parsedCarId);
+        }
+
         public void AddErrorLog(List<ErrorLog> errorLog)
         {
             Context.ErrorLogs.AddRange(errorLog);
@@ -169,7 +224,12 @@ namespace DataAccess.Repositories
         public void AddAdvertCarPrice(int advertCarId, double value, DateTime now)
         {
             Context.Set<AdvertCarPrice>()
-                .Add(new AdvertCarPrice { AdvertCarId = advertCarId, Value = value, DateTime = now });
+                .Add(new AdvertCarPrice
+                {
+                    AdvertCarId = advertCarId,
+                    Value = value,
+                    DateTime = now
+                });
             Context.SaveChanges();
         }
 
@@ -220,7 +280,7 @@ namespace DataAccess.Repositories
 
         public AdvertCar GetDealerAdvertCar(int carId)
         {
-            return Context.Set<AdvertCar>().FirstOrDefault(a => a.CarId == carId && a.IsDealer);
+            return Context.Set<AdvertCar>().FirstOrDefault(a => a.MainAdvertCarId == carId && a.IsDealer);
         }
 
         public List<Car> GetStockCarPrices(int stockCarId)

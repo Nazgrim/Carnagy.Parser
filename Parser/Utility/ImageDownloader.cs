@@ -47,8 +47,15 @@ namespace Utility
 
         private static async Task DownloadAndSaveImage(string url, string path)
         {
-            // TODO: Removed using for response stream. Please confirm there is no memory leak.
-            await SaveImage(path, await DownloadImage(url));
+            try
+            {
+                // TODO: Removed using for response stream. Please confirm there is no memory leak.
+                await SaveImage(path, await DownloadImage(url));
+            }
+            catch (Exception e)
+            {
+               //TODO: Add loger
+            }            
         }
 
         private static async Task<Stream> DownloadImage(string url)

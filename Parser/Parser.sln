@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AddisongmParseAndAnalyze", "AddisongmParseAndAnalyze\AddisongmParseAndAnalyze.csproj", "{2D4FCC6D-EBE6-475A-AC16-F4CF9EC5B06C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{EB9CE47F-1864-41D0-BC22-372570A017D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{2D4FCC6D-EBE6-475A-AC16-F4CF9EC5B06C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4FCC6D-EBE6-475A-AC16-F4CF9EC5B06C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D4FCC6D-EBE6-475A-AC16-F4CF9EC5B06C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB9CE47F-1864-41D0-BC22-372570A017D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB9CE47F-1864-41D0-BC22-372570A017D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB9CE47F-1864-41D0-BC22-372570A017D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB9CE47F-1864-41D0-BC22-372570A017D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,6 +12,6 @@
         public string url { get; set; }
         public string dealerName { get; set; }
         public string dealerLocation { get; set; }
-        public CarPrice price { get; set; }
+        public double price { get; set; }
     }
 }

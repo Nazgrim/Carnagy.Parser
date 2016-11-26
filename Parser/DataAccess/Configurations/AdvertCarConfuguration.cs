@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.ModelConfiguration;
 using DataAccess.Models;
 
 namespace DataAccess.Configurations
@@ -8,10 +9,10 @@ namespace DataAccess.Configurations
         public AdvertCarConfuguration()
         {
             HasKey(t => t.Id);
-           
-            HasRequired(t => t.Car)
+
+            HasRequired(t => t.MainAdvertCar)
                 .WithMany(t => t.AdvertCars)
-                .HasForeignKey(d => d.CarId);
+                .HasForeignKey(d => d.MainAdvertCarId);
 
             HasOptional(t => t.ParsedCar)
                 .WithMany(t => t.AdvertCars)

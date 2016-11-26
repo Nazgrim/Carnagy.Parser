@@ -9,6 +9,7 @@ using HtmlAgilityPack;
 using DataAccess;
 using System.Threading;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Utility.Extensions;
 
@@ -34,7 +35,7 @@ namespace ParserEngine
 
         public virtual void Run()
         {
-            Repository.ClearParsed();
+            //Repository.ClearParsed();
             LastUpdate = DateTime.Now;
             Stopwatch = new Stopwatch();
             Stopwatch.Start();
@@ -169,7 +170,7 @@ namespace ParserEngine
             foreach (var xpath in xpaths)
             {
                 try
-                {
+                {                   
                     if (string.IsNullOrWhiteSpace(field.Attribute))
                     {
                         filedValue.Value = carListNode.SelectSingleNode(xpath).InnerText.Trim();
@@ -178,7 +179,10 @@ namespace ParserEngine
                     {
                         filedValue.Value = carListNode.SelectSingleNode(xpath).GetAttributeValue(field.Attribute, string.Empty).Trim();
                     }
-                    return filedValue;
+                    if (!string.IsNullOrEmpty(filedValue.Value))
+                    {
+                        break;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -197,7 +201,7 @@ namespace ParserEngine
                 }
             }
 
-            return null;
+            return !string.IsNullOrEmpty(filedValue.Value) ? filedValue : null;
         }
 
         protected virtual ParsedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode)
@@ -223,7 +227,17 @@ namespace ParserEngine
             var priceFieldValue = GetFieldValue(priceField, carListNode);
             var price = new Price { DateTime = LastUpdate };
             if (priceFieldValue != null)
-                price.Value = priceFieldValue.Value;
+            {
+                var regex = new Regex(priceField.RegExPattern);
+                if (regex.IsMatch(priceFieldValue.Value))
+                {
+                    price.Value = regex.Match(priceFieldValue.Value).Value;
+                }
+                else
+                {
+                    price.Value = priceFieldValue.Value;
+                }             
+            }
 
             parsedCar.Prices.Add(price);
 
@@ -256,6 +270,7 @@ namespace ParserEngine
 
             WriteToLog($"Удалось распарсить:{parsedCars.Count}");
 
+            //TODO: создать функцию хеширования
             var urls = parsedCars.Select(a => a.Url).ToList();
             var savedParsedCars = Repository
                 .GetParsedCars(a => a.MainConfigurationId == MainConfigurationId && urls.Contains(a.Url));

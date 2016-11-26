@@ -59,6 +59,7 @@
     <Compile Include="Configurations\ErrorLogConfiguration.cs" />
     <Compile Include="Configurations\FieldConfiguration.cs" />
     <Compile Include="Configurations\FieldValueConfiguration.cs" />
+    <Compile Include="Configurations\MainAdvertCarConfiguration.cs" />
     <Compile Include="Configurations\MainConfigurationConfiguration.cs" />
     <Compile Include="Configurations\MakeConfiguration.cs" />
     <Compile Include="Configurations\ModelConfiguration.cs" />
@@ -189,6 +190,18 @@
     <Compile Include="Migrations\201610080929353_AddMsrpPriceFieldInStockCar.Designer.cs">
       <DependentUpon>201610080929353_AddMsrpPriceFieldInStockCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611040913043_RemoveFieldIsDealerFromAdvertCar.cs" />
+    <Compile Include="Migrations\201611040913043_RemoveFieldIsDealerFromAdvertCar.Designer.cs">
+      <DependentUpon>201611040913043_RemoveFieldIsDealerFromAdvertCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611041644241_AddMainAdvertCar.cs" />
+    <Compile Include="Migrations\201611041644241_AddMainAdvertCar.Designer.cs">
+      <DependentUpon>201611041644241_AddMainAdvertCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201611250704022_AddFiledegExPatternInField.cs" />
+    <Compile Include="Migrations\201611250704022_AddFiledegExPatternInField.Designer.cs">
+      <DependentUpon>201611250704022_AddFiledegExPatternInField.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -201,6 +214,8 @@
     <Compile Include="Models\FieldValue.cs" />
     <Compile Include="Models\FieldConfigurationType.cs" />
     <Compile Include="Models\IDictionaryEntity.cs" />
+    <Compile Include="Models\IEntites.cs" />
+    <Compile Include="Models\MainAdvertCar.cs" />
     <Compile Include="Models\MainConfiguration.cs" />
     <Compile Include="Models\Make.cs" />
     <Compile Include="Models\Model.cs" />
@@ -309,6 +324,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610080929353_AddMsrpPriceFieldInStockCar.resx">
       <DependentUpon>201610080929353_AddMsrpPriceFieldInStockCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611040913043_RemoveFieldIsDealerFromAdvertCar.resx">
+      <DependentUpon>201611040913043_RemoveFieldIsDealerFromAdvertCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611041644241_AddMainAdvertCar.resx">
+      <DependentUpon>201611041644241_AddMainAdvertCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611250704022_AddFiledegExPatternInField.resx">
+      <DependentUpon>201611250704022_AddFiledegExPatternInField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

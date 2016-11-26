@@ -3,7 +3,7 @@ using DataAccess.Models;
 
 namespace DataAccess.Configurations
 {
-    public class AdvertCarPriceConfiguration :EntityTypeConfiguration<AdvertCarPrice>
+    public class AdvertCarPriceConfiguration : EntityTypeConfiguration<AdvertCarPrice>
     {
         public AdvertCarPriceConfiguration()
         {

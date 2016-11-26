@@ -14,6 +14,8 @@ namespace AnalyzerEngine
         private IBaseRepository Repository { get; set; }
         private IDownloadImage DownloadImager { get; set; }
 
+        private const int ParrsedCarByTimes = 1000;
+
         public AnalyzerBase(IBaseRepository repository, IDownloadImage downloadImager)
         {
             Repository = repository;
@@ -35,88 +37,159 @@ namespace AnalyzerEngine
             DownloadImager.Download("Cars", images.Where(a => !string.IsNullOrWhiteSpace(a.Url)));
         }
 
-        private List<ImageDownloadCommand> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
-        {
-            var result = new List<ImageDownloadCommand>();
-            var now = DateTime.Now;
-            var dealerConfiguration = configuration.Where(a => a.DealerId.HasValue);
-            foreach (var mainConfiguration in dealerConfiguration)
-            {
-                foreach (var parssedCar in mainConfiguration.ParsedCars.Where(a => a.IsDeleted))
-                {
-                    var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
-                    if (parssedCar.IsParsed)
-                    {
-                        parssedCar.AdvertCars.First().Car.Price = priceValue;
-                        Repository.AddAdvertCarPrice(parssedCar.Id, priceValue, now);
-                    }
-                    else
-                    {
-                        parssedCar.IsParsed = true;
-                        var advertCar = GetAdvertCar(parssedCar, priceValue, mainConfiguration.Dealer);
-                        Repository.CreateAdvertCar(advertCar);
-                    }
-                }
-            }
-            return result;
-        }
+        //private List<ImageDownloadCommand> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
+        //{
+        //    var result = new List<ImageDownloadCommand>();
+        //    var now = DateTime.Now;
+        //    var dealerConfiguration = configuration.Where(a => a.DealerId.HasValue);
+        //    foreach (var mainConfiguration in dealerConfiguration)
+        //    {
+        //        foreach (var parssedCar in mainConfiguration.ParsedCars.Where(a => a.IsDeleted))
+        //        {
+        //            var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
+        //            if (parssedCar.IsParsed)
+        //            {
+        //                parssedCar.AdvertCars.First().MainAdvertCar.Car.Price = priceValue;
+        //                Repository.AddAdvertCarPrice(parssedCar.Id, priceValue, now);
+        //            }
+        //            else
+        //            {
+        //                parssedCar.IsParsed = true;
+        //                var advertCar = GetOrCreateAdvertCar(parssedCar, priceValue, mainConfiguration.Dealer);
+        //                Repository.CreateAdvertCar(advertCar);
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
 
         private List<ImageDownloadCommand> AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
         {
             var result = new List<ImageDownloadCommand>();
             var autotraderConfiguration = configuration.Where(a => !a.DealerId.HasValue);
-
+            var now = DateTime.Now;
+            //На данный момент у нас всего один аггрегатор(autotrader), но в будущем их будет больше
             foreach (var mainConfiguration in autotraderConfiguration)
             {
-                foreach (var parssedCar in mainConfiguration.ParsedCars.Where(a => !a.IsDeleted))
+                //мы не можем сразу забрать все сущности из базы которые необходимо обработать, поэтому разбиваем их на раввные порции
+                //с помощью константы ParrsedCarByTimes, цикл while можно заменить на for но нужно будет делать запрос на текущие количество элементов
+                //цикл выполняется пока возвращаются значения 
+                var page = 0;
+                while (true)
                 {
-                    var dealerName = GetValue(parssedCar.FieldValues, FiledNameConstant.DealerName); ;
-                    if (dealerName == null)
-                        continue;
 
-                    var dealer = GetOrCreateDealer(parssedCar, dealerName);
+                    //получаем порцию данных с которой дальше будем работать
+                    var parsedCars = Repository.GetParsedCarsByPage(page * ParrsedCarByTimes, ParrsedCarByTimes, mainConfiguration.Id);
 
-                    #region MoreDifficultWay
-                    //create relation between dealer advert and autortrader advert 
-                    //var priceValue = int.Parse(parssedCar.Prices.OrderByDescending(a => a.DateTime).First().Value);
-
-                    //if (dealer.Id == 0)
-                    //{
-                    //    Repository.CreateDealer(dealer);
-                    //    var advertCar = GetDealerAdvertCar(mainConfiguration, parssedCar, priceValue, dealer);
-                    //    Repository.CreateAdvertCar(advertCar);
-                    //}
-                    //else
-                    //{
-                    //    var car = GetCar();
-                    //    //var advertCar=car.AdvertCars.w
-                    //}
-                    #endregion
-
-                    var price = parssedCar.Prices
-                        .OrderByDescending(a => a.DateTime)
-                        .FirstOrDefault()?.Value ?? string.Empty;
-
-                    var priceValue = 0.0;
-                    if (!double.TryParse(
-                        price,
-                        NumberStyles.AllowCurrencySymbol |
-                        NumberStyles.AllowDecimalPoint |
-                        NumberStyles.AllowThousands,
-                        new CultureInfo("en-US"),
-                        out priceValue))
-                        continue;
-
-                    var advertCar = GetAdvertCar(parssedCar, priceValue, dealer);
-                    if (advertCar != null)
+                    //если данных нет выходим из цикла
+                    if (!parsedCars.Any())
                     {
-                        Repository.CreateAdvertCar(advertCar);
-                        result.Add(new ImageDownloadCommand { Id = advertCar.CarId, Url = GetValue(parssedCar.FieldValues, FiledNameConstant.ImgPath) });
+                        break;
                     }
-                    else
+                    page++;
+
+                    foreach (var parsedCar in parsedCars)
                     {
-                        Console.WriteLine("Не удалось распарсить");
+                        //без диллера некуда прикрепить машину.
+                        var dealerWebSite = GetValue(parsedCar.FieldValues, FiledNameConstant.DealerWebSite);
+                        if (dealerWebSite == null)
+                        {
+                            parsedCar.Status = ParsedCarStatus.NoDealerWebSite;
+                            Repository.SaveChanges();
+                            continue;
+                        }
+
+                        var dealer = GetOrCreateDealer(parsedCar, dealerWebSite);
+
+                        var price = parsedCar.Prices
+                            .OrderByDescending(a => a.DateTime)
+                            .FirstOrDefault()?.Value ?? string.Empty;
+                        
+                        //TODO: выбрасывать эти машины не стоит, но нужно учитывать что они могут нарушить логику работы расчетов
+                        var priceValue = 0.0;
+                        if (!double.TryParse(
+                            price,
+                            NumberStyles.AllowCurrencySymbol |
+                            NumberStyles.AllowDecimalPoint |
+                            NumberStyles.AllowThousands,
+                            new CultureInfo("en-US"),
+                            out priceValue))
+                        {
+                            parsedCar.Status = ParsedCarStatus.CannotParsePrice;
+                            Repository.SaveChanges();
+                            continue;
+                        }
+                        
+                        var stockCar = GetStockCar(parsedCar);
+                        if (stockCar == null)
+                        {
+                            parsedCar.Status = ParsedCarStatus.CantGetStockCar;
+                            Repository.SaveChanges();
+                            Console.WriteLine("Не удалось распарсить");
+                            continue;
+                        }
+
+                        var advertCar = Repository.GetAdvertCar(parsedCar.Id);
+                        if (advertCar == null)
+                        {
+                            var stockNumber = GetValue(parsedCar.FieldValues, FiledNameConstant.StockNumber);
+                            var car = Repository.GetCar(stockCar.Id, dealer.Id, stockNumber);
+                            //TODO: Не проверенная ветка
+                            if (car != null)
+                            {
+                                advertCar = new AdvertCar
+                                {
+                                    MainAdvertCarId = car.Id,
+                                    ParsedCarId = parsedCar.Id,
+                                    Url = parsedCar.Url,
+                                    AdvertCarPrices = new List<AdvertCarPrice>
+                                    {
+                                        new AdvertCarPrice {Value = priceValue, DateTime = now}
+                                    }
+                                };
+                                Repository.CreateAdvertCar(advertCar);
+                            }
+                            else
+                            {
+                                car = new Car
+                                {
+                                    StockCar = stockCar,
+                                    Dealer = dealer,
+                                    Price = priceValue,
+                                    Url = parsedCar.Url,
+                                    StockNumber = stockNumber,
+                                    MainAdvertCar = new MainAdvertCar
+                                    {
+                                        AdvertCars = new List<AdvertCar>
+                                        {
+                                            new AdvertCar
+                                            {
+                                                ParsedCarId = parsedCar.Id,
+                                                Url = parsedCar.Url,
+                                                AdvertCarPrices = new List<AdvertCarPrice>
+                                                {
+                                                    new AdvertCarPrice {Value = priceValue, DateTime = now}
+                                                }
+                                            }
+                                        }
+                                    }
+                                };
+                                Repository.CreateCar(car);
+                            }
+                            parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
+                            Repository.SaveChanges();
+                            result.Add(new ImageDownloadCommand { Id = car.Id, Url = GetValue(parsedCar.FieldValues, FiledNameConstant.ImgPath) });
+                        }
+                        else
+                        {
+                            Repository.AddAdvertCarPrice(advertCar.Id, priceValue, now);
+                            parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
+                            Repository.SaveChanges();
+                        }
                     }
+
+                    //после обработки порции данных её необходимо выгрузить из контекста и освободить память.
+                    Repository.DetachParsedCars(parsedCars);
                 }
             }
             return result;
@@ -185,22 +258,33 @@ namespace AnalyzerEngine
 
         private StockCar GetStockCar(ParsedCar parssedCar)
         {
-            var nameFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Name);
-            var makeFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Make);
-            var modelFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Model);
-            var yearFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Year);
+            var nameFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Name).ToLower();
+
+            var makeFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Make) ?? GetMakeValue(nameFieldValue);
+            var modelFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Model) ?? GetModelValue(nameFieldValue);
+            var yearFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Year) ?? GetYearValue(nameFieldValue);
             var bodyTypeFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.BodyType);
             var styleTrimFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.StyleTrim);
             var drivetrainFieldValue = GetValue(parssedCar.FieldValues, FiledNameConstant.Drivetrain);
 
-            if (makeFieldValue == null)
-                makeFieldValue = GetMakeValue(nameFieldValue);
-
-            if (modelFieldValue == null)
-                modelFieldValue = GetModelValue(nameFieldValue);
-
-            if (yearFieldValue == null)
-                yearFieldValue = GetYearValue(nameFieldValue);
+            Make make = null;
+            if (makeFieldValue != null)
+                make = GetDictionaryOrCreateEntity<Make>(makeFieldValue);
+            Model model = null;
+            if (modelFieldValue != null)
+                model = GetDictionaryOrCreateEntity<Model>(modelFieldValue);
+            Year year = null;
+            if (yearFieldValue != null)
+                year = GetDictionaryOrCreateEntity<Year>(yearFieldValue);
+            BodyType bodyType = null;
+            if (bodyTypeFieldValue != null)
+                bodyType = GetDictionaryOrCreateEntity<BodyType>(bodyTypeFieldValue);
+            StyleTrim styleTrim = null;
+            if (styleTrimFieldValue != null)
+                styleTrim = GetDictionaryOrCreateEntity<StyleTrim>(styleTrimFieldValue);
+            Drivetrain drivetrain = null;
+            if (drivetrainFieldValue != null)
+                drivetrain = GetDictionaryOrCreateEntity<Drivetrain>(drivetrainFieldValue);
 
             if (makeFieldValue == null ||
                 modelFieldValue == null ||
@@ -209,13 +293,6 @@ namespace AnalyzerEngine
                 styleTrimFieldValue == null ||
                 drivetrainFieldValue == null)
                 return null;
-
-            var make = GetDictionaryOrCreateEntity<Make>(makeFieldValue);
-            var model = GetDictionaryOrCreateEntity<Model>(modelFieldValue);
-            var year = GetDictionaryOrCreateEntity<Year>(yearFieldValue);
-            var bodyType = GetDictionaryOrCreateEntity<BodyType>(bodyTypeFieldValue);
-            var styleTrim = GetDictionaryOrCreateEntity<StyleTrim>(styleTrimFieldValue);
-            var drivetrain = GetDictionaryOrCreateEntity<Drivetrain>(drivetrainFieldValue);
 
             Func<StockCar, bool> filter = a => a.YearId == year.Id &&
                                                 a.MakeId == make.Id &&
@@ -242,7 +319,7 @@ namespace AnalyzerEngine
             var years = Repository.GetDictionaryEntity<Year>();
             foreach (var year in years)
             {
-                if (name.Contains(year.Value))
+                if (name.Contains(year.Value.ToLower()))
                 {
                     return year.Value;
                 }
@@ -255,7 +332,7 @@ namespace AnalyzerEngine
             var models = Repository.GetDictionaryEntity<Model>();
             foreach (var model in models)
             {
-                if (name.Contains(model.Value))
+                if (name.Contains(model.Value.ToLower()))
                 {
                     return model.Value;
                 }
@@ -268,7 +345,7 @@ namespace AnalyzerEngine
             var makes = Repository.GetDictionaryEntity<Make>();
             foreach (var make in makes)
             {
-                if (name.Contains(make.Value))
+                if (name.Contains(make.Value.ToLower()))
                 {
                     return make.Value;
                 }
@@ -276,38 +353,6 @@ namespace AnalyzerEngine
             return null;
         }
 
-        private AdvertCar GetAdvertCar(ParsedCar parssedCar, double priceValue, Dealer dealer = null)
-        {
-            var stockCar = GetStockCar(parssedCar);
-            if (stockCar == null)
-            {
-                parssedCar.Status = ParsedCarStatus.AnalyzeError;
-                Repository.SaveChanges();
-                return null;
-            }
 
-            var advertCar = new AdvertCar
-            {
-                Car = new Car
-                {
-                    StockCar = stockCar,
-                    Dealer = dealer,
-                    Price = priceValue,
-                    Url = parssedCar.Url
-                },
-                IsDealer = true,
-                Url = parssedCar.Url,
-                AdvertCarPrices = new List<AdvertCarPrice>
-                            {
-                                new AdvertCarPrice { Value = priceValue, DateTime = DateTime.Now }
-                            }
-            };
-            return advertCar;
-        }
-
-        private Car GetCar()
-        {
-            return new Car();
-        }
     }
 }

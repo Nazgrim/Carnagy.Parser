@@ -6,6 +6,9 @@
         List = 2,
         LoadPageError = 4,
         Page = 8,
-        AnalyzeError = 16
+        CantGetStockCar = 16,
+        NoDealerWebSite = 32,
+        AnalyzeComplete = 64,
+        CannotParsePrice = 128
     }
 }

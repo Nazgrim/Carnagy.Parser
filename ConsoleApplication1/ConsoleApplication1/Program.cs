@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ConsoleApplication1
@@ -10,9 +11,25 @@ namespace ConsoleApplication1
     {
         static void Main(string[] args)
         {
-            var duration = "15 day 15day";
-            var starDate = DateTime.Now;
-            DurationToTimeSapn(duration, starDate, starDate);
+
+            Regex moneyR = new Regex(@"\$(\d{1,3},?)+.?\d{2}?");
+            string[] money = new string[] {
+            "Dealer Price: $26,315",
+            "$1099999a.00",
+                                        "$1099999.00",
+                                        "$10.25",
+                                        "$90,999.99",
+                                        "$1,990,999.99",
+                                        "$1,999999.99" };
+            foreach (string m in money)
+            {
+                Console.WriteLine(m);
+                Console.WriteLine(moneyR.IsMatch(m));
+                Console.WriteLine(moneyR.Match(m));
+            }
+            //var duration = "15 day 15day";
+            //var starDate = DateTime.Now;
+            //DurationToTimeSapn(duration, starDate, starDate);
         }
         public static bool DurationToTimeSapn(string duration, DateTime stopdate, DateTime startdate)
         {

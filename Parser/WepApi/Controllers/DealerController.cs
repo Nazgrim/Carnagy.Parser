@@ -15,7 +15,7 @@ namespace WepApi.Controllers
         {
             DealerService = dealerService;
         }
-        
+
         [HttpGet]
         [ActionName("DealerCars")]
         public IHttpActionResult GetDealer(int id)
@@ -28,7 +28,29 @@ namespace WepApi.Controllers
             return Ok(dealerCars);
         }
 
-        
+        [HttpGet]
+        [ActionName("DealerInformation")]
+        public IHttpActionResult GetDealerInformation(int id)
+        {
+            var dealerCars = new
+            {
+                logo = "logo.jpg",
+                url = "http://addisongm.com/",
+                name = "Addison",
+                phone = "905-238-2886",
+                adress = "1220 Eglinton Ave East Mississauga, ON L4W 2M7",
+                priceCars = 123235,
+                carCount = 500,
+                webSiteName = "addisongm.com",
+            };
+            if (dealerCars == null)
+            {
+                return NotFound();
+            }
+            return Ok(dealerCars);
+        }
+
+
 
         #region ForTestOnly
 

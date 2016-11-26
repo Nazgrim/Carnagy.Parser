@@ -40,7 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DownloadManager.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="IDownloadManager.cs" />
     <Compile Include="ImageDownloader.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IDownloadImage.cs" />

@@ -2,7 +2,7 @@
 
 namespace DataAccess.Models
 {
-    public class Car
+    public class Car: IEntites
     {
         public int Id { get; set; }
         public string Url { get; set; }
@@ -14,8 +14,6 @@ namespace DataAccess.Models
 
         public virtual StockCar StockCar { get; set; }
         public virtual Dealer Dealer { get; set; }
-
-        public virtual ICollection<AdvertCar> AdvertCars { get; set; }
-        
+        public virtual MainAdvertCar MainAdvertCar { get; set; }        
     }
 }

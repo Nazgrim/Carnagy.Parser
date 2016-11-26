@@ -108,11 +108,7 @@ namespace WepApi.Service
                     drivetrain = c.StockCar.Drivetrain.Value,
                     make = c.StockCar.Make.Value,
                     styleTrim = c.StockCar.StyleTrim.Value,
-                    price = new CarPrice
-                    {
-                        value = c.Price.ToString(),
-                        difference = 500,
-                    },
+                    price = c.Price,
                     dealerLocation = c.Dealer.Location,
                     dealerName = c.Dealer.Name,
                     dealerId = c.DealerId
