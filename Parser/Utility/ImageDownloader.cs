@@ -54,7 +54,8 @@ namespace Utility
             }
             catch (Exception e)
             {
-               //TODO: Add loger
+                //TODO: Add loger
+                await Task.Delay(0);
             }            
         }
 

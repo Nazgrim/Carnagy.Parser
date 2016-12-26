@@ -10,7 +10,7 @@ namespace ParserEngine.DealerParser
 {
     public class AutoTraderParser : BaseParser
     {
-        public AutoTraderParser(IBaseRepository repository) :
+        public AutoTraderParser(IParseRepository repository) :
             base(repository, "AutoTrader")
         {
         }
@@ -28,7 +28,6 @@ namespace ParserEngine.DealerParser
         protected override List<ParsedCar> FirstPhase(string url, List<Field> fields)
         {
             var result = new List<ParsedCar>();
-            var htmlWeb = new HtmlWeb();
             var isLastPage = false;
             var page = 0;
             var pagerCurrentPageField = fields.First(a => a.Name == FiledNameConstant.PagerCurrentPage);
@@ -38,14 +37,14 @@ namespace ParserEngine.DealerParser
             foreach (var maker in listMakers.Where(a=>a== "buick"))
             {
                 url =
-                    $"http://wwwa.autotrader.ca/cars/{maker}";
+                    $"http://www.autotrader.ca/cars/{maker}";
 
-                while (!isLastPage && page < 1)
+                while (!isLastPage)
                 {
                     WriteToLog("Страница " + page);
-                    var pageUrl = "http://wwwa.autotrader.ca/cars/buick/encore/?prx=-1&loc=Ontario&adtype=Dealer&sts=New&hprc=True&wcp=True&inMarket=advancedSearch&rcs=0&rcp=500";
-                        //GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
-                    var htmlDocument = GetHtmlDocument(htmlWeb, pageUrl);
+                    var pageUrl =//"http://www.autotrader.ca/cars/buick/encore/?prx=-1&loc=Ontario&adtype=Dealer&sts=New&hprc=True&wcp=True&inMarket=advancedSearch&rcs=0&rcp=500";
+                        GetPageUrl(url, new Dictionary<string, object> { { "page", page } });
+                    var htmlDocument = GetHtmlDocument(pageUrl);
                     if (htmlDocument == null)
                     {
                         WriteToLog("Последняя страница");

@@ -6,7 +6,7 @@ namespace ParserEngine.DealerParser
 {
     public class AddisongmParser : BaseParser
     {
-        public AddisongmParser(IBaseRepository repository) :
+        public AddisongmParser(IParseRepository repository) :
             base(repository, "addisongm")
         {
 
