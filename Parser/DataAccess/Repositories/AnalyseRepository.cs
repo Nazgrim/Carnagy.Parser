@@ -2,55 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
-using System.Threading.Tasks;
 using DataAccess.Models;
 
 namespace DataAccess.Repositories
 {
-    public class BaseRepository : IBaseRepository
+    public class AnalyseRepository : IAnalyseRepository
     {
         private CarnagyContext Context { get; set; }
 
-        public BaseRepository(CarnagyContext context)
+        public AnalyseRepository(CarnagyContext context)
         {
             Context = context;
-        }
-
-        public void SaveParsedCar(List<ParsedCar> parsedCars)
-        {
-            Context.ParsedCars.AddRange(parsedCars);
-            Context.SaveChanges();
-        }
-
-        public void ClearParsed()
-        {
-            Context.ParsedCars.RemoveRange(Context.ParsedCars.ToList());
-            Context.ErrorLogs.RemoveRange(Context.ErrorLogs.ToList());
-            Context.SaveChanges();
-        }
-
-        public void AddFieldValues(List<FieldValue> fieldValues)
-        {
-            Context.FieldValues.AddRange(fieldValues);
-        }
-
-        public MainConfiguration GetMainConfigurationByName(string name)
-        {
-            return Context.MainConfigurations.SingleOrDefault(a => a.Name == name);
-        }
-
-        public List<ParsedCar> GetParsedCars(Func<ParsedCar, bool> filter)
-        {
-            return Context.ParsedCars.Where(filter).ToList();
-        }
-
-        public void SaveChanges()
-        {
-            Context.SaveChanges();
-        }
-        public Task<int> SaveChangesAsync()
-        {
-            return Context.SaveChangesAsync();
         }
 
         public List<Car> GetAllStockNumber(int dealerId)
@@ -84,10 +46,11 @@ namespace DataAccess.Repositories
         public List<ParsedCar> GetParsedCarsByPage(int skip, int take, int configurationId)
         {
             return Context.Set<ParsedCar>()
-                .Where(a => 
-                !a.IsDeleted 
-                && (a.Status == ParsedCarStatus.Page || a.Status == ParsedCarStatus.CantGetStockCar || a.Status == ParsedCarStatus.CannotParsePrice)
-                //&& a.Status==ParsedCarStatus.CannotParsePrice 
+                .Where(a =>
+                //!a.IsDeleted
+                //&& 
+                (a.Status == ParsedCarStatus.Page || a.Status == ParsedCarStatus.AnalyzeComplete)
+                //|| a.Status == ParsedCarStatus.CantGetStockCar || a.Status == ParsedCarStatus.CannotParsePrice
                 && a.MainConfigurationId == configurationId)
                 .OrderBy(a => a.Id)
                 .Skip(skip)
@@ -106,11 +69,6 @@ namespace DataAccess.Repositories
         public AdvertCar GetAdvertCar(int parsedCarId)
         {
             return Context.Set<AdvertCar>().FirstOrDefault(a => a.ParsedCarId == parsedCarId);
-        }
-
-        public void AddErrorLog(List<ErrorLog> errorLog)
-        {
-            Context.ErrorLogs.AddRange(errorLog);
         }
 
         public Dealer GetDealerById(int id)
@@ -162,15 +120,20 @@ namespace DataAccess.Repositories
             return Context.Set<StyleTrim>().FirstOrDefault(a => a.Value == styleTrim);
         }
 
+        public List<StockCar> GetStockCars(Func<StockCar, bool> filter)
+        {
+            return Context.Set<StockCar>().Where(filter).ToList();
+        }
+
         public StockCar GetStockCar(Func<StockCar, bool> filter)
         {
-            return Context.Set<StockCar>().FirstOrDefault(filter);
+            return Context.Set<StockCar>().SingleOrDefault(filter);
         }
 
         public List<StockCar> GetStockCars()
         {
             return Context.Set<StockCar>()
-                .Include(a => a.Cars)
+                .Include(a => a.Cars.Select(b => b.MainAdvertCar.AdvertCars.Select(c => c.AdvertCarPrices)))
                 .ToList();
         }
 
@@ -244,9 +207,9 @@ namespace DataAccess.Repositories
             return Context.Set<T>().ToList();
         }
 
-        public Dealer GetDealerByName(string name)
+        public Dealer GetDealerByWebSireUrl(string url)
         {
-            return Context.Set<Dealer>().FirstOrDefault(a => a.Name == name);
+            return Context.Set<Dealer>().FirstOrDefault(a => a.WebSireUrl == url);
         }
 
         public void CreateDealer(Dealer dealer)
@@ -269,7 +232,21 @@ namespace DataAccess.Repositories
 
         public Car GetCar(int stockCarId, int dealerId, string stockNumber)
         {
-            return Context.Set<Car>().FirstOrDefault(a => a.StockCarId == stockCarId && a.DealerId == dealerId && a.StockNumber == stockNumber);
+            return Context.Set<Car>()
+                .Include(a => a.MainAdvertCar)
+                .FirstOrDefault(a => a.StockCarId == stockCarId && a.DealerId == dealerId && a.StockNumber == stockNumber);
+        }
+
+        public Car GetCarByStockNumber(string stockNumber, int dealerId)
+        {
+            return Context.Set<Car>()
+                .Include(a => a.MainAdvertCar)
+                .SingleOrDefault(a => a.StockNumber == stockNumber && a.DealerId == dealerId);
+        }
+
+        public void DeleteStockCar(StockCar stockCar)
+        {
+            Context.Set<StockCar>().Remove(stockCar);
         }
 
         public void CreateCar(Car car)
@@ -278,9 +255,9 @@ namespace DataAccess.Repositories
             Context.SaveChanges();
         }
 
-        public AdvertCar GetDealerAdvertCar(int carId)
+        public List<AdvertCar> GetAdvertCars(int carId)
         {
-            return Context.Set<AdvertCar>().FirstOrDefault(a => a.MainAdvertCarId == carId && a.IsDealer);
+            return Context.Set<AdvertCar>().Where(a => a.MainAdvertCarId == carId).ToList();
         }
 
         public List<Car> GetStockCarPrices(int stockCarId)
@@ -298,7 +275,12 @@ namespace DataAccess.Repositories
 
         public List<Car> GetCarsByFilter(Func<Car, bool> filter)
         {
-            return Context.Set<Car>().Where(filter).ToList();
+            return Context.Set<Car>().Include(a => a.StockCar).Where(filter).ToList();
+        }
+
+        public void SaveChanges()
+        {
+            Context.SaveChanges();
         }
     }
 }

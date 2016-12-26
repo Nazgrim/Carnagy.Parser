@@ -19,6 +19,7 @@ namespace DataAccess.Models
         public bool IsDeleted { get; set; }
         public bool IsParsed { get; set; }
         public ParsedCarStatus Status { get; set; }
+        public string ForCompare { get; set; }
 
         public int MainConfigurationId { get; set; }
 

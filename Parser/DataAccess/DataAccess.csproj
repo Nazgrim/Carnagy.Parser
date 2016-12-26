@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -202,6 +203,10 @@
     <Compile Include="Migrations\201611250704022_AddFiledegExPatternInField.Designer.cs">
       <DependentUpon>201611250704022_AddFiledegExPatternInField.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201612090846422_AddForCompareFieldInParsedCar.cs" />
+    <Compile Include="Migrations\201612090846422_AddForCompareFieldInParsedCar.Designer.cs">
+      <DependentUpon>201612090846422_AddForCompareFieldInParsedCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -227,11 +232,15 @@
     <Compile Include="Models\StyleTrim.cs" />
     <Compile Include="Models\Year.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\BaseRepository.cs" />
-    <Compile Include="Repositories\IBaseRepository.cs" />
+    <Compile Include="Repositories\IAnalyseRepository.cs" />
+    <Compile Include="Repositories\AnalyseRepository.cs" />
+    <Compile Include="Repositories\ParseRepository.cs" />
+    <Compile Include="Repositories\IParseRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -333,6 +342,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611250704022_AddFiledegExPatternInField.resx">
       <DependentUpon>201611250704022_AddFiledegExPatternInField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612090846422_AddForCompareFieldInParsedCar.resx">
+      <DependentUpon>201612090846422_AddForCompareFieldInParsedCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

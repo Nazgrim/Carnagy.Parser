@@ -1,10 +1,19 @@
 ﻿using DataAccess.Migrations;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using DataAccess.Configurations;
 using DataAccess.Models;
 
 namespace DataAccess
 {
+    public class CarnagyContextFactory : IDbContextFactory<CarnagyContext>
+    {
+        public CarnagyContext Create()
+        {
+            return new CarnagyContext("Data Source=WORKING-PC\\SQLEXPRESS;Initial Catalog=Carnagy5;Integrated Security=True");
+        }
+    }
+
     public class CarnagyContext : DbContext
     {
         public DbSet<MainConfiguration> MainConfigurations { get; set; }
@@ -28,7 +37,7 @@ namespace DataAccess
         public DbSet<AdvertCarPrice> AdvertCarPrices { get; set; }
         public DbSet<MainAdvertCar> MainAdvertCars { get; set; }
 
-        public CarnagyContext() : base("DefaultConnection")
+        public CarnagyContext(string connnectionString = "DefaultConnection") : base(connnectionString)
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<CarnagyContext, Configuration>());
         }

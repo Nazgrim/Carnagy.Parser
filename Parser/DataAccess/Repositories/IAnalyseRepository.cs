@@ -1,20 +1,12 @@
 ﻿using System.Collections.Generic;
 using DataAccess.Models;
 using System;
-using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public interface IBaseRepository
+    public interface IAnalyseRepository
     {
-        void SaveParsedCar(List<ParsedCar> parsedCars);
-        void AddFieldValues(List<FieldValue> fieldValues);
-        MainConfiguration GetMainConfigurationByName(string name);
-        List<ParsedCar> GetParsedCars(Func<ParsedCar, bool> filter);
-        void ClearParsed();
-        void SaveChanges();
-        void AddErrorLog(List<ErrorLog> errorLog);
-      
+        void SaveChanges();      
         List<Car> GetCarsByDealerId(int dealerId);
         Make GetMakersByValue(string make);
         Model GetModelsByValue(string model);
@@ -25,7 +17,6 @@ namespace DataAccess.Repositories
         StockCar GetStockCar(Func<StockCar, bool> filter);
         List<StockCar> GetStockCars();
         void AddCar(Car car);
-
         Car GetCarById(int carId);
         List<Dealer> GetDealers(Func<Dealer, bool> filter);
         StockCar GetStockCarWithPrices(int stockCarId);
@@ -43,22 +34,22 @@ namespace DataAccess.Repositories
         //void AddBodyType(BodyType bodyType);
         //void AddDrivetrain(Drivetrain drivetrain);
         //void AddStyleTrim(StyleTrim styleTrim);
-        Dealer GetDealerByName(string name);
+        Dealer GetDealerByWebSireUrl(string url);
         void CreateDealer(Dealer dealer);
         void CreateDictionary<T>(T dictionary) where T : class, IDictionaryEntity;
         void CreateStockCar(StockCar stockCar);
         Car GetCar(int stockCarId, int dealerId, string stockNumber);
         void CreateCar(Car car);
-        AdvertCar GetDealerAdvertCar(int carId);
-        List<Car> GetStockCarPrices(int stockCarId);
+        List<AdvertCar> GetAdvertCars(int carId);
         List<Car> GetCarsByStockCarId(int stockCarId);
         List<Car> GetCarsByFilter(Func<Car, bool> filter);
-        Task<int> SaveChangesAsync();
-
         List<Car> GetAllStockNumber(int dealerId);
         void DeleteCars(List<Car> cars);
         List<ParsedCar> GetParsedCarsByPage(int skip, int take, int configurationId);
         void DetachParsedCars(List<ParsedCar> parrsedCar);
         AdvertCar GetAdvertCar(int id);
+        Dealer GetDealerById(int id);
+        Car GetCarByStockNumber(string stockNumber, int dealerId);
+        void DeleteStockCar(StockCar stockCar);
     }
 }
