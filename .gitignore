@@ -2,7 +2,8 @@ _build/
 _site/
 Properties/
 node_modules/
-wwwroot/
+wwwroot/lib/
+wwwroot/lib/images/cars/
 
 Project_Readme.html
 
