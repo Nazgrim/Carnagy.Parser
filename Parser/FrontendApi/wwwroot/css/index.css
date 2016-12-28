@@ -1,0 +1,172 @@
+body {
+    font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+}
+/*animatiion*/
+.sample-show-hide {
+  transition: all linear 0.5s;
+}
+.sample-show-hide.ng-hide {
+  opacity: 0;
+}
+.selected
+{
+    color: red
+}
+.tile_stats_count .left
+{
+    width: 0px!important;
+}
+.fixed_height_160
+{
+     height: 160px;
+}
+.fixed_height_230
+{
+    height: 230px;
+}
+.borderless li{
+    border:0px;
+}
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+.thumbnail {
+  height: 200px;
+}
+
+.thumbnail img.pull-right {
+  width: 50px;
+}
+
+.red {
+    border: 1px solid red;
+}
+.red-market
+{
+    width: 10px;
+    background:rgb(247, 163, 92);;
+}
+.green-market
+{
+    width: 10px;
+    background:rgb(144, 237, 125);
+}
+.blue-market
+{
+    width: 10px;
+    background:rgb(124, 181, 236);;
+}
+.yellow-market
+{
+    width: 10px;
+    background:rgb(67, 67, 72);
+}
+
+.ibox {
+  clear: both;
+  margin-bottom: 25px;
+  margin-top: 0;
+  padding: 0;
+  border: 1px solid #e7eaec;
+  /*height: 250px;*/
+}
+.ibox:after,
+.ibox:before {
+  display: table;
+}
+.ibox-title {
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background-color: #ffffff;
+  border-color: #e7eaec;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 4px 0px 0;
+  color: inherit;
+  margin-bottom: 0;
+  padding: 14px 15px 7px;
+  height: 60px;
+}
+.ibox h1, h2, h3 {
+    margin-top: 0;
+}
+.ibox-title label {
+    font-size: 100%;
+    font-weight: normal;
+}
+.ibox-content {
+  background-color: #ffffff;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+  border-color: #e7eaec;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 0px;
+}
+
+.table-sortable th {
+    user-select: none;
+    cursor: pointer;
+}
+
+.table-sortable th:after{
+    content:"";
+    float:right;
+    margin-top:7px;
+    visibility:hidden;
+    border-left:4px solid transparent;
+    border-right:4px solid transparent;
+
+    border-top:none;
+    border-bottom:4px solid #000;
+}
+
+.table-sortable th.sorted-desc:after{
+    border-top:4px solid #000;
+    border-bottom:none;
+}
+
+.table-sortable th:hover:after, .table-sortable th.sorted:after {
+    visibility:visible;
+}
+.clear {
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:5px 10px;
+  position:absolute;
+  right:30px;
+  top:4px;
+}
+.select2 .clear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 10px;
+    position: absolute;
+    left: -2px;
+    top: 1px;
+}
+
+.clear-btn-offset {
+    position: absolute;
+    left: 25px;
+}
+tr.sub-row td{
+    height: 150px;
+    vertical-align: middle !important;
+}
+img.resize{
+    width: auto; 
+    height: 120px;
+}
+.left-border-with-padding{
+    padding-left:10px;
+    border-left:2px solid #ADB2B5
+}

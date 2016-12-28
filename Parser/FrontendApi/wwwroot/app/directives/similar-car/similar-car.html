@@ -1,0 +1,62 @@
+<div class="row ">
+    <div class="col-md-12 ">
+        <div class="ibox ">
+            <div class="ibox-title ">
+                <h3>The cars is in such price segment
+                    <button ng-show="(cars|filter:{isEmpty:true}).length" class="btn btn-primary pull-right" ng-click="add()">Add car</button>
+                </h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4" ng-repeat="car in cars">
+        <div ng-if="!car.isEmpty">
+            <div class="ibox">
+                <div class="ibox-title ">
+                    <h3>{{car.name}}<span ng-click="remove(car)" class="glyphicon glyphicon-remove pull-right "></span></h3>
+
+                </div>
+                <div class="ibox-content ">
+                    <img ng-src="{{car.imgUrl}}" style="width:100% ">
+                    <ul class="list-group borderless ">
+                        <li class="list-group-item ">
+                            <ul class="row list-inline ">
+                                <li class="col-md-6 ">
+                                    <label>Maker</label>
+                                </li>
+                                <li class="col-md-6 text-center ">{{car.maker}}</li>
+                            </ul>
+                        </li>
+                        <li class="list-group-item ">
+                            <ul class="row list-inline ">
+                                <li class="col-md-6 ">
+                                    <label>Model</label>
+                                </li>
+                                <li class="col-md-6 text-center ">{{car.model}}</li>
+                            </ul>
+                        </li>
+                        <li class="list-group-item ">
+                            <ul class="row list-inline ">
+                                <li class="col-md-6 ">
+                                    <label>Drivetrain</label>
+                                </li>
+                                <li class="col-md-6 text-center ">{{car.drivetrain}}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="row ">
+                        <div class="col-xs-12 col-md-6 ">
+                            <p class="lead ">
+                                {{car.price | currency}}</p>
+                        </div>
+                        <div class="col-xs-12 col-md-6 text-right ">
+                            <button class="btn btn-success " ng-if="!car.isAdd" ng-click="addToCompare(car)">Add to compare</button>
+                            <button class="btn btn-danger " ng-if="car.isAdd" ng-click="removeToCompare(car)">Remove of compare</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

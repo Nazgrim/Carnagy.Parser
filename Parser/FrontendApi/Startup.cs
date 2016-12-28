@@ -8,9 +8,11 @@ using FrontendApi.Service;
 using FrontendApi.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FrontendApi
 {
@@ -32,7 +34,9 @@ namespace FrontendApi
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSession();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Create the container builder.
             var builder = new ContainerBuilder();
             var appSettings = Configuration.Get<AppSettings>("AppSettings");
@@ -83,7 +87,7 @@ namespace FrontendApi
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

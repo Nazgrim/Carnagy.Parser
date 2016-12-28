@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="x_panel tile" cg-busy="{promise:carInformationPromise,message:'Loading',backdrop:true}">
+			<div class="x_content">
+				<div class="row">
+					<div class="col-md-6">
+						<img style="display: inline-block; vertical-align:middle; padding-left:10px; padding-right:10px" class="resize" ng-src="../images/Cars/{{carInformation.imgScr}}.jpg"
+						/>
+						<div style="display: inline-block;vertical-align:middle;" class="left-border-with-padding">
+							<h1>{{carInformation.name}}</h1>
+							<p>
+								<span ng-repeat="(key, value) in carInformation.parametrs">{{key}} - {{value}}<span ng-if="!$last">, </span></span>
+							</p>
+						</div>
+					</div>
+					<div class="col-md-3 tile_stats_count" style="height:120px; display:table;">
+						<div style="display:table-cell;vertical-align:middle;">
+							<div class="left-border-with-padding">
+								<span class="count_top"><i class="fa fa-usd"></i> Average Price</span>
+								<div class="count">{{carInformation.averagePrice.value | currency}}</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 tile_stats_count" style="height:120px; display:table;">
+						<div style="display:table-cell;vertical-align:middle;">
+							<div class="left-border-with-padding">
+								<span class="count_top"><i class="fa fa-usd"></i> Your Price</span>
+								<div class="count">{{carInformation.dealerPrice.value | currency}}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<car-chart></car-chart>
+<dealer-competitors></dealer-competitors>
+<price-trend></price-trend>

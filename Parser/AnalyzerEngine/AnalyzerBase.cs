@@ -26,7 +26,6 @@ namespace AnalyzerEngine
         public void Run()
         {
             Analyze();
-            Сalculation();
         }
 
         private void Analyze()
@@ -247,7 +246,7 @@ namespace AnalyzerEngine
             return newDictionaryEntity;
         }
 
-        private void Сalculation()
+        public void Сalculation()
         {
             var stockCars = Repository.GetStockCars();
             var timeStart = DateTime.Now;

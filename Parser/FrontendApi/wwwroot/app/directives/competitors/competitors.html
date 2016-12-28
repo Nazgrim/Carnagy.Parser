@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="ibox ">
+            <div class="ibox-title ">
+                <h3>Dealers</h3>
+            </div>
+            <ul class="list-unstyled top_profiles" ng-nicescroll nice-option="{cursorcolor: '#e2edff'}" nice-scroll-end="endScroll()"
+                tabindex="5001" style="overflow: hidden; outline: none; cursor: -webkit-grab;">
+                <li class="media event" ng-repeat="dealer in dealers">
+                    <a class="pull-left {{dealer.borderColor}} profile_thumb">
+                        <i class="fa fa-user {{dealer.color}}"></i>
+                    </a>
+                    <div class="media-body">
+                        <a class="title" href="#">{{dealer.name}}</a>
+                        <p><strong>{{dealer.price}}</strong> {{dealer.employer}} </p>
+                        <p> <small>{{dealer.sales}}</small>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

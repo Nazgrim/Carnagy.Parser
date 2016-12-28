@@ -2,8 +2,8 @@ _build/
 _site/
 Properties/
 node_modules/
-wwwroot/lib/
-wwwroot/images/Cars/
+**/wwwroot/lib/
+**/wwwroot/images/Cars/
 
 Project_Readme.html
 
@@ -205,8 +205,6 @@ FakesAssemblies/
 *.opt
 
 project.lock.json
-**/sample/**/wwwroot/lib/
-**/samples/**/wwwroot/lib/
 __pycache__/
 
 #Mac OSX 

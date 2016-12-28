@@ -1,4 +1,4 @@
-﻿/// <binding Clean='Run - Development' /> 
+﻿/// <binding AfterBuild='Run - Development' /> 
 
 module.exports = {
     entry: "./wwwroot/app/index.js",

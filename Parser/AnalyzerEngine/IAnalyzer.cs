@@ -3,5 +3,6 @@
     public interface IAnalyzer
     {
         void Run();
+        void Сalculation();
     }
 }

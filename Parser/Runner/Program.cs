@@ -15,6 +15,7 @@ namespace Runner
         private static void Main(string[] args)
         {
             var container = BuildContainer();
+            Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
 
             //var download = container.Resolve<IDownloadImage>();
             //var stopwathc= new Stopwatch();
@@ -36,6 +37,10 @@ namespace Runner
             Console.WriteLine("AddisongmParseAndAnalyze is started.");
             parseAndAnalyze.Run();
             Console.WriteLine("AddisongmParseAndAnalyze is completed.");
+
+            Console.WriteLine("Сalculation is started.");
+            analyzer.Сalculation();
+            Console.WriteLine("Сalculation is completed.");
         }
 
         private static IContainer BuildContainer()
