@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.Globalization;
 using System.Linq;
 using DataAccess;
 using DataAccess.Models;
@@ -435,6 +436,31 @@ namespace Runner
 
                 stockCar.Price =
                     stockCar.StockCarPrices.OrderByDescending(a => a.DateTime).First().Value;
+            }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Востанавливаем данные в таблице AdvertCarPrice за 24.12.2016
+        /// </summary>
+        /// <param name="context"></param>
+        public static void RestoreAdvertCarPriceFromDate(CarnagyContext context)
+        {
+            var retoreDate = DateTime.Parse("24/12/2016");
+            var price = context.Prices.Include(a => a.ParsedCar.AdvertCars).ToList().Where(a => a.DateTime.Date == retoreDate);
+            foreach (var price1 in price)
+            {
+                var AdvertCar = price1.ParsedCar.AdvertCars.First();
+                var priceValue = 0.0;
+                double.TryParse(
+                    price1.Value,
+                    NumberStyles.AllowCurrencySymbol |
+                    NumberStyles.AllowDecimalPoint |
+                    NumberStyles.AllowThousands,
+                    new CultureInfo("en-US"),
+                    out priceValue);
+
+                AdvertCar.AdvertCarPrices.Add(new AdvertCarPrice { Value = priceValue, DateTime = retoreDate });
             }
             context.SaveChanges();
         }

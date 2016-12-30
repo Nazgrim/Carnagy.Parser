@@ -1529,7 +1529,7 @@ span.right {
   white-space: nowrap;
 }
 .tile_stats_count .count {
-  font-size: 40px;
+  font-size: 39px;
   line-height: 47px;
   font-weight: 600;
 }
@@ -1942,6 +1942,7 @@ span.section {
 .form-control {
   border-radius: 0;
   width: 100%;
+    font-size: 12px;
 }
 .form-horizontal .control-label {
   padding-top: 8px

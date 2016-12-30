@@ -60,7 +60,8 @@
                                             <option ng-repeat="drivetrain in drivetrains | orderBy" ng-value="drivetrain">{{drivetrain}}</option>
                                         </select>
 									</th>
-									<th></th>
+								    <th></th>
+                                    <th></th>
 								</tr>
 							</thead>
 							<tbody ng-show="!isLoading">
@@ -74,7 +75,7 @@
 									<td>{{row.bodyType}}</td>
 									<td>{{row.styleTrim}}</td>
 									<td>{{row.drivetrain}}</td>
-									<td>{{row.price|currency}}</td>
+									<td>{{row.price|currency: "$" : 0}}</td>
 									<td>
 										<a ui-sref="car({ carId: row.id, stockCarId:row.stockCarId}) " class="btn btn-primary btn-xs">Detail</a>
 										<a ng-href="{{row.url}}" class="btn btn-primary btn-xs">Open</a>
@@ -85,7 +86,7 @@
 										<div class="row">
 											<div class="col-md-10 tile_stats_count">
 												<div>
-													<img style="display: inline-block; padding-left:10px; padding-right:10px" class="resize" ng-src="{{row.imagePath}}" />
+													<img style="display: inline-block; padding-left:10px; padding-right: 10px;vertical-align: top;" class="resize" ng-src="{{row.imagePath}}" err-src="../images/site/default-car.gif"  />
 													<div style="display: inline-block;" class="left-border-with-padding">
 														<h1>{{row.year}} {{row.make}} {{row.model}}</h1>
 														<p>
@@ -97,8 +98,7 @@
 											<div class="col-md-2 tile_stats_count">
 												<div class="left-border-with-padding">
 													<span class="count_top"><i class="fa fa-usd"></i> Your Price</span>
-													<div class="count">{{row.price}}</div>
-													<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>{{row.amountDifference}} </i> From last Week</span>
+													<div class="count">{{row.price| currency: "$" : 0}}</div>
 												</div>
 											</div>
 										</div>

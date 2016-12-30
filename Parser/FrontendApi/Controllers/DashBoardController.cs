@@ -44,7 +44,7 @@ namespace FrontendApi.Controllers
             {
                 return NotFound();
             }
-            return Ok(dasboards.value.First());
+            return Ok(dasboards.value.First(a => a.displayName == "0Main"));
         }
     }
 

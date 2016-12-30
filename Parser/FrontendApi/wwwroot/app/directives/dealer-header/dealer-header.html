@@ -14,10 +14,11 @@
 									<a href="{{dealer.url}}" target="_blank">
 										<span class="glyphicon glyphicon-link"></span>&nbsp;{{dealer.webSiteName}}
 									</a>
-									<span class="glyphicon glyphicon-earphone"></span>&nbsp;{{dealer.phone}}
+								    <span class="glyphicon glyphicon-earphone"></span>&nbsp;{{dealer.phone}}, <span class="glyphicon glyphicon-earphone"></span> 905-821-0002 
 									<br>
 									<span class="glyphicon glyphicon-map-marker"></span>&nbsp;{{dealer.adress}}
-									<br>
+								    <br>
+                                    <span class="glyphicon glyphicon-map-marker"></span>&nbsp;6600 Turner Valley Road, Mississauga, ON. L5N 5Z1
 								</p>
 							</div>
 						</div>
@@ -32,7 +33,7 @@
 				<h3>Value</h3>
 			</div>
 			<div class="x_content">
-				<h3 class="no-margins">{{dealer.priceCars | currency}}</h3>
+				<h3 class="no-margins">{{dealer.priceCars | currency: "$" : 0}}</h3>
 			</div>
 		</div>
 	</div>

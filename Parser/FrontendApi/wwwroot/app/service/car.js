@@ -20,7 +20,7 @@ angular
                 {
                     value: avrPrice,
                     width: 2,
-                    color: '#00FF00',
+                    color: '#60EF60',
                     label: {
                         text: 'Avr. price',
                         verticalAlign: 'middle',
@@ -31,7 +31,7 @@ angular
                 {
                     value: dealerPrice,
                     width: 2,
-                    color: '#0000FF',
+                    color: '#FF6767',
                     label: {
                         text: 'Your price',
                         verticalAlign: 'middle',
@@ -47,22 +47,22 @@ angular
                 {
                     chartValue: 'below',
                     labelBtext: 'Exceptional Price',
-                    color: '#FCFFC5',
+                    color: 'rgba(204, 192, 225,0.5)'//FCFFC5
                 },
                 {
                     chartValue: 'great',
                     labelBtext: 'Great Price',
-                    color: '#c4c336',
+                    color: 'rgba(187, 210, 221,0.5)',//c4c336
                 },
                 {
                     chartValue: 'good',
                     labelBtext: 'Good price',
-                    color: '#CCFFC5',
+                    color: 'rgba(227, 246, 206,0.5)',//CCFFC5
                 },
                 {
                     chartValue: 'above',
                     labelBtext: 'Above Market',
-                    color: '#4ac336'
+                    color: 'rgba(255, 236, 214,0.5)'//4ac336
                 },
             ];
             //костыль 
@@ -159,7 +159,10 @@ angular
                                     column: {
                                         states: {
                                             hover: {
-                                                color: '#000000'
+                                                color: '#6A91E4'
+                                            },
+                                            select: {
+                                                color: '#844AA1'
                                             }
                                         }
                                     }
@@ -205,7 +208,7 @@ angular
                                 max: max,
                                 tickInterval: step,
                                 labels: {
-                                    format: '$ {value}'
+                                    format: '${value}'
                                 }
                             },
                             series: [
@@ -272,6 +275,9 @@ angular
                                     style: {
                                         display: 'none'
                                     }
+                                },
+                                labels: {
+                                    format: '${value}'
                                 }
                             }
                         };

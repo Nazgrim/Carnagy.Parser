@@ -25,13 +25,27 @@
 
 		<div class="menu_section">
 			<h3>General</h3>
-			<ul class="nav side-menu">
-				<li class="active"><a><i class="fa fa-home"></i> Inventory</a></li>
-				<li><a><i class="fa fa-book"></i> Report <span class="label label-success pull-right">Coming Soon</span></a>
-				</li>
-				<li><a><i class="fa fa-laptop"></i> Anylytics tools <span class="label label-success pull-right">Coming Soon</span></a>
-				</li>
-			</ul>
+		    <ul class="nav side-menu">
+                <li>
+                    <a><i class="fa fa-home"></i> Dashboard <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu" style="display: none">
+                        <li>
+                            <a ui-sref="dashboard()">Buick</a>
+                        </li>
+                        <li>
+                            <a href="#">Chevrolet</a>
+                        </li>
+                        <li>
+                            <a href="#">GMC</a>
+                        </li>
+                    </ul>
+                </li>
+		        <li class="active"><a ui-sref="dealer()"><i class="fa fa-car"></i> Inventory</a></li>
+		        <li><a><i class="fa fa-book"></i> Report <span class="label label-success pull-right">Coming Soon</span></a>
+		        </li>
+		        <li><a><i class="fa fa-laptop"></i> Anylytics tools <span class="label label-success pull-right">Coming Soon</span></a>
+		        </li>
+		    </ul>
 		</div>
 	</div>
 	<!-- /sidebar menu -->

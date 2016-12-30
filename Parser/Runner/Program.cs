@@ -15,7 +15,8 @@ namespace Runner
         private static void Main(string[] args)
         {
             var container = BuildContainer();
-            Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
+            //Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
+            //Helper.RestoreAdvertCarPriceFromDate(container.Resolve<CarnagyContext>());
 
             //var download = container.Resolve<IDownloadImage>();
             //var stopwathc= new Stopwatch();

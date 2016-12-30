@@ -1,8 +1,9 @@
-﻿using DataAccess.Migrations;
+﻿using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using DataAccess.Configurations;
 using DataAccess.Models;
+using Configuration = DataAccess.Migrations.Configuration;
 
 namespace DataAccess
 {
@@ -10,7 +11,8 @@ namespace DataAccess
     {
         public CarnagyContext Create()
         {
-            return new CarnagyContext("Data Source=WORKING-PC\\SQLEXPRESS;Initial Catalog=Carnagy5;Integrated Security=True");
+            var connection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            return new CarnagyContext(connection);
         }
     }
 

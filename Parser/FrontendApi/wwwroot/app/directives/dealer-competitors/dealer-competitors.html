@@ -20,7 +20,7 @@
                         </tr>
                     </thead>
                     <tbody ng-show="!isLoading">
-                        <tr ng-repeat-start="row in displayCollection" ng-class="{'red':row.isDealerCar}" >
+                        <tr ng-repeat-start="row in displayCollection" ng-class="{'info':row.isDealerCar}" >
                             <td>
                                 <span ng-class="{'glyphicon-menu-up': !row.isDetailed, 'glyphicon-menu-down': row.isDetailed }" class="glyphicon" ng-click="showDetailed(row)"></span>
                             </td>
@@ -31,10 +31,10 @@
                             <td>{{row.styleTrim}}</td>
                             <td>{{row.drivetrain}}</td>
                             <td>
-                                {{row.price|currency}}
+                                {{row.price | currency: "$" : 0}}
                                 <span ng-if='row.priceDifference==0'>0</span>
-                                <span ng-if='row.priceDifference>0' style="color: green">+{{row.priceDifference | currency}}</span>
-                                <span ng-if='row.priceDifference<0' style="color: red">{{row.priceDifference | currency}}</span>
+                                <span ng-if='row.priceDifference>0' style="color: green">+{{row.priceDifference  | currency: "$" : 0}}</span>
+                                <span ng-if='row.priceDifference<0' style="color: red">{{row.priceDifference  | currency: "$" : 0}}</span>
                             <td>
                                 <a ng-href="{{row.url}}" class="btn btn-primary btn-xs">Open</a>
                             </td>
@@ -42,7 +42,7 @@
                         <tr ng-repeat-end=" " ng-hide="!row.isDetailed ">
                             <td colspan="9">
                                 <div class="row">
-                                    <div class="col-md-9 tile_stats_count">
+                                    <div class="col-md-10 tile_stats_count">
                                         <div>
                                             <img style="display: inline-block; padding-left:10px; padding-right:10px" class="resize" ng-src="{{row.imagePath}}" err-src="../images/site/default-car.gif" />
                                             <div style="display: inline-block;" class="left-border-with-padding">
@@ -53,10 +53,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 tile_stats_count">
+                                    <div class="col-md-2 tile_stats_count">
                                         <div class="left-border-with-padding">
                                             <span class="count_top"><i class="fa fa-usd"></i> Price</span>
-                                            <div class="count">{{row.price | currency}}</div>
+                                            <div class="count">{{row.price  | currency: "$" : 0}}</div>
                                             <span class="count_bottom"><i class="green"></span>
                                         </div>
                                     </div>
