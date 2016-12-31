@@ -11,7 +11,7 @@ namespace DataAccess
     {
         public CarnagyContext Create()
         {
-            var connection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            var connection = "Data Source=WORKING-PC\\SQLEXPRESS;Initial Catalog=Carnagy5;Integrated Security=True";
             return new CarnagyContext(connection);
         }
     }
