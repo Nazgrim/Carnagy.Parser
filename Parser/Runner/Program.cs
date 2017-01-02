@@ -8,6 +8,7 @@ using DataAccess.Repositories;
 using ParserEngine;
 using ParserEngine.DealerParser;
 using Utility;
+using System.Configuration;
 
 namespace Runner
 {
@@ -16,10 +17,8 @@ namespace Runner
         private static void Main(string[] args)
         {
             var container = BuildContainer();
-            //Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
-            //Helper.RestoreAdvertCarPriceFromDate(container.Resolve<CarnagyContext>());
             //Helper.DownloadImage(container.Resolve<CarnagyContext>(), container.Resolve<IDownloadImage>());
-           
+
             var parser = container.Resolve<IParser>();
             Console.WriteLine("Parsing is started.");
             parser.Run();
@@ -42,9 +41,8 @@ namespace Runner
 
         private static IContainer BuildContainer()
         {
-            //TODO: Move to app.config
-            const int threadCount = 5;
-            const string baseDir = @"C:\Users\User\Source\Repos\Carnagy.Parser\Parser\FrontendApi\wwwroot\images";
+            var threadCount = int.Parse(ConfigurationManager.AppSettings["ThreadCount"]);
+            var baseDir = ConfigurationManager.AppSettings["CarImageFolder"];
 
             var builder = new ContainerBuilder();
 

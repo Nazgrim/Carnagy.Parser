@@ -483,5 +483,20 @@ namespace Runner
                 });
             downloadImage.Download("Cars", imagesCommands);
         }
+
+        /// <summary>
+        /// Откатываем дату на несколько часов назад
+        /// </summary>
+        /// <param name="context"></param>
+        public static void MoveAdvertCarPriceDate(CarnagyContext context)
+        {
+            var date = DateTime.Parse("01/01/2017");
+            var advertCars = context.AdvertCarPrices.Where(a => a.DateTime > date).ToList();
+            foreach (var advertCarPrice in advertCars)
+            {
+                advertCarPrice.DateTime = advertCarPrice.DateTime.AddHours(-6);
+            }
+            context.SaveChanges();
+        }
     }
 }
