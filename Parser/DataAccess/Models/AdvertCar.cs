@@ -12,6 +12,7 @@ namespace DataAccess.Models
         public int Id { get; set; }
         public string Url { get; set; }
         public bool IsDealer { get; set; }
+        public string ImageSrc { get; set; }
 
         public int? ParsedCarId { get; set; }
         public int MainAdvertCarId { get; set; }

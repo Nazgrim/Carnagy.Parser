@@ -207,6 +207,14 @@
     <Compile Include="Migrations\201612090846422_AddForCompareFieldInParsedCar.Designer.cs">
       <DependentUpon>201612090846422_AddForCompareFieldInParsedCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701021044069_AddImageSrcFieldToCar.cs" />
+    <Compile Include="Migrations\201701021044069_AddImageSrcFieldToCar.Designer.cs">
+      <DependentUpon>201701021044069_AddImageSrcFieldToCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701021347514_AddImageSrcToAdvertCar.cs" />
+    <Compile Include="Migrations\201701021347514_AddImageSrcToAdvertCar.Designer.cs">
+      <DependentUpon>201701021347514_AddImageSrcToAdvertCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -345,6 +353,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201612090846422_AddForCompareFieldInParsedCar.resx">
       <DependentUpon>201612090846422_AddForCompareFieldInParsedCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701021044069_AddImageSrcFieldToCar.resx">
+      <DependentUpon>201701021044069_AddImageSrcFieldToCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701021347514_AddImageSrcToAdvertCar.resx">
+      <DependentUpon>201701021347514_AddImageSrcToAdvertCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

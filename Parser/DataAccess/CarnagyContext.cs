@@ -11,7 +11,7 @@ namespace DataAccess
     {
         public CarnagyContext Create()
         {
-            var connection = "Data Source=WORKING-PC\\SQLEXPRESS;Initial Catalog=Carnagy5;Integrated Security=True";
+            var connection = "Data Source=USER-PC;Initial Catalog=Carnagy5;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
             return new CarnagyContext(connection);
         }
     }

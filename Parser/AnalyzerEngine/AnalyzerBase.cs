@@ -37,7 +37,7 @@ namespace AnalyzerEngine
             images.AddRange(autotraderImages);
             //DownloadImager.Download("Cars", images.Where(a => !string.IsNullOrWhiteSpace(a.Url)));
         }
-       
+
         private List<ImageDownloadCommand> AnalyzeAutotraderConfiguration(List<MainConfiguration> configuration)
         {
             var result = new List<ImageDownloadCommand>();
@@ -70,7 +70,6 @@ namespace AnalyzerEngine
                             var allIsGood = true;
                             foreach (var price in parsedCar.Prices)
                             {
-
                                 //TODO: выбрасывать эти машины не стоит, но нужно учитывать что они могут нарушить логику работы расчетов
                                 var priceValue = 0.0;
                                 if (!double.TryParse(
@@ -104,8 +103,9 @@ namespace AnalyzerEngine
                             {
                                 ParsedCarId = parsedCar.Id,
                                 Url = parsedCar.Url,
-                                AdvertCarPrices = listPrice
-                            };
+                                AdvertCarPrices = listPrice,
+                                ImageSrc = GetImage(parsedCar)
+                        };
                             var stockNumber = GetValue(parsedCar.FieldValues, FiledNameConstant.StockNumber);
                             var dealer = GetOrCreateDealer(parsedCar, dealerWebSite);
                             var stockCar = GetStockCar(parsedCar);
@@ -127,6 +127,11 @@ namespace AnalyzerEngine
                                 RebalanceStockCar(car, stockCar);
                             }
 
+                            if (string.IsNullOrWhiteSpace(car.ImageSrc))
+                            {
+                                car.ImageSrc = GetImage(parsedCar);
+                            }
+
                             car.MainAdvertCar.AdvertCars.Add(advertCar);
                             parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
                             Repository.SaveChanges();
@@ -134,6 +139,10 @@ namespace AnalyzerEngine
                         }
                         else
                         {
+                            if (string.IsNullOrWhiteSpace(advertCar.ImageSrc))
+                            {
+                                advertCar.ImageSrc = GetImage(parsedCar);
+                            }
                             var price = parsedCar.Prices
                                 .OrderByDescending(a => a.DateTime)
                                 .FirstOrDefault()?.Value ?? string.Empty;
@@ -163,6 +172,17 @@ namespace AnalyzerEngine
                 }
             }
             return result;
+        }
+
+        private string GetImage(ParsedCar parsedCar)
+        {
+            var imageSrc = GetValue(parsedCar.FieldValues, FiledNameConstant.ImgPath);
+            if (string.IsNullOrWhiteSpace(imageSrc))
+            {
+                return string.Empty;
+            }
+            imageSrc = imageSrc.Split('?')[0] + "?w=160&h=120";
+            return imageSrc;
         }
 
         private void RebalanceStockCar(Car car, StockCar newStockCar)
@@ -393,7 +413,7 @@ namespace AnalyzerEngine
             Repository.CreateCar(car);
             return car;
         }
-        
+
         //private List<ImageDownloadCommand> AnalyzeDealerConfiguration(List<MainConfiguration> configuration)
         //{
         //    var result = new List<ImageDownloadCommand>();

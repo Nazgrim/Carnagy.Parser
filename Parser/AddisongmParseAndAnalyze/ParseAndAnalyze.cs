@@ -36,13 +36,13 @@ namespace AddisongmParseAndAnalyze
             FillDatabase(rooobject.vehicles.ToList(), dealer, stockNumbers);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            var images = Repository.GetCarsByDealerId(dealer.Id)
-                .Select(a => new ImageDownloadCommand
-                {
-                    Id = a.Id,
-                    Url = vehicles.FirstOrDefault(b => b.stocknumber == a.StockNumber)?.picture
-                })
-                .Where(a => !string.IsNullOrWhiteSpace(a.Url));
+            //var images = Repository.GetCarsByDealerId(dealer.Id)
+            //    .Select(a => new ImageDownloadCommand
+            //    {
+            //        Id = a.Id,
+            //        Url = vehicles.FirstOrDefault(b => b.stocknumber == a.StockNumber)?.picture
+            //    })
+            //    .Where(a => !string.IsNullOrWhiteSpace(a.Url));
             //DownloadImage.Download("Cars", images);
             stopwatch.Stop();
             Console.WriteLine(stopwatch.Elapsed);
@@ -74,6 +74,7 @@ namespace AddisongmParseAndAnalyze
                 {
                     car.Price = vehicle.price;
                     car.Url = carUrl;
+                    car.ImageSrc = vehicle.picture;
                     stockNumbers.Remove(car);
                 }
                 var advertCar = GetOrCreateAdvertCar(car);
@@ -113,7 +114,8 @@ namespace AddisongmParseAndAnalyze
                 StockCarId = stockCar.Id,
                 StockNumber = vehicle.stocknumber,
                 Price = vehicle.price,
-                Url = carUrl
+                Url = carUrl,
+                ImageSrc = vehicle.picture
             };
             Repository.CreateCar(car);
 
@@ -129,7 +131,8 @@ namespace AddisongmParseAndAnalyze
                 {
                     Url = car.Url,
                     MainAdvertCar = new MainAdvertCar { Car = car },
-                    IsDealer = true
+                    IsDealer = true,
+                    ImageSrc = car.ImageSrc
                 };
                 Repository.CreateAdvertCar(advertCar);
                 return advertCar;
@@ -142,7 +145,8 @@ namespace AddisongmParseAndAnalyze
             {
                 Url = car.Url,
                 MainAdvertCarId = car.Id,
-                IsDealer = true
+                IsDealer = true,
+                ImageSrc = car.ImageSrc
             };
             Repository.CreateAdvertCar(mainAdvertCar);
             return mainAdvertCar;

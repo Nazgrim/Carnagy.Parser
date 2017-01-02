@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AddisongmParseAndAnalyze;
 using AnalyzerEngine;
 using Autofac;
@@ -17,13 +18,8 @@ namespace Runner
             var container = BuildContainer();
             //Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
             //Helper.RestoreAdvertCarPriceFromDate(container.Resolve<CarnagyContext>());
-
-            //var download = container.Resolve<IDownloadImage>();
-            //var stopwathc= new Stopwatch();
-            //stopwathc.Start();
-            //download.Download();
-            //stopwathc.Stop();
-
+            //Helper.DownloadImage(container.Resolve<CarnagyContext>(), container.Resolve<IDownloadImage>());
+           
             var parser = container.Resolve<IParser>();
             Console.WriteLine("Parsing is started.");
             parser.Run();
@@ -48,7 +44,7 @@ namespace Runner
         {
             //TODO: Move to app.config
             const int threadCount = 5;
-            const string baseDir = @"C:\Users\Иван\Source\Repos\Carnagy.Parser\Parser\WepApi\Image";
+            const string baseDir = @"C:\Users\User\Source\Repos\Carnagy.Parser\Parser\FrontendApi\wwwroot\images";
 
             var builder = new ContainerBuilder();
 

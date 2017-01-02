@@ -6,6 +6,7 @@
         public string Url { get; set; }
         public double Price { get; set; }
         public string StockNumber { get; set; }
+        public string ImageSrc { get; set; }
 
         public int StockCarId { get; set; }
         public int DealerId { get; set; }

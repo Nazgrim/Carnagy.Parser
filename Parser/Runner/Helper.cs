@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using DataAccess;
 using DataAccess.Models;
+using Utility;
 
 namespace Runner
 {
@@ -463,6 +464,24 @@ namespace Runner
                 AdvertCar.AdvertCarPrices.Add(new AdvertCarPrice { Value = priceValue, DateTime = retoreDate });
             }
             context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Скачать изображения для машин
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="downloadImage"></param>
+        public static void DownloadImage(CarnagyContext context, IDownloadImage downloadImage)
+        {
+            var imagesCommands = context.Cars.Include(a=>a.MainAdvertCar).Where(a => a.DealerId == 1 && !a.MainAdvertCar.IsDeleted)
+                //.Take(100)
+                .ToList()
+                .Select(a => new ImageDownloadCommand
+                {
+                    Id = a.Id,
+                    Url = a.ImageSrc
+                });
+            downloadImage.Download("Cars", imagesCommands);
         }
     }
 }
