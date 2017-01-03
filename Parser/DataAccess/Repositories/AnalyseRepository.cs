@@ -18,14 +18,8 @@ namespace DataAccess.Repositories
         public List<Car> GetAllStockNumber(int dealerId)
         {
             var result = Context.Set<Car>()
+                .Include(a=>a.MainAdvertCar)
                 .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)
-                .Select(a => new { a.Id, a.StockNumber })
-                .ToList()
-                .Select(a => new Car
-                {
-                    StockNumber = a.StockNumber,
-                    Id = a.Id
-                })
                 .ToList();
             return result;
         }

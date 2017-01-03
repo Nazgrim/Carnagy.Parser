@@ -33,7 +33,7 @@ namespace AddisongmParseAndAnalyze
 
             var vehicles = rooobject.vehicles.ToList();
             var stockNumbers = Repository.GetAllStockNumber(dealer.Id);
-            FillDatabase(rooobject.vehicles.ToList(), dealer, stockNumbers);
+            FillDatabase(vehicles, dealer, stockNumbers);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             //var images = Repository.GetCarsByDealerId(dealer.Id)
