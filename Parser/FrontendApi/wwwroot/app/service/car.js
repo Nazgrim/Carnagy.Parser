@@ -239,6 +239,7 @@ angular
                             options: {
                                 chart: {
                                     type: 'line',
+                                    zoomType: 'x',
                                     height: 300
                                 },
                                 legend: {
@@ -246,8 +247,41 @@ angular
                                 },
                                 exporting: {
                                     enabled: false
-                                }
+                                },
+                                rangeSelector: {
+                                    buttons: [{
+                                        type: 'week',
+                                        count: 1,
+                                        text: '1w'
+                                    }, {
+                                        type: 'month',
+                                        count: 1,
+                                        text: '1m'
+                                    }, {
+                                        type: 'month',
+                                        count: 3,
+                                        text: '3m'
+                                    }, {
+                                        type: 'month',
+                                        count: 6,
+                                        text: '6m'
+                                    }, {
+                                        type: 'ytd',
+                                        text: 'YTD'
+                                    },
+                                    {
+                                        type: 'year',
+                                        count: 1,
+                                        text: '1y'
+                                    }, {
+                                        type: 'all',
+                                        text: 'All'
+                                    }],
+                                    selected: 3
+                                },
+                                navigator: { enabled: true },
                             },
+                            useHighStocks: true,
                             title: {
                                 text: '',
                                 style: {
@@ -268,16 +302,11 @@ angular
                                 data: chartSeries.data,
                                 carId: chartSeries.carId
                             }],
-                            xAxis: { type: 'datetime' },
+                            //xAxis: { type: 'datetime' },
                             yAxis: {
-                                title: {
-                                    text: '',
-                                    style: {
-                                        display: 'none'
-                                    }
-                                },
+                                opposite: false,
                                 labels: {
-                                    format: '${value}'
+                                    format: '$ {value}'
                                 }
                             }
                         };
