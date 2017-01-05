@@ -28,12 +28,7 @@ namespace DataAccess.Repositories
         {
             foreach (var car in cars)
             {
-                var mainAdvertCar = new MainAdvertCar
-                {
-                    CarId = car.Id,
-                    IsDeleted = true
-                };
-                Context.Entry(mainAdvertCar).State = EntityState.Modified;
+                car.MainAdvertCar.IsDeleted = true;
             }
         }
 

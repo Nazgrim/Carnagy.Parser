@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using AddisongmParseAndAnalyze;
 using AnalyzerEngine;
 using Autofac;
