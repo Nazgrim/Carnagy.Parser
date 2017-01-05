@@ -518,6 +518,21 @@ body.nav-md ul.nav.child_menu li:before {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
+body.nav-md ul.nav.child_menu li.current-page:before {
+  background: #1ABB9C;
+  bottom: auto;
+  content: "";
+  height: 8px;
+  left: 23px;
+  margin-top: 15px;
+  position: absolute;
+  right: auto;
+  width: 8px;
+  z-index: 1;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+}
 body.nav-md ul.nav.child_menu li:after {
   border-left: 1px solid #425668;
   bottom: 0;

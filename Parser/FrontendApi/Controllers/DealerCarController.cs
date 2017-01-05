@@ -67,6 +67,19 @@ namespace FrontendApi.Controllers
         }
 
         [HttpGet]
+        [ActionName("CountTrend")]
+        public IActionResult GetCountTrend(int stockCarId)
+        {
+            var countTrend = _dealerService.GetCountTrendById(stockCarId);
+            if (countTrend == null)
+            {
+                return NotFound();
+            }
+            return Ok(countTrend);
+        }
+
+
+        [HttpGet]
         [ActionName("SimilarCars")]
         public IActionResult GetSimilarCars(int dealerCarId)
         {

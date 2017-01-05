@@ -5,6 +5,7 @@ using FrontendApi.Service;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Cors;
 
 namespace FrontendApi.Controllers
 {

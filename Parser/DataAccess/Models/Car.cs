@@ -1,4 +1,6 @@
-﻿namespace DataAccess.Models
+﻿using System;
+
+namespace DataAccess.Models
 {
     public class Car: IEntites
     {
@@ -7,7 +9,8 @@
         public double Price { get; set; }
         public string StockNumber { get; set; }
         public string ImageSrc { get; set; }
-
+        public DateTime CreatedTime { get; set; }
+        public DateTime? DeletedTime { get; set; }
         public int StockCarId { get; set; }
         public int DealerId { get; set; }
 

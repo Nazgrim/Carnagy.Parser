@@ -42,6 +42,23 @@ namespace FrontendApi.Service
             }
         }
 
+        public PBIReports GetReports(string accessToken)
+        {
+            System.Net.WebRequest request = System.Net.WebRequest.Create($"{BaseUri}reports") as System.Net.HttpWebRequest;
+            request.Method = "GET";
+            request.ContentLength = 0;
+            request.Headers.Add("Authorization", $"Bearer {accessToken}");
+
+            using (var response = request.GetResponse() as System.Net.HttpWebResponse)
+            {
+                using (var reader = new System.IO.StreamReader(response.GetResponseStream()))
+                {
+                    var responseContent = reader.ReadToEnd();
+                    return JsonConvert.DeserializeObject<PBIReports>(responseContent);
+                }
+            }
+        }
+
         public async Task<AzureAdTokenResponse> GetToken()
         {
             var content = new FormUrlEncodedContent(new[]

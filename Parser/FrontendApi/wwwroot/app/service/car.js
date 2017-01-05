@@ -313,6 +313,89 @@ angular
                         return result;
                     });
             },
+            getCountTrend: function (stockCarId) {
+                var DealerCar = $resource(baseUrl + '/countTrend?stockCarId=:stockCarId', { stockCarId: '@stockCarId' });
+                return DealerCar.get({ stockCarId: stockCarId })
+                    .$promise
+                    .then(function (chartSeries) {
+                        var result = {
+                            options: {
+                                chart: {
+                                    type: 'line',
+                                    zoomType: 'x',
+                                    height: 300
+                                },
+                                legend: {
+                                    enabled: true
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                rangeSelector: {
+                                    buttons: [{
+                                        type: 'week',
+                                        count: 1,
+                                        text: '1w'
+                                    }, {
+                                        type: 'month',
+                                        count: 1,
+                                        text: '1m'
+                                    }, {
+                                        type: 'month',
+                                        count: 3,
+                                        text: '3m'
+                                    }, {
+                                        type: 'month',
+                                        count: 6,
+                                        text: '6m'
+                                    }, {
+                                        type: 'ytd',
+                                        text: 'YTD'
+                                    },
+                                    {
+                                        type: 'year',
+                                        count: 1,
+                                        text: '1y'
+                                    }, {
+                                        type: 'all',
+                                        text: 'All'
+                                    }],
+                                    selected: 3
+                                },
+                                navigator: { enabled: true },
+                            },
+                            useHighStocks: true,
+                            title: {
+                                text: '',
+                                style: {
+                                    display: 'none'
+                                }
+                            },
+                            subtitle: {
+                                text: '',
+                                style: {
+                                    display: 'none'
+                                }
+                            },
+                            credits: {
+                                enabled: false
+                            },
+                            series: [{
+                                name: chartSeries.name,
+                                data: chartSeries.data,
+                                carId: chartSeries.carId
+                            }],
+                            //xAxis: { type: 'datetime' },
+                            yAxis: {
+                                opposite: false,
+                                //labels: {
+                                //    format: '$ {value}'
+                                //}
+                            }
+                        };
+                        return result;
+                    });
+            },
             getDealerCompetitors: function (stockCarId) {
                 var DealerCar = $resource(baseUrl + '/dealercompetitors?stockCarId=:stockCarId', { stockCarId: '@id' });
                 return DealerCar.query({ stockCarId: stockCarId })

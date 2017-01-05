@@ -215,6 +215,14 @@
     <Compile Include="Migrations\201701021347514_AddImageSrcToAdvertCar.Designer.cs">
       <DependentUpon>201701021347514_AddImageSrcToAdvertCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701031037458_AddCreatedTimeFieldToCar.cs" />
+    <Compile Include="Migrations\201701031037458_AddCreatedTimeFieldToCar.Designer.cs">
+      <DependentUpon>201701031037458_AddCreatedTimeFieldToCar.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201701031050456_AddDeletedTimeFieldToCar.cs" />
+    <Compile Include="Migrations\201701031050456_AddDeletedTimeFieldToCar.Designer.cs">
+      <DependentUpon>201701031050456_AddDeletedTimeFieldToCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -359,6 +367,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701021347514_AddImageSrcToAdvertCar.resx">
       <DependentUpon>201701021347514_AddImageSrcToAdvertCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701031037458_AddCreatedTimeFieldToCar.resx">
+      <DependentUpon>201701031037458_AddCreatedTimeFieldToCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701031050456_AddDeletedTimeFieldToCar.resx">
+      <DependentUpon>201701031050456_AddDeletedTimeFieldToCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

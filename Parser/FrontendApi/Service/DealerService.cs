@@ -170,6 +170,41 @@ namespace FrontendApi.Service
             return dealerCars;
         }
 
+        public ChartSeries GetCountTrendById(int stockCarId)
+        {
+            var cars = Repository.GetCarsByStockCarId(stockCarId);
+            var dic= new Dictionary<DateTime, int>();
+            foreach (var car in cars)
+            {
+                var crteadTime = car.CreatedTime.Date;
+                var stopDate = (car.DeletedTime ?? DateTime.Now).Date;
+                for (int i = 0; i < (stopDate - crteadTime).Days; i++)
+                {
+                    var curTime = crteadTime.AddDays(i);
+                    if (!dic.ContainsKey(curTime))
+                    {
+                        dic.Add(curTime,0);
+                    }
+                    dic[curTime]++;
+                }                
+            }
+
+            var car1 = cars.First().StockCar;
+            var year = car1.Year.Value;
+            var make = car1.Make.Value;
+            var model = car1.Model.Value;
+            var chartSeties = new ChartSeries
+            {
+                carId = stockCarId,
+                name = $"{year} {make} {model}",
+                data = dic
+                   .Select(a => new[] { a.Key.ConvertToUnixTime(), a.Value })
+                   .ToList()
+            };
+
+            return chartSeties;
+        }
+
         private IEnumerable<SeriesDataValue> GetSeriesData(List<Car> carDeales, double max, double min)
         {
             if (carDeales.Count <= 1)

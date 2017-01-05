@@ -33,6 +33,13 @@ namespace FrontendApi
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("AllowAngular2", b => b.WithOrigins("http://localhost:4200/")
+            //    .AllowAnyHeader()
+            //    .AllowAnyMethod());
+            //});
             services.AddMvc();
             services.AddSession();
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -85,7 +92,13 @@ namespace FrontendApi
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+                builder.AllowAnyOrigin();
+            }
+            );
             app.UseStaticFiles();
             app.UseSession();
             app.UseMvc(routes =>

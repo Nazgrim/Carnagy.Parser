@@ -498,5 +498,19 @@ namespace Runner
             }
             context.SaveChanges();
         }
+
+        public static void AddCreatedTime(CarnagyContext context)
+        {
+            var cars = context.Cars.Include(a => a.MainAdvertCar.AdvertCars.Select(b => b.AdvertCarPrices)).ToList();
+            foreach (var car in cars)
+            {
+                var advertCarPrices = car.MainAdvertCar.AdvertCars.SelectMany(a => a.AdvertCarPrices).OrderBy(a=>a.DateTime);
+                car.CreatedTime = advertCarPrices.First().DateTime;
+                var lastTime= advertCarPrices.Last().DateTime;
+                if (car.MainAdvertCar.IsDeleted)
+                    car.DeletedTime = lastTime;
+            }
+            context.SaveChanges();
+        }
     }
 }

@@ -17,6 +17,12 @@ namespace Runner
         {
             var container = BuildContainer();
             //Helper.DownloadImage(container.Resolve<CarnagyContext>(), container.Resolve<IDownloadImage>());
+            //Helper.AddCreatedTime(container.Resolve<CarnagyContext>());
+
+            //var abc = new DealerParser();
+            //abc.Parse();
+            //abc.FixLocation(container.Resolve<CarnagyContext>());
+            //abc.CreateCsv(container.Resolve<CarnagyContext>());
 
             var parser = container.Resolve<IParser>();
             Console.WriteLine("Parsing is started.");

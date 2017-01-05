@@ -12,5 +12,6 @@ namespace FrontendApi.Service
         List<DealerCompetitorCar> GetDealerCompetitorsById(int stockCarId, int dealerId);
         ChartSeries GetPriceTrendById(int stockCarId);
         DealerInformation GetDealer(int id);
+        ChartSeries GetCountTrendById(int stockCarId);
     }
 }

@@ -11,7 +11,7 @@ angular.module('carnagy', ['ui.router', 'ngAnimate', 'ngCookies', 'ngSanitize', 
     'dealerModule', 'similarCarModule',
     'carChartModule', 'powerBiModule',
     'carWidgetsPanelModule', 'carInformationModule',
-    'carModule', 'priceTrendModule', 'dealerCompetitorsModule', 'errSrcModule', 'ui.grid', 'ui.grid.edit',
+    'carModule', 'priceTrendModule', 'countTrendModule', 'dealerCompetitorsModule', 'errSrcModule', 'ui.grid', 'ui.grid.edit',
     'smart-table', 'accountModule', 'dealerHeaderModule','cgBusy'])
     .controller('SidebarCtrl', SidebarCtrl)
     .controller('DealerCtrl', DealerCtrl)
