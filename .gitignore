@@ -211,3 +211,4 @@ __pycache__/
 #Mac OSX 
 .DS_Store
 *.suo
+Parser/.vs/Parser/v14/.suo
