@@ -69,6 +69,12 @@ namespace FrontendApi.Service
                     value = car.StockCar.Price.ToString(),
                     date = "From last Week",
                     difference = "34%"
+                },
+                msrpPrice = new DelalerClassPrice
+                {
+                    value = car.MsrpPrice.ToString(),
+                    date = "From last Week",
+                    difference = "34%"
                 }
             };
             return dealerClassInformation;
@@ -82,7 +88,7 @@ namespace FrontendApi.Service
             && car.StockCar.MakeId == stockCar.MakeId
             && car.StockCar.ModelId == stockCar.ModelId);
             var carsFullСoincidence = cars.Where(a =>
-                 //a.DealerId != dealerId &&
+                //a.DealerId != dealerId &&
                 a.StockCar.BodyTypeId == stockCar.BodyTypeId
                 && a.StockCar.DrivetrainId == stockCar.DrivetrainId
                 && a.StockCar.StyleTrimId == stockCar.StyleTrimId).ToList();
@@ -106,7 +112,7 @@ namespace FrontendApi.Service
                 max = max,
                 min = min,
                 dealerPrice = dealer.Price,
-                msrpPrice = stockCar.MsrpPrice,
+                msrpPrice = dealer.MsrpPrice,
                 seriesData = seriesData
             };
             return chartData;
@@ -134,20 +140,22 @@ namespace FrontendApi.Service
             return result;
         }
 
-        public ChartSeries GetPriceTrendById(int stockCarId)
+        public ChartSeries GetPriceTrendById(int stockCarId, int carId)
         {
-            var car = Repository.GetStockCarWithPrices(stockCarId);
-            var year = car.Year.Value;
-            var make = car.Make.Value;
-            var model = car.Model.Value;
+            var car = Repository.GetCarById(carId);
+            var stockCar = Repository.GetStockCarWithPrices(stockCarId);
+            var year = stockCar.Year.Value;
+            var make = stockCar.Make.Value;
+            var model = stockCar.Model.Value;
 
             var chartSeties = new ChartSeries
             {
                 carId = stockCarId,
                 name = $"{year} {make} {model}",
-                data = car.StockCarPrices
+                data = stockCar.StockCarPrices
                     .Select(a => new[] { a.DateTime.ConvertToUnixTime(), a.Value })
-                    .ToList()
+                    .ToList(),
+                msrpPrice = car.MsrpPrice
             };
 
             return chartSeties;
@@ -173,7 +181,7 @@ namespace FrontendApi.Service
         public ChartSeries GetCountTrendById(int stockCarId)
         {
             var cars = Repository.GetCarsByStockCarId(stockCarId);
-            var dic= new Dictionary<DateTime, int>();
+            var dic = new Dictionary<DateTime, int>();
             foreach (var car in cars)
             {
                 var crteadTime = car.CreatedTime.Date;
@@ -183,10 +191,10 @@ namespace FrontendApi.Service
                     var curTime = crteadTime.AddDays(i);
                     if (!dic.ContainsKey(curTime))
                     {
-                        dic.Add(curTime,0);
+                        dic.Add(curTime, 0);
                     }
                     dic[curTime]++;
-                }                
+                }
             }
 
             var car1 = cars.First().StockCar;

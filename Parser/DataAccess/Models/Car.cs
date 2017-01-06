@@ -11,6 +11,8 @@ namespace DataAccess.Models
         public string ImageSrc { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime? DeletedTime { get; set; }
+        public double MsrpPrice { get; set; }
+
         public int StockCarId { get; set; }
         public int DealerId { get; set; }
 

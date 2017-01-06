@@ -230,9 +230,9 @@ angular
                 var DealerCar = $resource(baseUrl + '/similarcars/:delearId', { dealerCarId: '@id' });
                 return DealerCar.query({ dealerCarId: 123 });
             },
-            getPriceTrend: function (stockCarId) {
-                var DealerCar = $resource(baseUrl + '/chartSeries?stockCarId=:stockCarId', { stockCarId: '@stockCarId' });
-                return DealerCar.get({ stockCarId: stockCarId })
+            getPriceTrend: function (stockCarId, carId) {
+                var DealerCar = $resource(baseUrl + '/chartSeries?stockCarId=:stockCarId&carId=:carId', { stockCarId: '@stockCarId', carId: '@carId' });
+                return DealerCar.get({ stockCarId: stockCarId, carId: carId })
                     .$promise
                     .then(function (chartSeries) {
                         var result = {
@@ -297,19 +297,41 @@ angular
                             credits: {
                                 enabled: false
                             },
-                            series: [{
-                                name: chartSeries.name,
-                                data: chartSeries.data,
-                                carId: chartSeries.carId
-                            }],
+                            series: [
+                                {
+                                    name: chartSeries.name,
+                                    data: chartSeries.data,
+                                    carId: chartSeries.carId
+                                },
+                            ],
                             //xAxis: { type: 'datetime' },
                             yAxis: {
                                 opposite: false,
                                 labels: {
                                     format: '$ {value}'
-                                }
+                                },
                             }
                         };
+                        if (chartSeries.msrpPrice) {
+                            result.yAxis.plotLines = [{
+                                value: chartSeries.msrpPrice,
+                                color: 'green',
+                                dashStyle: 'shortdash',
+                                width: 2,
+                                label: {
+                                    text: 'MSRP price'
+                                }
+                            }];
+                            result.series.push({
+                                showInLegend: false,
+                                name: "MSRP",
+                                data: chartSeries.data.map(function (e) { return [e[0], [chartSeries.msrpPrice]] }),
+                                type: 'scatter',
+                                marker: {
+                                    enabled: false
+                                },
+                            });
+                        }
                         return result;
                     });
             },

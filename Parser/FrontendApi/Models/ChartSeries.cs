@@ -7,5 +7,6 @@ namespace FrontendApi.Models
         public int carId { get; set; }
         public string name { get; set; }
         public List<long[]> data { get; set; }
+        public double msrpPrice { get; set; }
     }
 }

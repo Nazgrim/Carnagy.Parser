@@ -223,6 +223,10 @@
     <Compile Include="Migrations\201701031050456_AddDeletedTimeFieldToCar.Designer.cs">
       <DependentUpon>201701031050456_AddDeletedTimeFieldToCar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701061045557_AddMsrpFieldToCar.cs" />
+    <Compile Include="Migrations\201701061045557_AddMsrpFieldToCar.Designer.cs">
+      <DependentUpon>201701061045557_AddMsrpFieldToCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -373,6 +377,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701031050456_AddDeletedTimeFieldToCar.resx">
       <DependentUpon>201701031050456_AddDeletedTimeFieldToCar.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701061045557_AddMsrpFieldToCar.resx">
+      <DependentUpon>201701061045557_AddMsrpFieldToCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

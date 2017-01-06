@@ -75,6 +75,7 @@ namespace AddisongmParseAndAnalyze
                     car.Price = vehicle.price;
                     car.Url = carUrl;
                     car.ImageSrc = vehicle.picture;
+                    car.MsrpPrice = vehicle.saleprice;
                     stockNumbers.Remove(car);
                 }
                 var advertCar = GetOrCreateAdvertCar(car);
@@ -115,7 +116,8 @@ namespace AddisongmParseAndAnalyze
                 StockNumber = vehicle.stocknumber,
                 Price = vehicle.price,
                 Url = carUrl,
-                ImageSrc = vehicle.picture
+                ImageSrc = vehicle.picture,
+                MsrpPrice = vehicle.saleprice
             };
             Repository.CreateCar(car);
 

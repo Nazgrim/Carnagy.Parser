@@ -3,7 +3,7 @@
 		<div class="x_panel tile" cg-busy="{promise:carInformationPromise,message:'Loading',backdrop:true}">
 			<div class="x_content">
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-md-6">
 						<img style="display: inline-block; vertical-align:middle; padding-left:10px; padding-right:10px" class="resize" ng-src="../images/Cars/{{carInformation.imgScr}}.jpg"
 						/>
 						<div style="display: inline-block;vertical-align:middle;" class="left-border-with-padding">
@@ -13,6 +13,14 @@
 							</p>
 						</div>
 					</div>
+                    <div class="col-md-2 tile_stats_count" style="height:120px; display:table;">
+                        <div style="display:table-cell;vertical-align:middle;">
+                            <div class="left-border-with-padding" ng-if="carInformation.msrpPrice.value!=0">
+                                <span class="count_top"><i class="fa fa-usd"></i> MSRP Price</span>
+                                <div class="count">{{carInformation.msrpPrice.value | currency: "$" : 0}}</div>
+                            </div>
+                        </div>
+                    </div>
 					<div class="col-md-2 tile_stats_count" style="height:120px; display:table;">
 						<div style="display:table-cell;vertical-align:middle;">
 							<div class="left-border-with-padding">

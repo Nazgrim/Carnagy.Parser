@@ -56,9 +56,9 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("ChartSeries")]
-        public IActionResult GetChartSeries(int stockCarId)
+        public IActionResult GetChartSeries(int stockCarId, int carId)
         {
-            var priceTrend = _dealerService.GetPriceTrendById(stockCarId);
+            var priceTrend = _dealerService.GetPriceTrendById(stockCarId, carId);
             if (priceTrend == null)
             {
                 return NotFound();
