@@ -18,17 +18,18 @@ namespace DataAccess.Repositories
         public List<Car> GetAllStockNumber(int dealerId)
         {
             var result = Context.Set<Car>()
-                .Include(a=>a.MainAdvertCar)
+                .Include(a => a.MainAdvertCar)
                 .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)
                 .ToList();
             return result;
         }
 
-        public void DeleteCars(List<Car> cars)
+        public void DeleteCars(List<Car> cars, DateTime deletedTime)
         {
             foreach (var car in cars)
             {
                 car.MainAdvertCar.IsDeleted = true;
+                car.DeletedTime = deletedTime;
             }
         }
 

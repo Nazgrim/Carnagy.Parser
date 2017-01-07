@@ -13,9 +13,10 @@ namespace AddisongmParseAndAnalyze
     {
         private const string InventoryUrl = "http://addisongm.com/data/inventory.json";
         private const string HttpWwwAddisongmCom = "http://www.addisongm.com";
-        private IAnalyseRepository Repository { get; set; }
-        private IDownloadImage DownloadImage { get; set; }
-        private IDownloadManager DownloadManager { get; set; }
+        private IAnalyseRepository Repository;
+        private IDownloadImage DownloadImage;
+        private IDownloadManager DownloadManager;
+        private DateTime CurrentTime;
 
         public ParseAndAnalyze(IAnalyseRepository repository, IDownloadImage downloadImage, IDownloadManager downloadManager)
         {
@@ -26,6 +27,7 @@ namespace AddisongmParseAndAnalyze
 
         public void Run()
         {
+            CurrentTime = DateTime.Now;
             var rooobject = GetRootobject();
             var dealer = Repository.GetDealerByWebSireUrl(HttpWwwAddisongmCom);
             if (dealer == null)
@@ -60,7 +62,6 @@ namespace AddisongmParseAndAnalyze
 
         private void FillDatabase(List<Vehicle> vehicles, Dealer dealer, List<Car> stockNumbers)
         {
-            var now = DateTime.Now;
             foreach (var vehicle in vehicles)
             {
                 var carUrl = $"http://addisongm.com/view/{vehicle.condition}-{vehicle.year}-{vehicle.make}-{vehicle.model}-{vehicle.id}";
@@ -80,10 +81,10 @@ namespace AddisongmParseAndAnalyze
                 }
                 var advertCar = GetOrCreateAdvertCar(car);
 
-                Repository.AddAdvertCarPrice(advertCar.Id, vehicle.price, now);
+                Repository.AddAdvertCarPrice(advertCar.Id, vehicle.price, CurrentTime);
             }
 
-            Repository.DeleteCars(stockNumbers);
+            Repository.DeleteCars(stockNumbers, CurrentTime);
 
             Repository.SaveChanges();
         }
@@ -117,7 +118,8 @@ namespace AddisongmParseAndAnalyze
                 Price = vehicle.price,
                 Url = carUrl,
                 ImageSrc = vehicle.picture,
-                MsrpPrice = vehicle.saleprice
+                MsrpPrice = vehicle.saleprice,
+                CreatedTime = CurrentTime,
             };
             Repository.CreateCar(car);
 

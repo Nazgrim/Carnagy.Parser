@@ -44,7 +44,7 @@ namespace DataAccess.Repositories
         List<Car> GetCarsByStockCarId(int stockCarId);
         List<Car> GetCarsByFilter(Func<Car, bool> filter);
         List<Car> GetAllStockNumber(int dealerId);
-        void DeleteCars(List<Car> cars);
+        void DeleteCars(List<Car> cars, DateTime deletedTime);
         List<ParsedCar> GetParsedCarsByPage(int skip, int take, int configurationId);
         void DetachParsedCars(List<ParsedCar> parrsedCar);
         AdvertCar GetAdvertCar(int id);

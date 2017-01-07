@@ -11,11 +11,12 @@ namespace AnalyzerEngine
 {
     public class AnalyzerBase : IAnalyzer
     {
-        private IAnalyseRepository Repository { get; set; }
-        private IDownloadImage DownloadImager { get; set; }
+        private IAnalyseRepository Repository;
+        private IDownloadImage DownloadImager;
 
         private const int ParrsedCarByTimes = 1000;
         private const string DefaultValue = "Not know";
+        private DateTime Current;
 
         public AnalyzerBase(IAnalyseRepository repository, IDownloadImage downloadImager)
         {
@@ -30,6 +31,7 @@ namespace AnalyzerEngine
 
         private void Analyze()
         {
+            Current = DateTime.Now;
             var images = new List<ImageDownloadCommand>();
             var configuration = Repository.GetConfigurations();
             //AnalyzeDealerConfiguration(configuration);
@@ -42,7 +44,6 @@ namespace AnalyzerEngine
         {
             var result = new List<ImageDownloadCommand>();
             var autotraderConfiguration = configuration.Where(a => !a.DealerId.HasValue);
-            var now = DateTime.Now;
             //На данный момент у нас всего один аггрегатор(autotrader), но в будущем их будет больше
             foreach (var mainConfiguration in autotraderConfiguration)
             {
@@ -63,17 +64,102 @@ namespace AnalyzerEngine
 
                     foreach (var parsedCar in parsedCars)
                     {
-                        var advertCar = Repository.GetAdvertCar(parsedCar.Id);
-                        if (advertCar == null)
+                        if (parsedCar.IsDeleted)
                         {
-                            var listPrice = new List<AdvertCarPrice>();
-                            var allIsGood = true;
-                            foreach (var price in parsedCar.Prices)
+                            var advertCar = parsedCar.AdvertCars.First();
+                            advertCar.MainAdvertCar.IsDeleted = true;
+                            advertCar.MainAdvertCar.Car.DeletedTime = Current;
+                        }
+                        else
+                        {
+                            var advertCar = Repository.GetAdvertCar(parsedCar.Id);
+                            if (advertCar == null)
                             {
+                                var listPrice = new List<AdvertCarPrice>();
+                                var allIsGood = true;
+                                foreach (var price in parsedCar.Prices)
+                                {
+                                    //TODO: выбрасывать эти машины не стоит, но нужно учитывать что они могут нарушить логику работы расчетов
+                                    var priceValue = 0.0;
+                                    if (!double.TryParse(
+                                        price.Value,
+                                        NumberStyles.AllowCurrencySymbol |
+                                        NumberStyles.AllowDecimalPoint |
+                                        NumberStyles.AllowThousands,
+                                        new CultureInfo("en-US"),
+                                        out priceValue))
+                                    {
+                                        parsedCar.Status = ParsedCarStatus.CannotParsePrice;
+                                        Repository.SaveChanges();
+                                        allIsGood = false;
+                                        break;
+                                    }
+                                    listPrice.Add(new AdvertCarPrice { Value = priceValue, DateTime = price.DateTime });
+                                }
+                                if (!allIsGood)
+                                    continue;
+
+                                //без диллера некуда прикрепить машину.
+                                var dealerWebSite = GetValue(parsedCar.FieldValues, FiledNameConstant.DealerWebSite);
+                                if (dealerWebSite == null)
+                                {
+                                    parsedCar.Status = ParsedCarStatus.NoDealerWebSite;
+                                    Repository.SaveChanges();
+                                    continue;
+                                }
+
+                                advertCar = new AdvertCar
+                                {
+                                    ParsedCarId = parsedCar.Id,
+                                    Url = parsedCar.Url,
+                                    AdvertCarPrices = listPrice,
+                                    ImageSrc = GetImage(parsedCar)
+                                };
+                                var stockNumber = GetValue(parsedCar.FieldValues, FiledNameConstant.StockNumber);
+                                var dealer = GetOrCreateDealer(parsedCar, dealerWebSite);
+                                var stockCar = GetStockCar(parsedCar);
+                                if (stockCar == null)
+                                {
+                                    parsedCar.Status = ParsedCarStatus.CantGetStockCar;
+                                    Repository.SaveChanges();
+                                    Console.WriteLine("Не удалось распарсить");
+                                    continue;
+                                }
+
+                                var car = Repository.GetCarByStockNumber(stockNumber, dealer.Id);
+                                if (car == null)
+                                {
+                                    car = CreateCar(parsedCar, stockCar, dealer, listPrice.Last().Value, stockNumber);
+                                }
+                                else if (stockNumber != null)
+                                {
+                                    RebalanceStockCar(car, stockCar);
+                                }
+
+                                if (string.IsNullOrWhiteSpace(car.ImageSrc))
+                                {
+                                    car.ImageSrc = GetImage(parsedCar);
+                                }
+
+                                car.MainAdvertCar.AdvertCars.Add(advertCar);
+                                parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
+                                Repository.SaveChanges();
+                                result.Add(new ImageDownloadCommand { Id = car.Id, Url = GetValue(parsedCar.FieldValues, FiledNameConstant.ImgPath) });
+                            }
+                            else
+                            {
+                                if (string.IsNullOrWhiteSpace(advertCar.ImageSrc))
+                                {
+                                    advertCar.ImageSrc = GetImage(parsedCar);
+                                }
+                                var price = parsedCar.Prices
+                                    .OrderByDescending(a => a.DateTime)
+                                    .FirstOrDefault();
+
                                 //TODO: выбрасывать эти машины не стоит, но нужно учитывать что они могут нарушить логику работы расчетов
                                 var priceValue = 0.0;
                                 if (!double.TryParse(
-                                    price.Value,
+                                    price?.Value ?? string.Empty,
                                     NumberStyles.AllowCurrencySymbol |
                                     NumberStyles.AllowDecimalPoint |
                                     NumberStyles.AllowThousands,
@@ -82,90 +168,14 @@ namespace AnalyzerEngine
                                 {
                                     parsedCar.Status = ParsedCarStatus.CannotParsePrice;
                                     Repository.SaveChanges();
-                                    allIsGood = false;
-                                    break;
+                                    continue;
                                 }
-                                listPrice.Add(new AdvertCarPrice { Value = priceValue, DateTime = price.DateTime });
-                            }
-                            if (!allIsGood)
-                                continue;
 
-                            //без диллера некуда прикрепить машину.
-                            var dealerWebSite = GetValue(parsedCar.FieldValues, FiledNameConstant.DealerWebSite);
-                            if (dealerWebSite == null)
-                            {
-                                parsedCar.Status = ParsedCarStatus.NoDealerWebSite;
-                                Repository.SaveChanges();
-                                continue;
+                                Repository.AddAdvertCarPrice(advertCar.Id, priceValue, price.DateTime);
+                                parsedCar.Status = ParsedCarStatus.AnalyzeComplete;                               
                             }
-
-                            advertCar = new AdvertCar
-                            {
-                                ParsedCarId = parsedCar.Id,
-                                Url = parsedCar.Url,
-                                AdvertCarPrices = listPrice,
-                                ImageSrc = GetImage(parsedCar)
-                        };
-                            var stockNumber = GetValue(parsedCar.FieldValues, FiledNameConstant.StockNumber);
-                            var dealer = GetOrCreateDealer(parsedCar, dealerWebSite);
-                            var stockCar = GetStockCar(parsedCar);
-                            if (stockCar == null)
-                            {
-                                parsedCar.Status = ParsedCarStatus.CantGetStockCar;
-                                Repository.SaveChanges();
-                                Console.WriteLine("Не удалось распарсить");
-                                continue;
-                            }
-
-                            var car = Repository.GetCarByStockNumber(stockNumber, dealer.Id);
-                            if (car == null)
-                            {
-                                car = CreateCar(parsedCar, stockCar, dealer, listPrice.Last().Value, stockNumber);
-                            }
-                            else if (stockNumber != null)
-                            {
-                                RebalanceStockCar(car, stockCar);
-                            }
-
-                            if (string.IsNullOrWhiteSpace(car.ImageSrc))
-                            {
-                                car.ImageSrc = GetImage(parsedCar);
-                            }
-
-                            car.MainAdvertCar.AdvertCars.Add(advertCar);
-                            parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
-                            Repository.SaveChanges();
-                            result.Add(new ImageDownloadCommand { Id = car.Id, Url = GetValue(parsedCar.FieldValues, FiledNameConstant.ImgPath) });
                         }
-                        else
-                        {
-                            if (string.IsNullOrWhiteSpace(advertCar.ImageSrc))
-                            {
-                                advertCar.ImageSrc = GetImage(parsedCar);
-                            }
-                            var price = parsedCar.Prices
-                                .OrderByDescending(a => a.DateTime)
-                                .FirstOrDefault()?.Value ?? string.Empty;
-
-                            //TODO: выбрасывать эти машины не стоит, но нужно учитывать что они могут нарушить логику работы расчетов
-                            var priceValue = 0.0;
-                            if (!double.TryParse(
-                                price,
-                                NumberStyles.AllowCurrencySymbol |
-                                NumberStyles.AllowDecimalPoint |
-                                NumberStyles.AllowThousands,
-                                new CultureInfo("en-US"),
-                                out priceValue))
-                            {
-                                parsedCar.Status = ParsedCarStatus.CannotParsePrice;
-                                Repository.SaveChanges();
-                                continue;
-                            }
-
-                            Repository.AddAdvertCarPrice(advertCar.Id, priceValue, now);
-                            parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
-                            Repository.SaveChanges();
-                        }
+                        Repository.SaveChanges();
                     }
                     //после обработки порции данных её необходимо выгрузить из контекста и освободить память.
                     //Repository.DetachParsedCars(parsedCars);
@@ -407,7 +417,8 @@ namespace AnalyzerEngine
                 Price = priceValue,
                 Url = parsedCar.Url,
                 StockNumber = stockNumber,
-                MainAdvertCar = new MainAdvertCar()
+                MainAdvertCar = new MainAdvertCar(),
+                CreatedTime = Current
             };
 
             Repository.CreateCar(car);
