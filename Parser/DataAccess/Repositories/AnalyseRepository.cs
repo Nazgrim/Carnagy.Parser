@@ -76,7 +76,7 @@ namespace DataAccess.Repositories
                 .Include(a => a.StockCar.Model)
                 .Include(a => a.StockCar.StyleTrim)
                 .Include(a => a.StockCar.Year)
-                .Where(a => a.DealerId == dealerId)
+                .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)                
                 .ToList();
         }
 

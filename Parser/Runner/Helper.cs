@@ -473,7 +473,7 @@ namespace Runner
         /// <param name="downloadImage"></param>
         public static void DownloadImage(CarnagyContext context, IDownloadImage downloadImage)
         {
-            var imagesCommands = context.Cars.Include(a=>a.MainAdvertCar).Where(a => a.DealerId == 1 && !a.MainAdvertCar.IsDeleted)
+            var imagesCommands = context.Cars.Include(a => a.MainAdvertCar).Where(a => a.DealerId == 1 && !a.MainAdvertCar.IsDeleted)
                 //.Take(100)
                 .ToList()
                 .Select(a => new ImageDownloadCommand
@@ -499,16 +499,43 @@ namespace Runner
             context.SaveChanges();
         }
 
+        /// <summary>
+        /// Указываем дату создания машины и дату удаления
+        /// </summary>
+        /// <param name="context"></param>
         public static void AddCreatedTime(CarnagyContext context)
         {
             var cars = context.Cars.Include(a => a.MainAdvertCar.AdvertCars.Select(b => b.AdvertCarPrices)).ToList();
             foreach (var car in cars)
             {
-                var advertCarPrices = car.MainAdvertCar.AdvertCars.SelectMany(a => a.AdvertCarPrices).OrderBy(a=>a.DateTime);
+                var advertCarPrices = car.MainAdvertCar.AdvertCars.SelectMany(a => a.AdvertCarPrices).OrderBy(a => a.DateTime);
                 car.CreatedTime = advertCarPrices.First().DateTime;
-                var lastTime= advertCarPrices.Last().DateTime;
+                var lastTime = advertCarPrices.Last().DateTime;
                 if (car.MainAdvertCar.IsDeleted)
                     car.DeletedTime = lastTime;
+            }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Удаление лишних цен в AdvertCarPrice
+        /// </summary>
+        /// <param name="context"></param>
+        public static void DeleteAdditionalAdvertsCarPrice(CarnagyContext context)
+        {
+            var parssedCars = context.ParsedCars.Include(a => a.Prices).ToList();
+            foreach (var parssedCar in parssedCars)
+            {
+                var advertCar = parssedCar.AdvertCars.FirstOrDefault();
+                if (advertCar == null)
+                    continue;
+                var lastDate = parssedCar.Prices.OrderBy(a => a.DateTime).Last().DateTime.Date;
+
+                var deletedAdvertCarPrice = advertCar.AdvertCarPrices
+                    .ToList()
+                    .Where(a => a.DateTime.Date > lastDate)
+                    .OrderBy(a=>a.DateTime);
+                context.AdvertCarPrices.RemoveRange(deletedAdvertCarPrice);
             }
             context.SaveChanges();
         }

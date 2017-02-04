@@ -313,23 +313,24 @@ angular
                             }
                         };
                         if (chartSeries.msrpPrice) {
-                            result.yAxis.plotLines = [{
-                                value: chartSeries.msrpPrice,
-                                color: 'green',
-                                dashStyle: 'shortdash',
-                                width: 2,
-                                label: {
-                                    text: 'MSRP price'
-                                }
-                            }];
+                            //result.yAxis.plotLines = [{
+                            //    value: chartSeries.msrpPrice,
+                            //    color: 'green',
+                            //    dashStyle: 'shortdash',
+                            //    width: 2,
+                            //    label: {
+                            //        text: 'MSRP price'
+                            //    }
+                            //}];
                             result.series.push({
-                                showInLegend: false,
+                                //showInLegend: false,
+                                color:'green',
                                 name: "MSRP",
-                                data: chartSeries.data.map(function (e) { return [e[0], [chartSeries.msrpPrice]] }),
-                                type: 'scatter',
-                                marker: {
-                                    enabled: false
-                                },
+                                data: chartSeries.data.map(function (e) { return [e[0], chartSeries.msrpPrice] }),
+                                //type: 'scatter',
+                                //marker: {
+                                //    enabled: false
+                                //},
                             });
                         }
                         return result;
