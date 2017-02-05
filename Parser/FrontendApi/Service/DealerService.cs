@@ -118,8 +118,9 @@ namespace FrontendApi.Service
             return chartData;
         }
 
-        public List<DealerCompetitorCar> GetDealerCompetitorsById(int stockCarId, int dealerId)
+        public List<DealerCompetitorCar> GetDealerCompetitorsById(int stockCarId, int dealerId, int carId)
         {
+            var car = Repository.GetCarById(carId) ?? new Car();
             var result = Repository.GetCarsByStockCarId(stockCarId)
                 .Select(c => new DealerCompetitorCar
                 {
@@ -135,7 +136,8 @@ namespace FrontendApi.Service
                     dealerName = c.Dealer.Name,
                     dealerId = c.DealerId,
                     id = c.Id,
-                    isDealerCar = c.DealerId == dealerId
+                    isDealerCar = c.DealerId == dealerId,
+                    priceDifference = c.Price - car.Price
                 }).ToList();
             return result;
         }

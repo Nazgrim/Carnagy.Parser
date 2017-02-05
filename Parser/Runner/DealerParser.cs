@@ -73,6 +73,131 @@ namespace Runner
             File.WriteAllLines("dealer1.json", new[] { JsonConvert.SerializeObject(dealerList) });
         }
 
+        public void FillDatabase(CarnagyContext context)
+        {
+            string json = File.ReadAllText("dealer1.json");
+            var dealersFromJson = JsonConvert.DeserializeObject<List<Dealer>>(json);
+            using (var client = new WebClient()) // WebClient class inherits IDisposable
+            {
+                var dealers = context.Dealers.Where(a => a.Longitude == 0).ToList();
+
+                foreach (var dealer in dealers)
+                {
+                    var zipCode = "";
+                    if (dealer.WebSireUrl == "http://www.addisongm.com")
+                    {
+                        zipCode = "L4W 2M7";
+                        dealer.CityName = "Mississauga";
+                        dealer.Province = "ON";
+                    }
+                    if (dealer.WebSireUrl == "http://www.murraythepas.com/")
+                    {
+                        zipCode = "R9A 1L1";
+                        dealer.CityName = "The Pas";
+                        dealer.Province = "MB";
+                    }
+                    if (dealer.WebSireUrl == "https://www.grenierchevrolet.com/")
+                    {
+                        zipCode = "J6W 6J7";
+                        dealer.CityName = "Terrebonne";
+                        dealer.Province = "QC";
+                    }
+                    if (dealer.WebSireUrl == "http://www.mikejacksongm.com")
+                    {
+                        zipCode = "L9Y 1W6";
+                        dealer.CityName = "Collingwood";
+                        dealer.Province = "ON";
+                    }
+
+                    var url1 =
+            string.Format(
+                "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false",
+                zipCode);
+                    // Or you can get the file content without saving it:
+                    string htmlCode1 = client.DownloadString(url1);
+                    dynamic abc1 = JsonConvert.DeserializeObject(htmlCode1);
+                    dealer.Latitude = abc1.results[0].geometry.location.lat;
+                    dealer.Longitude = abc1.results[0].geometry.location.lng;
+                    Thread.Sleep(2000);
+
+                    //    var dbDelaer = dealersFromJson.FirstOrDefault(a => a.Name == dealer.Name);
+                    //    if (dbDelaer != null && dealer.Longitude == 0)
+                    //    {
+                    //        var cityProvince = dealer.Location.Split(',');
+                    //        if (dealer.WebSireUrl == "http://www.centralgm.com")
+                    //        {
+                    //            cityProvince = new[] { "100 Mile House", "BC" };
+                    //        }
+                    //        if (dealer.WebSireUrl == "http://www.addisongm.com")
+                    //        {
+                    //            cityProvince = new[] { "Mississauga", "ON" };
+                    //        }
+                    //        if (dealer.WebSireUrl == "http://www.birchwoodchevrolet.ca")
+                    //        {
+                    //            cityProvince = new[] { "Winnipeg", "MB" };
+                    //        }
+                    //        dealer.Province = cityProvince[1].Trim();
+                    //        dealer.CityName = cityProvince[0].Trim();
+                    //        dealer.Adress = dbDelaer.Adress;
+                    //        dealer.ZipCode = dbDelaer.ZipCode;
+                    //        dealer.Phone = dbDelaer.Phone;
+                    //        if (string.IsNullOrWhiteSpace(dbDelaer.ZipCode))
+                    //            continue;
+                    //        var url =
+                    //                    string.Format(
+                    //                        "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false",
+                    //                        dbDelaer.ZipCode);
+                    //        // Or you can get the file content without saving it:
+                    //        string htmlCode = client.DownloadString(url);
+                    //        dynamic abc = JsonConvert.DeserializeObject(htmlCode);
+                    //        dealer.Latitude = abc.results[0].geometry.location.lat;
+                    //        dealer.Longitude = abc.results[0].geometry.location.lng;
+                    //        Thread.Sleep(2000);
+                    //    }
+                }
+
+                //foreach (var dealer in dealersFromJson)
+                //{
+                //    //var test = dealersFromJson.Where(a => a.Name=="Shaganappi GM");
+                //    var dbDelaer = context.Dealers.FirstOrDefault(a => a.Name == dealer.Name);
+                //    if (dbDelaer != null && dbDelaer.Longitude==0)
+                //    {
+                //        var cityProvince = dbDelaer.Location.Split(',');
+                //        if (dbDelaer.WebSireUrl == "http://www.centralgm.com")
+                //        {
+                //            cityProvince = new[] { "100 Mile House", "BC" };
+                //        }
+                //        if (dbDelaer.WebSireUrl == "http://www.addisongm.com")
+                //        {
+                //            cityProvince = new[] { "Mississauga", "ON" };
+                //        }
+                //        if (dbDelaer.WebSireUrl == "http://www.birchwoodchevrolet.ca")
+                //        {
+                //            cityProvince = new[] { "Winnipeg", "MB" };
+                //        }
+                //        dbDelaer.Province = cityProvince[1].Trim();
+                //        dbDelaer.CityName = cityProvince[0].Trim();
+                //        dbDelaer.Adress = dealer.Adress;
+                //        dbDelaer.ZipCode = dealer.ZipCode;
+                //        dbDelaer.Phone = dealer.Phone;
+                //        if (string.IsNullOrWhiteSpace(dbDelaer.ZipCode))
+                //            continue;
+                //        var url =
+                //                    string.Format(
+                //                        "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false",
+                //                        dbDelaer.ZipCode);
+                //        // Or you can get the file content without saving it:
+                //        string htmlCode = client.DownloadString(url);
+                //        dynamic abc = JsonConvert.DeserializeObject(htmlCode);
+                //        dbDelaer.Latitude = abc.results[0].geometry.location.lat;
+                //        dbDelaer.Longitude = abc.results[0].geometry.location.lng;
+                //        Thread.Sleep(2000);
+                //    }
+                //}
+            }
+            context.SaveChanges();
+        }
+
         public void FixLocation(CarnagyContext context)
         {
             string json = File.ReadAllText("dealer1.json");
@@ -109,10 +234,11 @@ namespace Runner
             //    dealer.Name = dealer.Name.Replace("&#39;", "'");
             //}
 
-            var dealersFromBD = context.Dealers.Where(a=>a.Location==null).Include(a => a.Cars).Where(a => a.Cars.Any(b => b.StockCar.MakeId == 3)).ToList();
+            var dealersFromBD = context.Dealers.Where(a => a.Location == null).Include(a => a.Cars).Where(a => a.Cars.Any(b => b.StockCar.MakeId == 3)).ToList();
             foreach (var dealer in dealersFromBD)
             {
-                if (dealer.Name=="Murray Motors The Pas") {
+                if (dealer.Name == "Murray Motors The Pas")
+                {
                     dealer.Location = "The Pas, MB";
                 }
 
@@ -127,7 +253,7 @@ namespace Runner
                     dealer.Location = "Collingwood, ON";
                 }
             }
-            var groupDelears = dealersFromBD.Where(a=>a.Location==null).GroupBy(a => a.Name);
+            var groupDelears = dealersFromBD.Where(a => a.Location == null).GroupBy(a => a.Name);
 
             var list1 = new List<Dealer>();
 
@@ -150,11 +276,11 @@ namespace Runner
             //    //    list2.AddRange(dealerFromJson2);
             //}
 
-            
+
             //var list2 = new List<Dealer>();
             //foreach (var dealers in groupDelears)
             //{
-                
+
             //    var dealerFromJson2 = dealersFromJson.Where(a => !string.IsNullOrWhiteSpace(a.DealerUrl))
             //        .Where(a => dealers.Select(b => b.WebSireUrl).Contains(a.DealerUrl));
 
@@ -181,7 +307,7 @@ namespace Runner
 
         public void CreateCsv(CarnagyContext context)
         {
-           var dealersGroup= context.Dealers.Include(a => a.Cars).ToList().GroupBy(a=>a.Location);
+            var dealersGroup = context.Dealers.Include(a => a.Cars).ToList().GroupBy(a => a.Location);
             var list = new List<string>
            {
                "sep=^",
@@ -193,6 +319,23 @@ namespace Runner
                 list.Add($"{dealers.Key}^{dealers.SelectMany(a => a.Cars).Count(a => a.StockCar.MakeId == 3 && !a.MainAdvertCar.IsDeleted)}");
             }
             File.WriteAllLines("location.csv", list.ToArray());
+        }
+
+        public void CreateCsv2(CarnagyContext context)
+        {
+            var dealersGroup = context.Dealers.Include(a => a.Cars).Include(a => a.Cars.Select(b=>b.MainAdvertCar)).ToList();
+            var list = new List<string>
+           {
+               "sep=^",
+               "Latitude",
+               "Longitude",
+               "Count"
+           };
+            foreach (var dealers in dealersGroup)
+            {
+                list.Add($"{dealers.Name}^{dealers.Latitude}^{dealers.Longitude}^{dealers.Cars.Count(a => a.StockCar.MakeId == 3 && !a.MainAdvertCar.IsDeleted)}");
+            }
+            File.WriteAllLines("location2.csv", list.ToArray());
         }
 
         private static HtmlDocumentResult GetFromUrl(HtmlWeb htmlWeb, string url)

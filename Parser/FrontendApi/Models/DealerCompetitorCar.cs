@@ -15,5 +15,6 @@
         public double price { get; set; }
         public int id { get; set; }
         public bool isDealerCar { get; set; }
+        public double priceDifference { get; set; }
     }
 }

@@ -44,9 +44,9 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("DealerCompetitors")]
-        public IActionResult GetDealerCompetitors(int stockCarId, int deaerId = 1)
+        public IActionResult GetDealerCompetitors(int stockCarId, int deaerId = 1, int carId=0)
         {
-            var dealerCompetitors = _dealerService.GetDealerCompetitorsById(stockCarId, deaerId);
+            var dealerCompetitors = _dealerService.GetDealerCompetitorsById(stockCarId, deaerId, carId);
             if (dealerCompetitors == null)
             {
                 return NotFound();
