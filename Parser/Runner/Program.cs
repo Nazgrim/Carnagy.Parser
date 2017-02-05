@@ -18,6 +18,8 @@ namespace Runner
             var container = BuildContainer();
             //Helper.DownloadImage(container.Resolve<CarnagyContext>(), container.Resolve<IDownloadImage>());
             //Helper.AddCreatedTime(container.Resolve<CarnagyContext>());
+            //Helper.DeleteAdditionalAdvertsCarPrice(container.Resolve<CarnagyContext>());
+            //Helper.AddAllStockCarPrices(container.Resolve<CarnagyContext>());
 
             //var abc = new DealerParser();
             //abc.Parse();

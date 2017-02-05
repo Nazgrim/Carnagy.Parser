@@ -67,8 +67,11 @@ namespace AnalyzerEngine
                         if (parsedCar.IsDeleted)
                         {
                             var advertCar = parsedCar.AdvertCars.First();
-                            advertCar.MainAdvertCar.IsDeleted = true;
-                            advertCar.MainAdvertCar.Car.DeletedTime = Current;
+                            if (advertCar.MainAdvertCar.IsDeleted == false)
+                            {
+                                advertCar.MainAdvertCar.IsDeleted = true;
+                                advertCar.MainAdvertCar.Car.DeletedTime = Current;
+                            }
                         }
                         else
                         {
@@ -136,10 +139,7 @@ namespace AnalyzerEngine
                                     RebalanceStockCar(car, stockCar);
                                 }
 
-                                if (string.IsNullOrWhiteSpace(car.ImageSrc))
-                                {
-                                    car.ImageSrc = GetImage(parsedCar);
-                                }
+                                car.ImageSrc = GetImage(parsedCar);
 
                                 car.MainAdvertCar.AdvertCars.Add(advertCar);
                                 parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
@@ -148,9 +148,10 @@ namespace AnalyzerEngine
                             }
                             else
                             {
-                                if (string.IsNullOrWhiteSpace(advertCar.ImageSrc))
+                                advertCar.ImageSrc = GetImage(parsedCar);
+                                if (!advertCar.IsDealer)
                                 {
-                                    advertCar.ImageSrc = GetImage(parsedCar);
+                                    advertCar.MainAdvertCar.Car.ImageSrc = advertCar.ImageSrc;
                                 }
                                 var price = parsedCar.Prices
                                     .OrderByDescending(a => a.DateTime)
@@ -172,7 +173,7 @@ namespace AnalyzerEngine
                                 }
 
                                 Repository.AddAdvertCarPrice(advertCar.Id, priceValue, price.DateTime);
-                                parsedCar.Status = ParsedCarStatus.AnalyzeComplete;                               
+                                parsedCar.Status = ParsedCarStatus.AnalyzeComplete;
                             }
                         }
                         Repository.SaveChanges();
