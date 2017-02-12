@@ -125,19 +125,24 @@ namespace FrontendApi.Service
                 .Select(c => new DealerCompetitorCar
                 {
                     url = c.Url,
+                    price = c.Price,
+                    dealerName = c.DealerId == dealerId ? "You" : c.Dealer.Name,
+                    dealerId = c.DealerId,
+                    id = c.Id,
+                    isDealerCar = c.DealerId == dealerId,
+                    priceDifference = c.Price - car.Price,
+                    city = c.Dealer.CityName ?? "No information",
+                    province = c.Dealer.Province ?? "No information",
+                    createdTime = c.CreatedTime.ToShortDateString(),
+
+                    dealerLocation = c.Dealer.Location,
                     year = c.StockCar.Year.Value,
                     model = c.StockCar.Model.Value,
                     bodyType = c.StockCar.BodyType.Value,
                     drivetrain = c.StockCar.Drivetrain.Value,
                     make = c.StockCar.Make.Value,
-                    styleTrim = c.StockCar.StyleTrim.Value,
-                    price = c.Price,
-                    dealerLocation = c.Dealer.Location,
-                    dealerName = c.Dealer.Name,
-                    dealerId = c.DealerId,
-                    id = c.Id,
-                    isDealerCar = c.DealerId == dealerId,
-                    priceDifference = c.Price - car.Price
+                    styleTrim = c.StockCar.StyleTrim.Value
+
                 }).ToList();
             return result;
         }
