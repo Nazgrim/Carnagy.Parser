@@ -32,9 +32,9 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("ChartData")]
-        public IActionResult GetChartData(int stockCarId, int dealerId, int carId)
+        public IActionResult GetChartData(int stockCarId, int dealerId, int carId, string location = "")
         {
-            var chartData = _dealerService.GetChartDataById(stockCarId, dealerId, carId);
+            var chartData = _dealerService.GetChartDataById(stockCarId, dealerId, carId, location);
             if (chartData == null)
             {
                 return NotFound();
@@ -44,7 +44,7 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("DealerCompetitors")]
-        public IActionResult GetDealerCompetitors(int stockCarId, int deaerId = 1, int carId=0)
+        public IActionResult GetDealerCompetitors(int stockCarId, int deaerId = 1, int carId = 0)
         {
             var dealerCompetitors = _dealerService.GetDealerCompetitorsById(stockCarId, deaerId, carId);
             if (dealerCompetitors == null)
@@ -56,9 +56,9 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("ChartSeries")]
-        public IActionResult GetChartSeries(int stockCarId, int carId)
+        public IActionResult GetChartSeries(int stockCarId, int carId, string location = "", IEnumerable<int> carsId = null)
         {
-            var priceTrend = _dealerService.GetPriceTrendById(stockCarId, carId);
+            var priceTrend = _dealerService.GetPriceTrendById(stockCarId, carId, location, carsId);
             if (priceTrend == null)
             {
                 return NotFound();
@@ -68,9 +68,9 @@ namespace FrontendApi.Controllers
 
         [HttpGet]
         [ActionName("CountTrend")]
-        public IActionResult GetCountTrend(int stockCarId)
+        public IActionResult GetCountTrend(int stockCarId, string location)
         {
-            var countTrend = _dealerService.GetCountTrendById(stockCarId);
+            var countTrend = _dealerService.GetCountTrendById(stockCarId, location);
             if (countTrend == null)
             {
                 return NotFound();

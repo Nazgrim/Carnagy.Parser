@@ -265,7 +265,11 @@ namespace DataAccess.Repositories
 
         public List<Car> GetCarsByFilter(Func<Car, bool> filter)
         {
-            return Context.Set<Car>().Include(a => a.StockCar).Where(filter).ToList();
+            return Context.Set<Car>()
+                .Include(a => a.StockCar)
+                .Include(a => a.Dealer)
+                .Where(filter)
+                .ToList();
         }
 
         public void SaveChanges()

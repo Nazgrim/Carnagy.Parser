@@ -80,28 +80,54 @@ namespace FrontendApi.Service
             return dealerClassInformation;
         }
 
-        public ChartData GetChartDataById(int stockCarId, int dealerId, int carId)
+        public ChartData GetChartDataById(int stockCarId, int dealerId, int carId, string location)
         {
             var stockCar = Repository.GetStockCar(a => a.Id == stockCarId);
-            var cars = Repository.GetCarsByFilter(car =>
-            car.StockCar.YearId == stockCar.YearId
+            Func<Car, bool> filter = car => car.StockCar.YearId == stockCar.YearId
             && car.StockCar.MakeId == stockCar.MakeId
-            && car.StockCar.ModelId == stockCar.ModelId);
-            var carsFullСoincidence = cars.Where(a =>
-                //a.DealerId != dealerId &&
-                a.StockCar.BodyTypeId == stockCar.BodyTypeId
-                && a.StockCar.DrivetrainId == stockCar.DrivetrainId
-                && a.StockCar.StyleTrimId == stockCar.StyleTrimId).ToList();
+            && car.StockCar.ModelId == stockCar.ModelId
+            && car.StockCar.BodyTypeId == stockCar.BodyTypeId
+            && car.StockCar.DrivetrainId == stockCar.DrivetrainId
+            && car.StockCar.StyleTrimId == stockCar.StyleTrimId;
+
+            //if (!string.IsNullOrWhiteSpace(location))
+            //{
+            //    filter = car => car.StockCar.YearId == stockCar.YearId
+            //                 && car.StockCar.MakeId == stockCar.MakeId
+            //                 && car.StockCar.ModelId == stockCar.ModelId
+            //                 && car.StockCar.BodyTypeId == stockCar.BodyTypeId
+            //                 && car.StockCar.DrivetrainId == stockCar.DrivetrainId
+            //                 && car.StockCar.StyleTrimId == stockCar.StyleTrimId
+            //                 && car.Dealer.Province == location;
+            //}
+
+            var cars = Repository.GetCarsByFilter(filter);
             var dealer = cars.FirstOrDefault(a => a.Id == carId);
-            if (carsFullСoincidence.Count > 1)
+            var abc = cars.Select(a => a.Dealer.Location).ToList();
+            if (!string.IsNullOrWhiteSpace(location))
             {
-                return GetChartData(carsFullСoincidence, dealer, stockCar);
+                cars = cars.Where(a => a.Dealer.Location.Split(',')[1].Contains(location)).ToList();
             }
-            return GetChartData(cars, dealer, stockCar);//.Where(a => a.DealerId != dealerId).ToList()
+
+
+
+            return GetChartData(cars, dealer, stockCar);
         }
 
         private ChartData GetChartData(List<Car> cars, Car dealer, StockCar stockCar)
         {
+            if (!cars.Any())
+            {
+                return new ChartData
+                {
+                    avrPrice = 0,
+                    max = 0,
+                    min = 0,
+                    dealerPrice = dealer == null ? 0 : dealer.Price,
+                    msrpPrice = dealer == null ? 0 : dealer.MsrpPrice,
+                    seriesData = Enumerable.Empty<SeriesDataValue>()
+                };
+            }
             var carsPrice = cars.Select(a => a.Price);
             var max = Math.Ceiling(carsPrice.Max() / 1000) * 1000;
             var min = Math.Floor(carsPrice.Min() / 1000) * 1000;
@@ -147,22 +173,57 @@ namespace FrontendApi.Service
             return result;
         }
 
-        public ChartSeries GetPriceTrendById(int stockCarId, int carId)
+        public ChartSeries GetPriceTrendById(int stockCarId, int carId, string location, IEnumerable<int> carsId)
         {
-            var car = Repository.GetCarById(carId);
+            var cars = Repository.GetCarsByStockCarId(stockCarId);
+            var dealerCar = cars.FirstOrDefault(a => a.Id == carId);
             var stockCar = Repository.GetStockCarWithPrices(stockCarId);
             var year = stockCar.Year.Value;
             var make = stockCar.Make.Value;
             var model = stockCar.Model.Value;
 
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                cars = cars.Where(a => a.Dealer.Province == location).ToList();
+            }
+
+            if (carsId != null && carsId.Any())
+            {
+                cars = cars.Where(a => carsId.Contains(a.Id)).ToList();
+            }
+            if (cars.Count == 0)
+            {
+                return new ChartSeries
+                {
+                    carId = stockCarId,
+                    name = $"{year} {make} {model}",
+                    data = new List<long[]>(),
+                    msrpPrice = 0
+                };
+            }
+
+            var list = new List<AdvertCarPrice>();
+            foreach (var car in cars)
+            {
+
+                var advertsCar = car.MainAdvertCar.AdvertCars.SingleOrDefault(a => a.IsDealer) ??
+                                  car.MainAdvertCar.AdvertCars.FirstOrDefault(a => !a.IsDealer);
+                list.AddRange(advertsCar.AdvertCarPrices);
+            }
+
+            var group = list.GroupBy(a => a.DateTime.ToShortDateString());
+
+            
+
             var chartSeties = new ChartSeries
             {
                 carId = stockCarId,
                 name = $"{year} {make} {model}",
-                data = stockCar.StockCarPrices
-                    .Select(a => new[] { a.DateTime.ConvertToUnixTime(), a.Value })
+                data = group                  
+                    .Select(a => new[] { DateTime.Parse(a.Key).ConvertToUnixTime(), (long)a.Average(b => b.Value) })
+                    .OrderBy(a => a[0])
                     .ToList(),
-                msrpPrice = car.MsrpPrice
+                msrpPrice = dealerCar.MsrpPrice
             };
 
             return chartSeties;
@@ -185,9 +246,26 @@ namespace FrontendApi.Service
             return dealerCars;
         }
 
-        public ChartSeries GetCountTrendById(int stockCarId)
+        public ChartSeries GetCountTrendById(int stockCarId, string location)
         {
             var cars = Repository.GetCarsByStockCarId(stockCarId);
+            var car1 = cars.First().StockCar;
+            var year = car1.Year.Value;
+            var make = car1.Make.Value;
+            var model = car1.Model.Value;
+            if (!string.IsNullOrWhiteSpace(location))
+            {
+                cars = cars.Where(a => a.Dealer.Province == location).ToList();
+            }
+            if (cars.Count == 0)
+            {
+                return new ChartSeries
+                {
+                    carId = stockCarId,
+                    name = $"{year} {make} {model}",
+                    data = new List<long[]>()
+                };
+            }
             var dic = new Dictionary<DateTime, int>();
             foreach (var car in cars)
             {
@@ -204,16 +282,15 @@ namespace FrontendApi.Service
                 }
             }
 
-            var car1 = cars.First().StockCar;
-            var year = car1.Year.Value;
-            var make = car1.Make.Value;
-            var model = car1.Model.Value;
+
+
             var chartSeties = new ChartSeries
             {
                 carId = stockCarId,
                 name = $"{year} {make} {model}",
                 data = dic
                    .Select(a => new[] { a.Key.ConvertToUnixTime(), a.Value })
+                   .OrderBy(a => a[0])
                    .ToList()
             };
 
