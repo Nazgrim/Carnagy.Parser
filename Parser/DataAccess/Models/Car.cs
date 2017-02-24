@@ -12,6 +12,7 @@ namespace DataAccess.Models
         public DateTime CreatedTime { get; set; }
         public DateTime? DeletedTime { get; set; }
         public double MsrpPrice { get; set; }
+        public bool IsUsed { get; set; }
 
         public int StockCarId { get; set; }
         public int DealerId { get; set; }

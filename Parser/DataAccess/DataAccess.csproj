@@ -231,6 +231,10 @@
     <Compile Include="Migrations\201702040919495_AddLocationsFieldsToDealer.Designer.cs">
       <DependentUpon>201702040919495_AddLocationsFieldsToDealer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702241448388_AddFiledIsUsedInCar.cs" />
+    <Compile Include="Migrations\201702241448388_AddFiledIsUsedInCar.Designer.cs">
+      <DependentUpon>201702241448388_AddFiledIsUsedInCar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AdvertCar.cs" />
     <Compile Include="Models\AdvertCarPrice.cs" />
@@ -387,6 +391,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201702040919495_AddLocationsFieldsToDealer.resx">
       <DependentUpon>201702040919495_AddLocationsFieldsToDealer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702241448388_AddFiledIsUsedInCar.resx">
+      <DependentUpon>201702241448388_AddFiledIsUsedInCar.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
