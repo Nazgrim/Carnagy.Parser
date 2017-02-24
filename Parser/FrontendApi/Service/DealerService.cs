@@ -103,20 +103,19 @@ namespace FrontendApi.Service
 
             var cars = Repository.GetCarsByFilter(filter);
             var dealer = cars.FirstOrDefault(a => a.Id == carId);
-            var abc = cars.Select(a => a.Dealer.Location).ToList();
             if (!string.IsNullOrWhiteSpace(location))
             {
-                cars = cars.Where(a => a.Dealer.Location.Split(',')[1].Contains(location)).ToList();
+                cars = cars.Where(a => a.Dealer.Province == location).ToList();
             }
 
-
+            cars = cars.Where(a => a.Price != 0).ToList();
 
             return GetChartData(cars, dealer, stockCar);
         }
 
         private ChartData GetChartData(List<Car> cars, Car dealer, StockCar stockCar)
         {
-            if (!cars.Any())
+            if (cars.Count < 2)
             {
                 return new ChartData
                 {
@@ -159,7 +158,7 @@ namespace FrontendApi.Service
                     priceDifference = c.Price - car.Price,
                     city = c.Dealer.CityName ?? "No information",
                     province = c.Dealer.Province ?? "No information",
-                    createdTime = c.CreatedTime.ToShortDateString(),
+                    createdTime = c.CreatedTime.ToString("yyyy-MM-dd"),
 
                     dealerLocation = c.Dealer.Location,
                     year = c.StockCar.Year.Value,
@@ -213,13 +212,13 @@ namespace FrontendApi.Service
 
             var group = list.GroupBy(a => a.DateTime.ToShortDateString());
 
-            
+
 
             var chartSeties = new ChartSeries
             {
                 carId = stockCarId,
                 name = $"{year} {make} {model}",
-                data = group                  
+                data = group
                     .Select(a => new[] { DateTime.Parse(a.Key).ConvertToUnixTime(), (long)a.Average(b => b.Value) })
                     .OrderBy(a => a[0])
                     .ToList(),
@@ -232,6 +231,7 @@ namespace FrontendApi.Service
         public DealerInformation GetDealer(int id)
         {
             var dealer = Repository.GetDealerById(id);
+            var cars = dealer.Cars.Where(a => !a.MainAdvertCar.IsDeleted);
             var dealerCars = new DealerInformation()
             {
                 logo = dealer.Logo,
@@ -239,8 +239,8 @@ namespace FrontendApi.Service
                 name = dealer.Name,
                 phone = "905-238-2886",
                 adress = dealer.Location,
-                priceCars = dealer.Cars.Sum(a => a.Price),
-                carCount = dealer.Cars.Count(),
+                priceCars = cars.Sum(a => a.Price),
+                carCount = cars.Count(),
                 webSiteName = dealer.WebSiteName,
             };
             return dealerCars;

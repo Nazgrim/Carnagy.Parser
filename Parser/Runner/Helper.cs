@@ -427,7 +427,7 @@ namespace Runner
 
                 foreach (var VARIABLE in group)
                 {
-                    var averagePrice = (int)VARIABLE.Average(a => a.Value);
+                    var averagePrice = (int)VARIABLE.Where(a => a.Value != 0).Average(a => a.Value);
                     stockCar.StockCarPrices.Add(new StockCarPrice
                     {
                         DateTime = DateTime.Parse(VARIABLE.Key),
@@ -534,7 +534,7 @@ namespace Runner
                 var deletedAdvertCarPrice = advertCar.AdvertCarPrices
                     .ToList()
                     .Where(a => a.DateTime.Date > lastDate)
-                    .OrderBy(a=>a.DateTime);
+                    .OrderBy(a => a.DateTime);
                 context.AdvertCarPrices.RemoveRange(deletedAdvertCarPrice);
             }
             context.SaveChanges();
