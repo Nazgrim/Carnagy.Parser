@@ -285,7 +285,9 @@ namespace AnalyzerEngine
             {
                 if (!stockCar.Cars.Any()) continue;
 
-                var averagePrice = (int)stockCar.Cars.Average(a => a.Price);
+                var averagePrice = (int)stockCar.Cars
+                    .Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted)
+                    .Average(a => a.Price);
                 stockCar.Price = averagePrice;
                 stockCar.StockCarPrices.Add(new StockCarPrice
                 {

@@ -427,7 +427,7 @@ namespace Runner
 
                 foreach (var VARIABLE in group)
                 {
-                    var averagePrice = (int)VARIABLE.Average(a => a.Value);
+                    var averagePrice = (int)VARIABLE.Where(a => a.Value != 0).Average(a => a.Value);
                     stockCar.StockCarPrices.Add(new StockCarPrice
                     {
                         DateTime = DateTime.Parse(VARIABLE.Key),
