@@ -88,8 +88,9 @@ namespace DataAccess.Migrations
                 Logo = "logo.jpg",
                 WebSireUrl = "http://www.addisongm.com",
                 WebSiteName = "addisongm.com",
-                Location = "1220 Eglinton Ave East Mississauga, ON L4W 2M7",
-
+                Location = "Mississauga, ON",
+                Province = "Ontario",
+                CityName = "Mississauga"
             });
         }
 

@@ -534,9 +534,38 @@ namespace Runner
                 var deletedAdvertCarPrice = advertCar.AdvertCarPrices
                     .ToList()
                     .Where(a => a.DateTime.Date > lastDate)
-                    .OrderBy(a=>a.DateTime);
+                    .OrderBy(a => a.DateTime);
                 context.AdvertCarPrices.RemoveRange(deletedAdvertCarPrice);
             }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Исправление коротких названий провинций на длинные
+        /// </summary>
+        public static void ChangeDealerProvinceFromShortToFull(CarnagyContext context)
+        {
+            var dic = new Dictionary<string, string>
+            {
+                  { "ON", "Ontario" },
+                  { "QC", "Quebec" },
+                  { "NS", "Nova Scotia" },
+                  { "NB", "New Brunswick" },
+                  { "MB", "Manitoba" },
+                  { "BC", "British Columbia" },
+                  { "PE", "Prince Edward Island" },
+                  { "SK", "Saskatchewan" },
+                  { "AB", "Alberta" },
+                  { "NL", "Newfoundland and Labrador" }
+            };
+            var dealers = context.Dealers.ToList();
+            foreach (var dealer in dealers)
+            {
+                if (dic.ContainsKey(dealer.Province) == false) continue;
+
+                dealer.Province = dic[dealer.Province];
+            }
+
             context.SaveChanges();
         }
     }

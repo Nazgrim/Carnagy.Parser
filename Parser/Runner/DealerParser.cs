@@ -86,7 +86,7 @@ namespace Runner
                     var dbDelaer = dealersFromJson.FirstOrDefault(a => a.Name == dealer.Name);
                     if (dbDelaer != null && dealer.Longitude == 0)
                     {
-                        var cityProvince = dealer.Location.Split(',');
+                        var cityProvince = dealer.Location?.Split(',');
                         if (dealer.WebSireUrl == "http://www.centralgm.com")
                         {
                             cityProvince = new[] { "100 Mile House", "BC" };
@@ -99,12 +99,28 @@ namespace Runner
                         {
                             cityProvince = new[] { "Winnipeg", "MB" };
                         }
-                        dealer.Province = cityProvince[1].Trim();
-                        dealer.CityName = cityProvince[0].Trim();
+                        dealer.Province = cityProvince == null ? dbDelaer.Province : cityProvince[1].Trim();
+                        dealer.CityName = cityProvince == null ? dbDelaer.CityName : cityProvince[0].Trim();
                         dealer.Adress = dbDelaer.Adress;
                         dealer.ZipCode = dbDelaer.ZipCode;
                         dealer.Phone = dbDelaer.Phone;
 
+                        if (string.IsNullOrWhiteSpace(dealer.ZipCode))
+                            continue;
+                        var url =
+                                    string.Format(
+                                        "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false",
+                                        dbDelaer.ZipCode);
+                        // Or you can get the file content without saving it:
+                        string htmlCode = client.DownloadString(url);
+                        dynamic abc = JsonConvert.DeserializeObject(htmlCode);
+                        dealer.Latitude = abc.results[0].geometry.location.lat;
+                        dealer.Longitude = abc.results[0].geometry.location.lng;
+                        dealer.Location = $"{dealer.CityName}, {dealer.Province}";
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
                         if (dealer.WebSireUrl == "http://www.addisongm.com")
                         {
                             dealer.ZipCode = "L4W 2M7";
@@ -130,6 +146,46 @@ namespace Runner
                             dealer.Province = "ON";
                         }
 
+                        if (string.IsNullOrWhiteSpace(dealer.ZipCode))
+                            continue;
+                        var url =
+                                    string.Format(
+                                        "http://maps.googleapis.com/maps/api/geocode/json?address={0}&sensor=false",
+                                        dealer.ZipCode);
+                        // Or you can get the file content without saving it:
+                        string htmlCode = client.DownloadString(url);
+                        dynamic abc = JsonConvert.DeserializeObject(htmlCode);
+                        dealer.Latitude = abc.results[0].geometry.location.lat;
+                        dealer.Longitude = abc.results[0].geometry.location.lng;
+                        dealer.Location = $"{dealer.CityName}, {dealer.Province}";
+                        Thread.Sleep(2000);
+                    }
+                }
+
+                foreach (var dealer in dealersFromJson)
+                {
+                    //var test = dealersFromJson.Where(a => a.Name=="Shaganappi GM");
+                    var dbDelaer = context.Dealers.FirstOrDefault(a => a.Name == dealer.Name);
+                    if (dbDelaer != null && dbDelaer.Longitude == 0)
+                    {
+                        var cityProvince = dbDelaer.Location.Split(',');
+                        if (dbDelaer.WebSireUrl == "http://www.centralgm.com")
+                        {
+                            cityProvince = new[] { "100 Mile House", "BC" };
+                        }
+                        if (dbDelaer.WebSireUrl == "http://www.addisongm.com")
+                        {
+                            cityProvince = new[] { "Mississauga", "ON" };
+                        }
+                        if (dbDelaer.WebSireUrl == "http://www.birchwoodchevrolet.ca")
+                        {
+                            cityProvince = new[] { "Winnipeg", "MB" };
+                        }
+                        dbDelaer.Province = cityProvince[1].Trim();
+                        dbDelaer.CityName = cityProvince[0].Trim();
+                        dbDelaer.Adress = dealer.Adress;
+                        dbDelaer.ZipCode = dealer.ZipCode;
+                        dbDelaer.Phone = dealer.Phone;
                         if (string.IsNullOrWhiteSpace(dbDelaer.ZipCode))
                             continue;
                         var url =
@@ -139,8 +195,8 @@ namespace Runner
                         // Or you can get the file content without saving it:
                         string htmlCode = client.DownloadString(url);
                         dynamic abc = JsonConvert.DeserializeObject(htmlCode);
-                        dealer.Latitude = abc.results[0].geometry.location.lat;
-                        dealer.Longitude = abc.results[0].geometry.location.lng;
+                        dbDelaer.Latitude = abc.results[0].geometry.location.lat;
+                        dbDelaer.Longitude = abc.results[0].geometry.location.lng;
                         Thread.Sleep(2000);
                     }
                 }
