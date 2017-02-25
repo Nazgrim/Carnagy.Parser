@@ -172,7 +172,8 @@ namespace ParserEngine
                 else
                 {
                     savedParsedCar.LastUpdate = LastUpdate;
-                    var currentPrice = savedParsedCar.Prices.Last();
+                    var currentPrice = parsedCar.Prices.FirstOrDefault() ??
+                                        savedParsedCar.Prices.Last();
                     var price = new Price
                     {
                         ParsedCarId = savedParsedCar.Id,
