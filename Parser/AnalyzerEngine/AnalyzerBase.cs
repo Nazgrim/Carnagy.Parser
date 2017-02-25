@@ -283,10 +283,10 @@ namespace AnalyzerEngine
             var timeStart = DateTime.Now;
             foreach (var stockCar in stockCars)
             {
-                if (!stockCar.Cars.Any()) continue;
+                var cars = stockCar.Cars.Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted);
+                if (cars.Any()==false) continue;
 
-                var averagePrice = (int)stockCar.Cars
-                    .Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted)
+                var averagePrice = (int)cars
                     .Average(a => a.Price);
                 stockCar.Price = averagePrice;
                 stockCar.StockCarPrices.Add(new StockCarPrice
