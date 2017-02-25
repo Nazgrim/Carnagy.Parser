@@ -51,5 +51,7 @@ namespace DataAccess.Repositories
         Dealer GetDealerById(int id);
         Car GetCarByStockNumber(string stockNumber, int dealerId);
         void DeleteStockCar(StockCar stockCar);
+        void StopDetecChanges();
+        void StartDetecChanges();
     }
 }

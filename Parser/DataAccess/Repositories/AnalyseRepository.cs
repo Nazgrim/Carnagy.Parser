@@ -36,9 +36,11 @@ namespace DataAccess.Repositories
         public List<ParsedCar> GetParsedCarsByPage(int skip, int take, int configurationId)
         {
             return Context.Set<ParsedCar>()
+                .Include(a=>a.Prices)
+                .Include(a=>a.AdvertCars.Select(b=>b.MainAdvertCar))
                 .Where(a =>
-                //!a.IsDeleted
-                //&& 
+                !a.IsCarDeleted
+                &&
                 (a.Status == ParsedCarStatus.Page || a.Status == ParsedCarStatus.AnalyzeComplete)
                 //|| a.Status == ParsedCarStatus.CantGetStockCar || a.Status == ParsedCarStatus.CannotParsePrice
                 && a.MainConfigurationId == configurationId)
@@ -76,7 +78,7 @@ namespace DataAccess.Repositories
                 .Include(a => a.StockCar.Model)
                 .Include(a => a.StockCar.StyleTrim)
                 .Include(a => a.StockCar.Year)
-                .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)                
+                .Where(a => a.DealerId == dealerId && !a.MainAdvertCar.IsDeleted)
                 .ToList();
         }
 
@@ -183,7 +185,6 @@ namespace DataAccess.Repositories
                     Value = value,
                     DateTime = now
                 });
-            Context.SaveChanges();
         }
 
         public T GetDictionaryEntity<T>(string value)
@@ -194,12 +195,15 @@ namespace DataAccess.Repositories
 
         public List<T> GetDictionaryEntity<T>() where T : class, IDictionaryEntity
         {
-            return Context.Set<T>().ToList();
+            return Context.Set<T>().Local.Any() ? 
+                Context.Set<T>().Local.ToList() : 
+                Context.Set<T>().ToList();
         }
 
         public Dealer GetDealerByWebSireUrl(string url)
         {
-            return Context.Set<Dealer>().FirstOrDefault(a => a.WebSireUrl == url);
+            return Context.Set<Dealer>().Local.FirstOrDefault(a => a.WebSireUrl == url) ??
+                Context.Set<Dealer>().FirstOrDefault(a => a.WebSireUrl == url);
         }
 
         public void CreateDealer(Dealer dealer)
@@ -270,6 +274,16 @@ namespace DataAccess.Repositories
                 .Include(a => a.Dealer)
                 .Where(filter)
                 .ToList();
+        }
+
+        public void StopDetecChanges()
+        {
+            Context.Configuration.AutoDetectChangesEnabled = false;
+        }
+
+        public void StartDetecChanges()
+        {
+            Context.Configuration.AutoDetectChangesEnabled = true;
         }
 
         public void SaveChanges()
