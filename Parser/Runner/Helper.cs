@@ -568,5 +568,18 @@ namespace Runner
 
             context.SaveChanges();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void FilIsCarDeleted(CarnagyContext context)
+        {
+            var parrsedCar = context.ParsedCars.Where(a=>a.IsDeleted && !a.IsCarDeleted).ToList();
+            foreach (var parsedCar in parrsedCar)
+            {
+                parsedCar.IsCarDeleted = true;
+            }
+            context.SaveChanges();
+        }
     }
 }

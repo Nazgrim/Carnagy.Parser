@@ -17,6 +17,7 @@ namespace DataAccess.Models
         public DateTime CreatedTime { get; set; }
         public DateTime LastUpdate { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsCarDeleted { get; set; }
         public bool IsParsed { get; set; }
         public ParsedCarStatus Status { get; set; }
         public string ForCompare { get; set; }
