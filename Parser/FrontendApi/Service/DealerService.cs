@@ -83,7 +83,8 @@ namespace FrontendApi.Service
         public ChartData GetChartDataById(int stockCarId, int dealerId, int carId, string location)
         {
             var stockCar = Repository.GetStockCar(a => a.Id == stockCarId);
-            Func<Car, bool> filter = car => car.StockCar.YearId == stockCar.YearId
+            Func<Car, bool> filter = car => !car.MainAdvertCar.IsDeleted
+            && car.StockCar.YearId == stockCar.YearId
             && car.StockCar.MakeId == stockCar.MakeId
             && car.StockCar.ModelId == stockCar.ModelId
             && car.StockCar.BodyTypeId == stockCar.BodyTypeId

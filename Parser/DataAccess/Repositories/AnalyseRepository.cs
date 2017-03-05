@@ -262,14 +262,16 @@ namespace DataAccess.Repositories
         public List<Car> GetCarsByStockCarId(int stockCarId)
         {
             return Context.Set<Car>()
+                .Include(a => a.MainAdvertCar)
                 .Include(a => a.Dealer)
-                .Where(a => a.StockCarId == stockCarId)
+                .Where(a => a.StockCarId == stockCarId && !a.MainAdvertCar.IsDeleted)
                 .ToList();
         }
 
         public List<Car> GetCarsByFilter(Func<Car, bool> filter)
         {
             return Context.Set<Car>()
+                .Include(a => a.MainAdvertCar)
                 .Include(a => a.StockCar)
                 .Include(a => a.Dealer)
                 .Where(filter)

@@ -325,6 +325,13 @@ namespace AnalyzerEngine
             {
                 var cars = stockCar.Cars.Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted);
                 if (cars.Any()==false) continue;
+                foreach (var car in cars)
+                {
+                    var advertsCar = car.MainAdvertCar.AdvertCars.SingleOrDefault(a => a.IsDealer) ??
+                                      car.MainAdvertCar.AdvertCars.FirstOrDefault(a => !a.IsDealer);
+                    var lastPrice = advertsCar.AdvertCarPrices.OrderByDescending(a => a.DateTime).First();
+                    car.Price = lastPrice.Value;
+                }
 
                 var averagePrice = (int)cars
                     .Average(a => a.Price);
