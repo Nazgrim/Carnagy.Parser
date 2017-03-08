@@ -171,6 +171,7 @@ namespace ParserEngine
                 }
                 else
                 {
+
                     savedParsedCar.LastUpdate = LastUpdate;
                     var currentPrice = parsedCar.Prices.FirstOrDefault() ??
                                         savedParsedCar.Prices.Last();
@@ -187,6 +188,40 @@ namespace ParserEngine
             Repository.AddPrices(prices);
             var result = newParsedCars.ToList();
             Repository.SaveParsedCar(result);
+
+            var list = new List<FieldValue>();
+            var msrpFiled = fields.First(a => a.Name == FiledNameConstant.MSRP);
+            foreach (var savedParsedCar in savedParsedCars)
+            {
+                var parsedCar = parsedCars.FirstOrDefault(a => a.ForCompare == savedParsedCar.ForCompare);
+                var msrp = savedParsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
+                if (parsedCar != null && msrp == null)
+                {
+                    var field = parsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
+                    if (field == null)
+                    {
+                        list.Add(new FieldValue
+                        {
+                            Field = msrpFiled,
+                            ParsedCarId = savedParsedCar.Id,
+                            Value = prices.FirstOrDefault(a => a.ParsedCarId == savedParsedCar.Id).Value
+                        });
+                    }
+                    else
+                    {
+                        list.Add(new FieldValue
+                        {
+                            Field = msrpFiled,
+                            ParsedCarId = savedParsedCar.Id,
+                            Value = field.Value
+                        });
+                    }
+                }
+            }
+            if (list.Any())
+            {
+                Repository.AddFieldValues(list);
+            }
 
             return result;
         }
@@ -232,7 +267,30 @@ namespace ParserEngine
 
             parsedCar.Prices.Add(price);
 
-            var filedsValue = new ConcurrentBag<FieldValue>();
+            var msrpFiled = fields.First(a => a.Name == FiledNameConstant.MSRP);
+            var msrpFiledValue = GetFieldValue(msrpFiled, carListNode);
+            if (msrpFiledValue != null)
+            {
+                var regex = new Regex(msrpFiled.RegExPattern);
+                if (regex.IsMatch(msrpFiledValue.Value))
+                {
+                    msrpFiledValue.Value = regex.Match(msrpFiledValue.Value).Value;
+                }
+                else
+                {
+                    msrpFiledValue.Value = msrpFiledValue.Value;
+                }
+            }
+            else
+            {
+                msrpFiledValue = new FieldValue
+                {
+                    Field = msrpFiled,
+                    Value = price.Value
+                };
+            }
+
+            var filedsValue = new ConcurrentBag<FieldValue> { msrpFiledValue };
             Parallel.ForEach(fields.Where(a => !a.IsDefault), new ParallelOptions { MaxDegreeOfParallelism = _fieldsThredCount }, field =>
             {
                 var filedValue = GetFieldValue(field, carListNode);

@@ -570,7 +570,7 @@ namespace Runner
         }
 
         /// <summary>
-        /// 
+        /// Устанавливается флаг удаленный для Car
         /// </summary>
         public static void FilIsCarDeleted(CarnagyContext context)
         {
@@ -578,6 +578,43 @@ namespace Runner
             foreach (var parsedCar in parrsedCar)
             {
                 parsedCar.IsCarDeleted = true;
+            }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Устанавливается MSRPPrice для Car для autotrader
+        /// </summary>
+        /// <param name="context"></param>
+        public static void InitializationMSRPPrice(CarnagyContext context)
+        {
+            var cars = context.Cars.Include(a=>a.MainAdvertCar.AdvertCars.Select(b=>b.ParsedCar.FieldValues)).Where(a => a.DealerId != 1 && !a.MainAdvertCar.IsDeleted);
+            foreach (var car in cars)
+            {
+                var advertCar = car.MainAdvertCar.AdvertCars.FirstOrDefault(a => !a.IsDealer);
+                if(advertCar==null)
+                    continue;
+
+                var parssedCar = advertCar.ParsedCar;
+                if(parssedCar== null)
+                    continue;
+
+                var fieldsVale = parssedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
+                if(fieldsVale==null)
+                    continue;
+
+                var msrp = 0.0;
+                if (!double.TryParse(
+                                fieldsVale.Value,
+                                NumberStyles.AllowCurrencySymbol |
+                                NumberStyles.AllowDecimalPoint |
+                                NumberStyles.AllowThousands,
+                                new CultureInfo("en-US"),
+                                out msrp))
+                {
+                    continue;
+                }
+                car.MsrpPrice = msrp;
             }
             context.SaveChanges();
         }

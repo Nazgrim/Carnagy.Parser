@@ -163,8 +163,21 @@ namespace AnalyzerEngine
                                 }
                                 listPrice.Add(new AdvertCarPrice { Value = priceValue, DateTime = price.DateTime });
                             }
+
                             if (!allIsGood)
                                 continue;
+                            var msrpValue = GetValue(parsedCar.FieldValues, FiledNameConstant.MSRP);
+                            var msrp = 0.0;
+                            if (!double.TryParse(
+                                    msrpValue,
+                                    NumberStyles.AllowCurrencySymbol |
+                                    NumberStyles.AllowDecimalPoint |
+                                    NumberStyles.AllowThousands,
+                                    new CultureInfo("en-US"),
+                                    out msrp))
+                            {
+                                msrp = listPrice.OrderByDescending(a => a.DateTime).First().Value;
+                            }
 
                             //без диллера некуда прикрепить машину.
                             var dealerWebSite = GetValue(parsedCar.FieldValues, FiledNameConstant.DealerWebSite);
@@ -196,7 +209,7 @@ namespace AnalyzerEngine
                             var car = Repository.GetCarByStockNumber(stockNumber, dealer.Id);
                             if (car == null)
                             {
-                                car = CreateCar(parsedCar, stockCar, dealer, listPrice.Last().Value, stockNumber);
+                                car = CreateCar(parsedCar, stockCar, dealer, listPrice.Last().Value, stockNumber, msrp);
                             }
                             else if (stockNumber != null)
                             {
@@ -324,7 +337,7 @@ namespace AnalyzerEngine
             foreach (var stockCar in stockCars)
             {
                 var cars = stockCar.Cars.Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted);
-                if (cars.Any()==false) continue;
+                if (cars.Any() == false) continue;
                 foreach (var car in cars)
                 {
                     var advertsCar = car.MainAdvertCar.AdvertCars.SingleOrDefault(a => a.IsDealer) ??
@@ -458,7 +471,7 @@ namespace AnalyzerEngine
             return listResult.OrderByDescending(a => a.Value.Length).FirstOrDefault();
         }
 
-        private Car CreateCar(ParsedCar parsedCar, StockCar stockCar, Dealer dealer, double priceValue, string stockNumber)
+        private Car CreateCar(ParsedCar parsedCar, StockCar stockCar, Dealer dealer, double priceValue, string stockNumber, double msrp)
         {
             var car = new Car
             {
@@ -468,7 +481,8 @@ namespace AnalyzerEngine
                 Url = parsedCar.Url,
                 StockNumber = stockNumber,
                 MainAdvertCar = new MainAdvertCar(),
-                CreatedTime = Current
+                CreatedTime = Current,
+                MsrpPrice = msrp
             };
 
             Repository.CreateCar(car);
