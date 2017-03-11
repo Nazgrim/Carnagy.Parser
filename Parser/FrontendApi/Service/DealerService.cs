@@ -128,6 +128,12 @@ namespace FrontendApi.Service
                     seriesData = Enumerable.Empty<SeriesDataValue>()
                 };
             }
+            var carsMsrpPrice = cars.Where(a=>a.MsrpPrice!=0).Select(a => a.MsrpPrice);
+            var msrpPrice = 0.0;
+            if (carsMsrpPrice.Any())
+            {
+                msrpPrice = carsMsrpPrice.Average();
+            }
             var carsPrice = cars.Select(a => a.Price);
             var max = Math.Ceiling(carsPrice.Max() / 1000) * 1000;
             var min = Math.Floor(carsPrice.Min() / 1000) * 1000;
@@ -138,7 +144,7 @@ namespace FrontendApi.Service
                 max = max,
                 min = min,
                 dealerPrice = dealer.Price,
-                msrpPrice = dealer.MsrpPrice,
+                msrpPrice = msrpPrice,
                 seriesData = seriesData
             };
             return chartData;
@@ -203,14 +209,24 @@ namespace FrontendApi.Service
             }
 
             var list = new List<AdvertCarPrice>();
+            var msrp = 0.0;
+            var carCount = 0;
             foreach (var car in cars)
             {
 
                 var advertsCar = car.MainAdvertCar.AdvertCars.SingleOrDefault(a => a.IsDealer) ??
                                   car.MainAdvertCar.AdvertCars.FirstOrDefault(a => !a.IsDealer);
                 list.AddRange(advertsCar.AdvertCarPrices);
+                if (car.MsrpPrice != 0)
+                {
+                    msrp += car.MsrpPrice;
+                    carCount++;
+                }
             }
-
+            if (carCount != 0)
+            {
+                msrp = msrp/carCount;
+            }
             var group = list.GroupBy(a => a.DateTime.ToShortDateString());
 
 
@@ -223,7 +239,7 @@ namespace FrontendApi.Service
                     .Select(a => new[] { DateTime.Parse(a.Key).ConvertToUnixTime(), (long)a.Average(b => b.Value) })
                     .OrderBy(a => a[0])
                     .ToList(),
-                msrpPrice = dealerCar.MsrpPrice
+                msrpPrice = msrp
             };
 
             return chartSeties;
