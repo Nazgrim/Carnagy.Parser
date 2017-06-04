@@ -90,8 +90,8 @@ namespace AnalyzerEngine
                         WriteToLog($"Количество deletedParsedCar забранных из базы {deletedParsedCar.Count}");
                         foreach (var parsedCar in deletedParsedCar)
                         {
-                            var advertCar = parsedCar.AdvertCars.First();
-                            if (advertCar.MainAdvertCar.IsDeleted == false)
+                            var advertCar = parsedCar.AdvertCars.FirstOrDefault ();
+                            if (advertCar!=null && advertCar.MainAdvertCar.IsDeleted == false)
                             {
                                 advertCar.MainAdvertCar.IsDeleted = true;
                                 advertCar.MainAdvertCar.Car.DeletedTime = Current;
@@ -334,6 +334,7 @@ namespace AnalyzerEngine
         {
             var stockCars = Repository.GetStockCars();
             var timeStart = DateTime.Now;
+            var i = 0;
             foreach (var stockCar in stockCars)
             {
                 var cars = stockCar.Cars.Where(a => a.Price != 0 && !a.MainAdvertCar.IsDeleted);
@@ -354,6 +355,15 @@ namespace AnalyzerEngine
                     DateTime = timeStart,
                     Value = averagePrice
                 });
+                if (i >= 100)
+                {
+                    Repository.SaveChanges();
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }       
             }
             Repository.SaveChanges();
         }
