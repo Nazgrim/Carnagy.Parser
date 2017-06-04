@@ -108,12 +108,19 @@ namespace ParserEngine
 
         protected virtual HtmlDocument GetHtmlDocument(string url)
         {
-            var htmlWeb = new HtmlWeb();
+            WebClient wc = new WebClient();
+            wc.Headers.Add(HttpRequestHeader.Cookie, @".ASPXANONYMOUS=h6x2brvS0gEkAAAANzc1OGRhYzMtZjZmOC00MGRmLTg4YjUtZjE2YjlkNTI3ZGVl6KRq9zbUNS3PwEeJp2YXVHB-G_lCijwYB80r_3S5nGs1;;___utmvc=navigator%3Dtrue,navigator.vendor%3D,navigator.appName%3DNetscape,navigator.plugins.length%3D%3D0%3Dfalse,navigator.platform%3DWin32,navigator.webdriver%3Dfalse,plugin_ext%3Docx,ActiveXObject%3Dfalse,webkitURL%3Dfalse,_phantom%3Dfalse,callPhantom%3Dfalse,chrome%3Dfalse,yandex%3Dfalse,opera%3Dfalse,opr%3Dfalse,safari%3Dfalse,awesomium%3Dfalse,puffinDevice%3Dfalse,__nightmare%3Dfalse,_Selenium_IDE_Recorder%3Dfalse,document.__webdriver_script_fn%3Dfalse,document.%24cdc_asdjflasutopfhvcZLmcfl_%3Dfalse,process.version%3Dfalse,navigator.cpuClass%3Dtrue,navigator.oscpu%3Dfalse,navigator.connection%3Dfalse,window.outerWidth%3D%3D0%3Dfalse,window.outerHeight%3D%3D0%3Dfalse,window.WebGLRenderingContext%3Dtrue,document.documentMode%3D11,eval.toString().length%3D39,digest=75385,75514;___utmvmNmufwBX=BgClKyBuURt;___utmvaNmufwBX=CoS_nToO;___utmvbNmufwBX=SZm XrlOhalH: ztY;visid_incap_820541=baKA9kdrTLusvwaOHgf4/R7oxlgAAAAAQUIPAAAAAAAxQ7Z4qvsByD2+6VebkibP;uag=9FA9D5EEDE64FA7B926FF39E7680599019B2077654E1337086ECAE6E68338124;at_uid=HH%2fn1CwDk0u4VX7SxdKdaQ%3d%3d;visid_incap_820268=jPoRC4qjS7u5y9RNdTAVvB/oxlgAAAAAQUIPAAAAAADQZoRKpA6oxHEgU9pnguVN;_ga=GA1.2.1446513763.1489430572;_cplid=3ad3e86749f7ba301a08926a288aed2715ac8faed81;__utma=1.1446513763.1489430572.1489430580.1489430580.1;__utmz=1.1489430580.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none);__utmv=1.test|8=HH%2Fn1CwDk0u4VX7SxdKdaQ%3D%3D=User%20ID=1;__gads=ID=76472c63f2948495:T=1489430576:S=ALNI_MbE888PR7CLRFFd-MqhZUwQW_uBtg;_fsspl_=%7B%22when%22%3A1489433545772%2C%22keys%22%3A%7B%22rid%22%3A%7B%22v%22%3A%22916b9f766af526298ebb50052775851c%22%2C%22x%22%3A1497206586002%7D%2C%22cp%22%3A%7B%22v%22%3A%7B%22url%22%3A%22http%3A%2F%2Fwwwb.autotrader.ca%2Fcars%2Fbuick%2F%3Fprx%3D-1%26rcs%3D0%26rcp%3D100%26adtype%3DDealer%26sts%3DNew%26showcpo%3D1%26hprc%3DTrue%26wcp%3DFalse%22%2C%22isLoggedIn%22%3A%22N%22%2C%22HasContactedSeller%22%3A%22N%22%2C%22terms%22%3A%22%22%2C%22browser%22%3A%22IE%2011%22%2C%22os%22%3A%22Windows%22%2C%22referrer%22%3A%22%22%2C%22site%22%3A%22autotrader.ca%22%2C%22code%22%3A%2219.1.2%22%2C%22fp%22%3A%22undefined%22%2C%22pv%22%3A%221%22%2C%22locale%22%3A%22en%22%7D%2C%22x%22%3A1497206586910%7D%2C%22pl%22%3A%7B%22v%22%3A1%2C%22x%22%3A1489444986914%2C%22ttl%22%3A14400000%7D%2C%22pv%22%3A%7B%22v%22%3A1%2C%22x%22%3A1497206586915%7D%2C%22def%22%3A%7B%22v%22%3A0%2C%22x%22%3A1497206586917%7D%2C%22browsepv%22%3A%7B%22v%22%3A1%2C%22x%22%3A1497206586918%7D%7D%7D;249_MVT=Production;visid_incap_820528=aFdrRYXpSXGv4slyqrqMtK72FlkAAAAAQUIPAAAAAAAFae066NfXzVlW/vEA9Xg3;incap_ses_143_820528=0KyaZu2PCFdPRFa7+gr8Aa72FlkAAAAAbfrjEJoRxBEpP1NCh5+4jg==;incap_ses_586_820541=+2oNLMyhQRBoAXtnGOQhCLP2FlkAAAAAF8AWkqkOFPq9Gqqv/z53Gw==");
+            //wc.Proxy = new WebProxy("137.74.254.198", 3128);
             for (var i = 0; i < NumberOfRetries; i++)
             {
                 try
                 {
-                    return htmlWeb.Load(url);
+                    //return htmlWeb.Load(url);
+                    var page = wc.DownloadString(url);
+
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                    doc.LoadHtml(page);
+                    return doc;
                 }
                 catch (WebException ex)
                 {
@@ -139,7 +146,9 @@ namespace ParserEngine
         protected virtual List<ParsedCar> ParseListCars(HtmlDocument htmlDocument, List<Field> fields)
         {
             var listField = fields.First(a => a.Name == FiledNameConstant.List);
-            var carListNodes = htmlDocument.DocumentNode.SelectNodes(listField.Xpath).ToList();
+            var abc = htmlDocument.DocumentNode.SelectNodes(listField.Xpath) ??
+                      htmlDocument.DocumentNode.SelectNodes("//*[@id='adList']/div/div[contains(@class, 'at_result')]");
+            var carListNodes = abc.ToList();
             WriteToLog($"Машин на странице:{carListNodes.Count}");
 
             var parsedCars = new ConcurrentBag<ParsedCar>();
@@ -189,48 +198,49 @@ namespace ParserEngine
             var result = newParsedCars.ToList();
             Repository.SaveParsedCar(result);
 
-            var list = new List<FieldValue>();
-            var msrpFiled = fields.First(a => a.Name == FiledNameConstant.MSRP);
-            foreach (var savedParsedCar in savedParsedCars)
-            {
-                var parsedCar = parsedCars.FirstOrDefault(a => a.ForCompare == savedParsedCar.ForCompare);
-                var msrp = savedParsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
-                if (parsedCar != null && msrp == null)
-                {
-                    var field = parsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
-                    if (field == null)
-                    {
-                        list.Add(new FieldValue
-                        {
-                            Field = msrpFiled,
-                            ParsedCarId = savedParsedCar.Id,
-                            Value = prices.FirstOrDefault(a => a.ParsedCarId == savedParsedCar.Id).Value
-                        });
-                    }
-                    else
-                    {
-                        list.Add(new FieldValue
-                        {
-                            Field = msrpFiled,
-                            ParsedCarId = savedParsedCar.Id,
-                            Value = field.Value
-                        });
-                    }
-                }
-            }
-            if (list.Any())
-            {
-                Repository.AddFieldValues(list);
-            }
+            //Добавление MSRP
+            //var list = new List<FieldValue>();
+            //var msrpFiled = fields.First(a => a.Name == FiledNameConstant.MSRP);
+            //foreach (var savedParsedCar in savedParsedCars)
+            //{
+            //    var parsedCar = parsedCars.FirstOrDefault(a => a.ForCompare == savedParsedCar.ForCompare);
+            //    var msrp = savedParsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
+            //    if (parsedCar != null && msrp == null)
+            //    {
+            //        var field = parsedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
+            //        if (field == null)
+            //        {
+            //            list.Add(new FieldValue
+            //            {
+            //                Field = msrpFiled,
+            //                ParsedCarId = savedParsedCar.Id,
+            //                Value = prices.FirstOrDefault(a => a.ParsedCarId == savedParsedCar.Id).Value
+            //            });
+            //        }
+            //        else
+            //        {
+            //            list.Add(new FieldValue
+            //            {
+            //                Field = msrpFiled,
+            //                ParsedCarId = savedParsedCar.Id,
+            //                Value = field.Value
+            //            });
+            //        }
+            //    }
+            //}
+            //if (list.Any())
+            //{
+            //    Repository.AddFieldValues(list);
+            //}
 
             return result;
         }
 
         protected virtual ParsedCar ParseCarNode(IEnumerable<Field> fields, HtmlNode carListNode)
         {
-            var urlField = fields.First(a => a.Name == FiledNameConstant.Url);
-            var urlFieldValue = GetFieldValue(urlField, carListNode);
-            if (string.IsNullOrWhiteSpace(urlFieldValue?.Value))
+            //var urlField = ;
+            var urlFieldValue = carListNode.SelectSingleNode(".//h2/a").GetAttributeValue("href", string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(urlFieldValue))
             {
                 WriteToLog("Не удалось распарсить url");
                 return null;
@@ -242,7 +252,7 @@ namespace ParserEngine
                 CreatedTime = LastUpdate,
                 LastUpdate = LastUpdate,
                 Status = ParsedCarStatus.List,
-                Url = urlFieldValue.Value.Split('?')[0],
+                Url = urlFieldValue.Split('?')[0],
 
             };
 

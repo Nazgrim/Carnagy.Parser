@@ -13,6 +13,7 @@ namespace DataAccess.Repositories
         public AnalyseRepository(CarnagyContext context)
         {
             Context = context;
+            Context.Database.CommandTimeout = 300;
         }
 
         public List<Car> GetAllStockNumber(int dealerId)

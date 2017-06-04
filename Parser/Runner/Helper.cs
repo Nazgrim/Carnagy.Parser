@@ -405,11 +405,13 @@ namespace Runner
         /// <param name="context"></param>
         public static void AddAllStockCarPrices(CarnagyContext context)
         {
+            context.Database.CommandTimeout = 1000;
             var stockCars = context.Set<StockCar>()
                 .Include(a => a.Cars.Select(b => b.MainAdvertCar.AdvertCars.Select(c => c.AdvertCarPrices)))
                 .ToList();
 
             var timeStart = DateTime.Now;
+            var i = 0;
             foreach (var stockCar in stockCars)
             {
                 if (!stockCar.Cars.Any()) continue;
@@ -427,16 +429,36 @@ namespace Runner
 
                 foreach (var VARIABLE in group)
                 {
-                    var averagePrice = (int)VARIABLE.Where(a => a.Value != 0).Average(a => a.Value);
+                    var abc2 = VARIABLE.Where(a => a.Value != 0);
+                    if (abc2.Any())
+                    {
+                    
+                    var averagePrice = (int)abc2.Average(a => a.Value);
                     stockCar.StockCarPrices.Add(new StockCarPrice
                     {
                         DateTime = DateTime.Parse(VARIABLE.Key),
                         Value = averagePrice
                     });
+                    }
+                    else
+                    {
+                        var ab2423432c = 1;
+                    }
                 }
 
-                stockCar.Price =
-                    stockCar.StockCarPrices.OrderByDescending(a => a.DateTime).First().Value;
+                var abc3 = stockCar.StockCarPrices.OrderByDescending(a => a.DateTime).FirstOrDefault();
+                if(abc3!=null)
+                stockCar.Price = abc3.Value;
+
+                if (i >= 100)
+                {
+                    context.SaveChanges();
+                    i = 0;
+                }
+                else
+                {
+                    i++;
+                }
             }
             context.SaveChanges();
         }
@@ -599,8 +621,8 @@ namespace Runner
                 if(parssedCar== null)
                     continue;
 
-                var fieldsVale = parssedCar.FieldValues.FirstOrDefault(a => a.Field.Name == FiledNameConstant.MSRP);
-                if(fieldsVale==null)
+                var fieldsVale = parssedCar.FieldValues.FirstOrDefault(a => a.FieldId == 31);//FiledNameConstant.MSRP
+                if (fieldsVale==null)
                     continue;
 
                 var msrp = 0.0;
@@ -616,6 +638,94 @@ namespace Runner
                 }
                 car.MsrpPrice = msrp;
             }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Ищем Price с нулями, указываем значение предыдущей цены, и если машина была помечена как ParsedCarStatus.CannotParsePrice ставим её статус ParsedCarStatus.AnalyzeComplete
+        /// </summary>
+        /// <param name="context"></param>
+        public static void RemoveNullPrice(CarnagyContext context)
+        {
+            context.Database.CommandTimeout = 1000;
+            var parsedCars = context.ParsedCars
+                .Include(a => a.Prices)
+                .Include(a => a.AdvertCars)
+                .Include(a => a.AdvertCars.Select(b => b.AdvertCarPrices))
+                .ToList();
+
+            var enumerable = parsedCars.Where(a=>a.Prices.Any(b=>b.Value==null));
+            foreach (var parsedCar in enumerable)
+            {
+                string price = null;
+                foreach (var parsedCarPrice in parsedCar.Prices.OrderBy(a=>a.DateTime))
+                {
+                    if (parsedCarPrice.Value == null)
+                    {
+                        parsedCarPrice.Value = price;
+                    }
+                    else
+                    {
+                        price = parsedCarPrice.Value;
+                    }
+                }
+
+                var advertCar = parsedCar.AdvertCars.FirstOrDefault();
+                if (advertCar != null)
+                {
+                    Dictionary<string, AdvertCarPrice> advertCarAdvertCarPricesDic =
+                        new Dictionary<string, AdvertCarPrice>();
+                        
+                    Dictionary<string, Price> parsedCarPricesDic = new Dictionary<string, Price>();
+
+                    advertCar.AdvertCarPrices.ForEach(a =>
+                    {
+                        if(!advertCarAdvertCarPricesDic.ContainsKey(a.DateTime.ToShortDateString()))
+                        {
+                            advertCarAdvertCarPricesDic.Add(a.DateTime.ToShortDateString(),a);
+                        } 
+                    });
+                    parsedCar.Prices.ForEach(a =>
+                    {
+                        if (!parsedCarPricesDic.ContainsKey(a.DateTime.ToShortDateString()))
+                        {
+                            parsedCarPricesDic.Add(a.DateTime.ToShortDateString(), a);
+                        }
+                    });
+
+                    foreach (var price1 in parsedCarPricesDic)
+                    {
+                        if (!advertCarAdvertCarPricesDic.ContainsKey(price1.Key) && price1.Value.Value!=null)
+                        {
+                            advertCar.AdvertCarPrices.Add(new AdvertCarPrice
+                            {
+                                DateTime = price1.Value.DateTime,
+                                Value = double.Parse(
+                                    price1.Value.Value,
+                                    NumberStyles.AllowCurrencySymbol |
+                                    NumberStyles.AllowDecimalPoint |
+                                    NumberStyles.AllowThousands,
+                                    new CultureInfo("en-US"))
+                            });
+                        }
+                    }
+                }
+                if (parsedCar.Status == ParsedCarStatus.CannotParsePrice)
+                {
+                    parsedCar.Status=ParsedCarStatus.AnalyzeComplete;
+                }             
+            }
+            context.SaveChanges();
+        }
+
+        /// <summary>
+        /// Очистка всех значений в таблице StockPrices
+        /// </summary>
+        /// <param name="context"></param>
+        public static void ClearStockPrices(CarnagyContext context)
+        {
+            var abc = context.StockCarPrices.ToList();
+            context.StockCarPrices.RemoveRange(abc);
             context.SaveChanges();
         }
     }
